@@ -1,9 +1,62 @@
 import * as React from 'react';
 import { Range } from '../src/index';
 
+const thumbStyle = {
+  border: '1px solid black',
+  height: '30px',
+  width: '30px',
+  borderRadius: '20px'
+};
+
+const trackStyle = {
+  height: '3px',
+  width: '300px',
+  margin: '40px',
+  padding: '2px',
+  backgroundColor: '#ccc'
+};
+
+const verticalTrackStyle = {
+  height: '300px',
+  width: '3px',
+  margin: '40px',
+  padding: '3px',
+  backgroundColor: '#ccc'
+};
+
 class Basic extends React.Component {
+  state = {
+    values: [50]
+  };
   render() {
-    return <Range />;
+    return (
+      <React.Fragment>
+        <p>Test</p>
+        <p>Test</p>
+        <Range
+          values={this.state.values}
+          onChange={values => this.setState({ values })}
+          renderTrack={({ props }) => (
+            <div {...props} style={{ ...props.style, ...trackStyle }} />
+          )}
+          renderThumb={({ props }) => (
+            <div {...props} style={{ ...props.style, ...thumbStyle }} />
+          )}
+        />
+
+        <Range
+          isVertical
+          values={this.state.values}
+          onChange={values => this.setState({ values })}
+          renderTrack={({ props }) => (
+            <div {...props} style={{ ...props.style, ...verticalTrackStyle }} />
+          )}
+          renderThumb={({ props }) => (
+            <div {...props} style={{ ...props.style, ...thumbStyle }} />
+          )}
+        />
+      </React.Fragment>
+    );
   }
 }
 

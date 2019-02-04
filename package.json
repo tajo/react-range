@@ -1,6 +1,6 @@
 {
   "name": "react-range",
-  "version": "1.0.1",
+  "version": "0.0.1",
   "description": "Input Range",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
