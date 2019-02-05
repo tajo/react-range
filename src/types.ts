@@ -1,4 +1,4 @@
-export interface IRangeProps {
+export interface IProps {
   values: number[];
   min: number;
   max: number;

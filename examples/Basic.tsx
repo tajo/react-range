@@ -35,7 +35,7 @@ class Basic extends React.Component {
         <p>Test</p>
         <Range
           values={this.state.values}
-          step={1}
+          step={0.1}
           max={100}
           onChange={values => {
             console.log(values);

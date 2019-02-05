@@ -6,11 +6,12 @@ import {
   replaceAt,
   checkBoundaries,
   relativeValue,
-  schd
+  schd,
+  normalizeValue
 } from './utils';
-import { IRangeProps, TThumbOffsets, TEvent } from './types';
+import { IProps, TThumbOffsets, TEvent } from './types';
 
-class Range extends React.Component<IRangeProps> {
+class Range extends React.Component<IProps> {
   static defaultProps = {
     step: 1,
     isVertical: false,
@@ -24,12 +25,10 @@ class Range extends React.Component<IRangeProps> {
   schdOnEnd: (e: Event) => void;
 
   state = {
-    initialX: 0,
-    initialY: 0,
     draggedThumbIndex: -1
   };
 
-  constructor(props: IRangeProps) {
+  constructor(props: IProps) {
     super(props);
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
@@ -43,13 +42,16 @@ class Range extends React.Component<IRangeProps> {
     translateThumbs(this.getThumbs(), this.getOffsets());
   }
 
-  componentDidUpdate(prevProps: IRangeProps) {
-    translateThumbs(this.getThumbs(), this.getOffsets());
+  componentDidUpdate(prevProps: IProps) {
+    const valuesUpdated = this.props.values.some(
+      (value, index) => value !== prevProps.values[index]
+    );
+    if (valuesUpdated) {
+      translateThumbs(this.getThumbs(), this.getOffsets());
+    }
   }
 
   getOffsets = () => {
-    // setting up initial offsets, considering dimensions, paddings
-    // and margins of both thumbs and the track
     const { isVertical, values, min, max } = this.props;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
@@ -80,43 +82,6 @@ class Range extends React.Component<IRangeProps> {
     });
   };
 
-  // alignThumbs = () => {
-  //   // setting up initial offsets, considering dimensions, paddings
-  //   // and margins of both thumbs and the track
-  //   const { isVertical, values, min, max } = this.props;
-  //   const trackElement = this.trackRef.current!;
-  //   const trackRect = trackElement.getBoundingClientRect();
-  //   const trackPadding = getPadding(trackElement);
-
-  //   this.thumbOffsets = this.getThumbs().map((thumb, index) => {
-  //     const thumbOffsets = { x: 0, y: 0 };
-  //     const thumbRect = thumb.getBoundingClientRect();
-  //     const thumbMargins = getMargin(thumb);
-  //     thumbOffsets.x = isVertical
-  //       ? ((thumbRect.width - trackRect.width) / 2 +
-  //           thumbMargins.left +
-  //           trackPadding.left) *
-  //         -1
-  //       : (thumbMargins.left + trackPadding.left) * -1;
-  //     thumbOffsets.y = isVertical
-  //       ? -trackPadding.left
-  //       : ((thumbRect.height - trackRect.height) / 2 + trackPadding.top) * -1;
-
-  //     // adjusting the offsets based on the value
-  //     if (isVertical) {
-  //       thumbOffsets.y +=
-  //         trackRect.height * relativeValue(values[index], min, max) -
-  //         thumbRect.height / 2;
-  //     } else {
-  //       thumbOffsets.x +=
-  //         trackRect.width * relativeValue(values[index], min, max) -
-  //         thumbRect.width / 2;
-  //     }
-  //     return thumbOffsets;
-  //   });
-  //   translateThumbs(this.getThumbs(), this.thumbOffsets);
-  // };
-
   getThumbs = () => {
     if (this.trackRef && this.trackRef.current) {
       return Array.from(this.trackRef.current.children);
@@ -139,12 +104,9 @@ class Range extends React.Component<IRangeProps> {
     document.addEventListener('mouseup', this.schdOnEnd);
     const index = this.getTargetIndex(e);
     if (index === -1) return;
-    this.onStart(
-      this.getThumbs()[index] as HTMLElement,
-      e.clientX,
-      e.clientY,
-      index
-    );
+    this.setState({
+      draggedThumbIndex: index
+    });
   };
 
   onTouchStart = (e: React.TouchEvent) => {
@@ -156,24 +118,8 @@ class Range extends React.Component<IRangeProps> {
     document.addEventListener('touchcancel', this.schdOnEnd);
     const index = this.getTargetIndex(e);
     if (index === -1) return;
-    this.onStart(
-      this.getThumbs()[index] as HTMLElement,
-      e.touches[0].clientX,
-      e.touches[0].clientY,
-      index
-    );
-  };
-
-  onStart = (
-    target: HTMLElement,
-    clientX: number,
-    clientY: number,
-    index: number
-  ) => {
     this.setState({
-      draggedThumbIndex: index,
-      initialX: clientX,
-      initialY: clientY
+      draggedThumbIndex: index
     });
   };
 
@@ -199,14 +145,11 @@ class Range extends React.Component<IRangeProps> {
       : clientX - trackRect.left;
     const newValue = (pointerOffset / trackLength) * (max - min);
     if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
-      const remainder = newValue % step;
       onChange(
         replaceAt(
           values,
           draggedThumbIndex,
-          remainder === 0
-            ? newValue
-            : Math.round((newValue - remainder) * 10e10) / 10e10
+          normalizeValue(newValue, min, max, step)
         )
       );
     }
@@ -219,7 +162,6 @@ class Range extends React.Component<IRangeProps> {
     document.removeEventListener('mouseup', this.schdOnEnd);
     document.removeEventListener('touchup', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
-    //this.props.onChange(10);
     this.setState({ draggedThumbIndex: -1 });
   };
 
