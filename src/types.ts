@@ -4,6 +4,7 @@ export interface IProps {
   max: number;
   step: number;
   isVertical: boolean;
+  allowOverlap: boolean;
   onChange: (values: number[]) => void;
   renderThumb: (props: any) => React.ReactNode;
   renderTrack: (props: any) => React.ReactNode;

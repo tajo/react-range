@@ -6,8 +6,7 @@ import {
   replaceAt,
   checkBoundaries,
   relativeValue,
-  schd,
-  normalizeValue
+  schd
 } from './utils';
 import { IProps, TThumbOffsets, TEvent } from './types';
 
@@ -15,6 +14,7 @@ class Range extends React.Component<IProps> {
   static defaultProps = {
     step: 1,
     isVertical: false,
+    allowOverlap: false,
     min: 0,
     max: 100
   };
@@ -97,6 +97,22 @@ class Range extends React.Component<IProps> {
       child => child === e.target || child.contains(e.currentTarget)
     );
 
+  onMouseDownTrack = (e: React.MouseEvent) => {
+    // in case there is a single thumb, we want to support
+    // moving the thumb to a place where the track is clicked
+    if (e.button !== 0 || this.props.values.length > 1) return;
+    e.preventDefault();
+    e.persist();
+    document.addEventListener('mousemove', this.schdOnMouseMove);
+    document.addEventListener('mouseup', this.schdOnEnd);
+    this.setState(
+      {
+        draggedThumbIndex: 0
+      },
+      () => this.onMove(e.clientX, e.clientY)
+    );
+  };
+
   onMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
     e.preventDefault();
@@ -135,7 +151,15 @@ class Range extends React.Component<IProps> {
 
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex } = this.state;
-    const { isVertical, min, max, onChange, values, step } = this.props;
+    const {
+      isVertical,
+      min,
+      max,
+      onChange,
+      values,
+      step,
+      allowOverlap
+    } = this.props;
     if (draggedThumbIndex === -1) return null;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
@@ -149,10 +173,26 @@ class Range extends React.Component<IProps> {
         replaceAt(
           values,
           draggedThumbIndex,
-          normalizeValue(newValue, min, max, step)
+          this.normalizeValue(newValue, draggedThumbIndex)
         )
       );
     }
+  };
+
+  normalizeValue = (value: number, index: number) => {
+    const { min, max, step, allowOverlap, values } = this.props;
+    if (!allowOverlap) {
+      const prev = values[index - 1];
+      const next = values[index + 1];
+      if (prev && prev > value) return prev;
+      if (next && next < value) return next;
+    }
+    if (value > max) return max;
+    if (value < min) return min;
+    const remainder = value % step;
+    const rounded =
+      remainder === 0 ? value : Math.round((value - remainder) * 10e10) / 10e10;
+    return rounded;
   };
 
   onEnd = (e: Event) => {
@@ -172,6 +212,7 @@ class Range extends React.Component<IProps> {
     return renderTrack({
       props: {
         style: trackStyle,
+        onMouseDown: this.onMouseDownTrack,
         children: values.map((_v, index) =>
           renderThumb({
             props: {

@@ -1,19 +1,5 @@
 import { TThumbOffsets } from './types';
 
-export function normalizeValue(
-  value: number,
-  min: number,
-  max: number,
-  step: number
-) {
-  if (value > max) return max;
-  if (value < min) return min;
-  const remainder = value % step;
-  const rounded =
-    remainder === 0 ? value : Math.round((value - remainder) * 10e10) / 10e10;
-  return rounded;
-}
-
 export function relativeValue(value: number, min: number, max: number) {
   return (value - min) / (max - min);
 }
