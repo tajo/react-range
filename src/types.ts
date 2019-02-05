@@ -4,7 +4,10 @@ export interface IRangeProps {
   max: number;
   step: number;
   isVertical: boolean;
-  onChange: (value: number) => void;
+  onChange: (values: number[]) => void;
   renderThumb: (props: any) => React.ReactNode;
   renderTrack: (props: any) => React.ReactNode;
 }
+
+export type TThumbOffsets = { x: number; y: number }[];
+export type TEvent = React.MouseEvent | React.TouchEvent | React.KeyboardEvent;

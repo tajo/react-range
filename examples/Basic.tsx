@@ -10,7 +10,7 @@ const thumbStyle = {
 
 const trackStyle = {
   height: '3px',
-  width: '300px',
+  width: '900px',
   margin: '40px',
   padding: '2px',
   backgroundColor: '#ccc'
@@ -26,7 +26,7 @@ const verticalTrackStyle = {
 
 class Basic extends React.Component {
   state = {
-    values: [50]
+    values: [5, 40]
   };
   render() {
     return (
@@ -35,7 +35,12 @@ class Basic extends React.Component {
         <p>Test</p>
         <Range
           values={this.state.values}
-          onChange={values => this.setState({ values })}
+          step={1}
+          max={100}
+          onChange={values => {
+            console.log(values);
+            this.setState({ values });
+          }}
           renderTrack={({ props }) => (
             <div {...props} style={{ ...props.style, ...trackStyle }} />
           )}
@@ -43,7 +48,6 @@ class Basic extends React.Component {
             <div {...props} style={{ ...props.style, ...thumbStyle }} />
           )}
         />
-
         <Range
           isVertical
           values={this.state.values}
