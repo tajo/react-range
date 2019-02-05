@@ -97,14 +97,27 @@ class Range extends React.Component<IProps> {
       child => child === e.target || child.contains(e.currentTarget)
     );
 
+  addTouchEvents = (e: React.TouchEvent) => {
+    e.preventDefault();
+    document.addEventListener('touchmove', this.schdOnTouchMove, {
+      passive: false
+    });
+    document.addEventListener('touchend', this.schdOnEnd);
+    document.addEventListener('touchcancel', this.schdOnEnd);
+  };
+
+  addMouseEvents = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.addEventListener('mousemove', this.schdOnMouseMove);
+    document.addEventListener('mouseup', this.schdOnEnd);
+  };
+
   onMouseDownTrack = (e: React.MouseEvent) => {
     // in case there is a single thumb, we want to support
     // moving the thumb to a place where the track is clicked
     if (e.button !== 0 || this.props.values.length > 1) return;
-    e.preventDefault();
     e.persist();
-    document.addEventListener('mousemove', this.schdOnMouseMove);
-    document.addEventListener('mouseup', this.schdOnEnd);
+    this.addMouseEvents(e);
     this.setState(
       {
         draggedThumbIndex: 0
@@ -113,11 +126,23 @@ class Range extends React.Component<IProps> {
     );
   };
 
+  onTouchStartTrack = (e: React.TouchEvent) => {
+    // in case there is a single thumb, we want to support
+    // moving the thumb to a place where the track is clicked
+    if (this.props.values.length > 1) return;
+    e.persist();
+    this.addTouchEvents(e);
+    this.setState(
+      {
+        draggedThumbIndex: 0
+      },
+      () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
+    );
+  };
+
   onMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
-    e.preventDefault();
-    document.addEventListener('mousemove', this.schdOnMouseMove);
-    document.addEventListener('mouseup', this.schdOnEnd);
+    this.addMouseEvents(e);
     const index = this.getTargetIndex(e);
     if (index === -1) return;
     this.setState({
@@ -126,12 +151,7 @@ class Range extends React.Component<IProps> {
   };
 
   onTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    document.addEventListener('touchmove', this.schdOnTouchMove, {
-      passive: false
-    });
-    document.addEventListener('touchend', this.schdOnEnd);
-    document.addEventListener('touchcancel', this.schdOnEnd);
+    this.addTouchEvents(e);
     const index = this.getTargetIndex(e);
     if (index === -1) return;
     this.setState({
@@ -151,15 +171,7 @@ class Range extends React.Component<IProps> {
 
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex } = this.state;
-    const {
-      isVertical,
-      min,
-      max,
-      onChange,
-      values,
-      step,
-      allowOverlap
-    } = this.props;
+    const { isVertical, min, max, onChange, values, step } = this.props;
     if (draggedThumbIndex === -1) return null;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
@@ -207,14 +219,17 @@ class Range extends React.Component<IProps> {
 
   render() {
     const trackStyle = {};
-    const thumbStyle = { position: 'absolute' };
+    const thumbStyle = { position: 'absolute' } as React.CSSProperties;
     const { renderTrack, renderThumb, values } = this.props;
     return renderTrack({
       props: {
         style: trackStyle,
         onMouseDown: this.onMouseDownTrack,
-        children: values.map((_v, index) =>
+        onTouchStart: this.onTouchStartTrack,
+        children: values.map((value, index) =>
           renderThumb({
+            index,
+            value,
             props: {
               style: thumbStyle,
               key: index,

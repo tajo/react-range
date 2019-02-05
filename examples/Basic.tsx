@@ -26,7 +26,7 @@ const verticalTrackStyle = {
 
 class Basic extends React.Component {
   state = {
-    values: [20, 60, 80]
+    values: [20, 70]
   };
   render() {
     return (
