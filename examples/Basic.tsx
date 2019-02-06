@@ -8,38 +8,82 @@ const thumbStyle = {
   borderRadius: '6px'
 };
 
-const trackStyle = {
-  height: '5px',
-  width: '900px',
-  margin: '80px',
-  backgroundColor: '#ccc'
-};
-
-const verticalTrackStyle = {
-  height: '300px',
-  width: '5px',
-  margin: '80px',
-  backgroundColor: '#ccc'
-};
-
 class Basic extends React.Component {
   state = {
-    values: [20, 60]
+    valuesOne: [20],
+    valuesTwo: [30, 60],
+    valuesThree: [20, 60]
   };
   render() {
     return (
       <React.Fragment>
         <Range
-          values={this.state.values}
+          values={this.state.valuesOne}
           step={10}
           min={0}
           max={100}
-          onChange={values => {
-            console.log(values);
-            this.setState({ values });
+          onChange={valuesOne => {
+            console.log('valuesOne', valuesOne);
+            this.setState({ valuesOne });
           }}
-          renderTrack={({ props }) => (
-            <div {...props} style={{ ...props.style, ...trackStyle }} />
+          renderTrack={({ props, children }) => (
+            <div
+              onMouseDown={props.onMouseDown}
+              onTouchStart={props.onTouchStart}
+              style={{
+                ...props.style,
+                height: '36px',
+                display: 'flex',
+                width: '900px',
+                margin: '30px'
+              }}
+            >
+              <div
+                ref={props.ref}
+                style={{
+                  height: '5px',
+                  width: '100%',
+                  backgroundColor: '#ccc',
+                  alignSelf: 'center'
+                }}
+              >
+                {children}
+              </div>
+            </div>
+          )}
+          renderThumb={({ props, isDragged }) => (
+            <div
+              {...props}
+              style={{
+                ...props.style,
+                ...thumbStyle,
+                backgroundColor: isDragged ? '#EEE' : '#FFF'
+              }}
+            />
+          )}
+        />
+        <Range
+          values={this.state.valuesTwo}
+          step={0.1}
+          min={0}
+          max={100}
+          onChange={valuesTwo => {
+            console.log('valuesTwo', valuesTwo);
+            this.setState({ valuesTwo });
+          }}
+          renderTrack={({ props, children }) => (
+            <div
+              {...props}
+              style={{
+                ...props.style,
+                height: '36px',
+                width: '900px',
+                margin: '30px',
+                backgroundColor: '#ccc'
+              }}
+            >
+              {children}
+            </div>
           )}
           renderThumb={({ props, isDragged }) => (
             <div
@@ -54,16 +98,32 @@ class Basic extends React.Component {
         />
         <Range
           isVertical
-          values={this.state.values}
-          onChange={values => this.setState({ values })}
-          renderTrack={({ props }) => (
+          values={this.state.valuesThree}
+          onChange={valuesThree => this.setState({ valuesThree })}
+          renderTrack={({ props, children }) => (
             <div
-              {...props}
+              onMouseDown={props.onMouseDown}
+              onTouchStart={props.onTouchStart}
               style={{
                 ...props.style,
-                ...verticalTrackStyle
+                width: '36px',
+                display: 'flex',
+                height: '300px',
+                margin: '30px'
               }}
-            />
+            >
+              <div
+                ref={props.ref}
+                style={{
+                  height: '100%',
+                  width: '5px',
+                  justifySelf: 'center',
+                  backgroundColor: '#ccc'
+                }}
+              >
+                {children}
+              </div>
+            </div>
           )}
           renderThumb={({ props, isDragged }) => (
             <div

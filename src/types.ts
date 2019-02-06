@@ -16,6 +16,7 @@ export interface IProps {
   }) => React.ReactNode;
   renderTrack: (params: {
     props: ITrackProps;
+    children: React.ReactNode;
     isDragged: boolean;
   }) => React.ReactNode;
 }
@@ -38,7 +39,6 @@ export interface IThumbProps {
 export interface ITrackProps {
   style: React.CSSProperties;
   ref: React.RefObject<any>;
-  children: React.ReactNode;
   onMouseDown: (e: React.MouseEvent) => void;
   onTouchStart: (e: React.TouchEvent) => void;
 }

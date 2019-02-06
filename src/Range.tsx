@@ -6,7 +6,8 @@ import {
   replaceAt,
   checkBoundaries,
   relativeValue,
-  schd
+  schd,
+  normalizeValue
 } from './utils';
 import { IProps, TThumbOffsets, TEvent } from './types';
 
@@ -227,21 +228,8 @@ class Range extends React.Component<IProps> {
   };
 
   normalizeValue = (value: number, index: number) => {
-    const BIG_NUM = 10e10;
-    value = Math.round(value * BIG_NUM) / BIG_NUM;
     const { min, max, step, allowOverlap, values } = this.props;
-    if (!allowOverlap) {
-      const prev = values[index - 1];
-      const next = values[index + 1];
-      if (prev && prev > value) return prev;
-      if (next && next < value) return next;
-    }
-    if (value > max) return max;
-    if (value < min) return min;
-    const remainder = Math.round(value * BIG_NUM) % Math.round(step * BIG_NUM);
-    const closestBigNum = Math.round(value * BIG_NUM - remainder);
-    const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
-    return rounded;
+    return normalizeValue(value, index, min, max, step, allowOverlap, values);
   };
 
   onEnd = (e: Event) => {
@@ -271,39 +259,39 @@ class Range extends React.Component<IProps> {
             draggedThumbIndex > -1
               ? 'grabbing'
               : values.length === 1
-              ? 'poinnter'
+              ? 'pointer'
               : 'inherit'
         },
         onMouseDown: this.onMouseDownTrack,
         onTouchStart: this.onTouchStartTrack,
-        children: values.map((value, index) => {
-          const isDragged = this.state.draggedThumbIndex === index;
-          return renderThumb({
-            index,
-            value,
-            isDragged,
-            props: {
-              style: {
-                position: 'absolute',
-                cursor: isDragged ? 'grabbing' : 'grab'
-              } as React.CSSProperties,
-              key: index,
-              tabIndex: 0,
-              'aria-valuemax': allowOverlap ? max : values[index + 1] || max,
-              'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
-              'aria-valuenow': value,
-              draggable: false,
-              role: 'slider',
-              onMouseDown: this.onMouseDown,
-              onTouchStart: this.onTouchStart,
-              onKeyDown: this.onKeyDown,
-              onKeyUp: this.onKeyUp
-            }
-          });
-        }),
         ref: this.trackRef
       },
-      isDragged: this.state.draggedThumbIndex > -1
+      isDragged: this.state.draggedThumbIndex > -1,
+      children: values.map((value, index) => {
+        const isDragged = this.state.draggedThumbIndex === index;
+        return renderThumb({
+          index,
+          value,
+          isDragged,
+          props: {
+            style: {
+              position: 'absolute',
+              cursor: isDragged ? 'grabbing' : 'grab'
+            } as React.CSSProperties,
+            key: index,
+            tabIndex: 0,
+            'aria-valuemax': allowOverlap ? max : values[index + 1] || max,
+            'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
+            'aria-valuenow': value,
+            draggable: false,
+            role: 'slider',
+            onMouseDown: this.onMouseDown,
+            onTouchStart: this.onTouchStart,
+            onKeyDown: this.onKeyDown,
+            onKeyUp: this.onKeyUp
+          }
+        });
+      })
     });
   }
 }

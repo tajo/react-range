@@ -1,5 +1,30 @@
 import { TThumbOffsets } from './types';
 
+export function normalizeValue(
+  value: number,
+  index: number,
+  min: number,
+  max: number,
+  step: number,
+  allowOverlap: boolean,
+  values: number[]
+) {
+  const BIG_NUM = 10e10;
+  value = Math.round(value * BIG_NUM) / BIG_NUM;
+  if (!allowOverlap) {
+    const prev = values[index - 1];
+    const next = values[index + 1];
+    if (prev && prev > value) return prev;
+    if (next && next < value) return next;
+  }
+  if (value > max) return max;
+  if (value < min) return min;
+  const remainder = Math.round(value * BIG_NUM) % Math.round(step * BIG_NUM);
+  const closestBigNum = Math.round(value * BIG_NUM - remainder);
+  const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
+  return rounded;
+}
+
 export function relativeValue(value: number, min: number, max: number) {
   return (value - min) / (max - min);
 }
