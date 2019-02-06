@@ -2,11 +2,15 @@ import * as React from 'react';
 import { Range } from '../src/index';
 
 const thumbStyle = {
-  border: '4px solid #CCC',
+  borderWidth: '4px',
+  borderStyle: 'solid',
   height: '28px',
   width: '28px',
-  borderRadius: '6px'
+  borderRadius: '6px',
+  backgroundColor: '#FFF'
 };
+
+const BLUE = '#276EF1';
 
 class Basic extends React.Component {
   state = {
@@ -57,14 +61,14 @@ class Basic extends React.Component {
               style={{
                 ...props.style,
                 ...thumbStyle,
-                backgroundColor: isDragged ? '#EEE' : '#FFF'
+                borderColor: isDragged ? BLUE : '#CCC'
               }}
             />
           )}
         />
         <Range
           values={this.state.valuesTwo}
-          step={0.1}
+          step={1}
           min={0}
           max={100}
           onChange={valuesTwo => {
@@ -91,7 +95,7 @@ class Basic extends React.Component {
               style={{
                 ...props.style,
                 ...thumbStyle,
-                backgroundColor: isDragged ? '#EEE' : '#FFF'
+                borderColor: isDragged ? BLUE : '#ccc'
               }}
             />
           )}
@@ -131,7 +135,7 @@ class Basic extends React.Component {
               style={{
                 ...props.style,
                 ...thumbStyle,
-                backgroundColor: isDragged ? '#EEE' : '#FFF'
+                borderColor: isDragged ? BLUE : '#ccc'
               }}
             />
           )}

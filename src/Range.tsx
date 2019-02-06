@@ -198,6 +198,8 @@ class Range extends React.Component<IProps> {
           this.normalizeValue(values[index] - step, index)
         )
       );
+    } else if (e.key === 'Tab') {
+      this.setState({ draggedThumbIndex: -1 });
     }
   };
 

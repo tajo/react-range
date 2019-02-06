@@ -22,7 +22,7 @@ export function normalizeValue(
   const remainder = Math.round(value * BIG_NUM) % Math.round(step * BIG_NUM);
   const closestBigNum = Math.round(value * BIG_NUM - remainder);
   const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
-  return rounded;
+  return remainder / BIG_NUM < step / 2 ? rounded : rounded + step;
 }
 
 export function relativeValue(value: number, min: number, max: number) {
