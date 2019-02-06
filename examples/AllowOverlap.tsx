@@ -4,10 +4,11 @@ import { Range, getTrackBackground } from '../src/index';
 const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
+const COLORS = ['#0C2960', '#276EF1', '#9CBCF8', '#ccc'];
 
-class Basic extends React.Component {
+class MultipleThumbs extends React.Component {
   state = {
-    values: [50]
+    values: [25, 50, 75]
   };
   render() {
     return (
@@ -19,6 +20,7 @@ class Basic extends React.Component {
         }}
       >
         <Range
+          allowOverlap
           values={this.state.values}
           step={STEP}
           min={MIN}
@@ -41,12 +43,7 @@ class Basic extends React.Component {
                   height: '5px',
                   width: '100%',
                   borderRadius: '4px',
-                  background: getTrackBackground({
-                    values: this.state.values,
-                    colors: ['#548BF4', '#ccc'],
-                    min: MIN,
-                    max: MAX
-                  }),
+                  background: '#ccc',
                   alignSelf: 'center'
                 }}
               >
@@ -54,7 +51,7 @@ class Basic extends React.Component {
               </div>
             </div>
           )}
-          renderThumb={({ props, isDragged }) => (
+          renderThumb={({ props, isDragged, index }) => (
             <div
               {...props}
               style={{
@@ -66,25 +63,26 @@ class Basic extends React.Component {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                boxShadow: '0px 2px 6px #AAA'
+                border: `3px solid ${COLORS[index]}`
               }}
             >
               <div
                 style={{
                   height: '16px',
                   width: '5px',
-                  backgroundColor: isDragged ? '#548BF4' : '#CCC'
+                  backgroundColor: isDragged ? COLORS[index] : '#CCC'
                 }}
               />
             </div>
           )}
         />
         <output style={{ marginTop: '30px' }}>
-          {this.state.values[0].toFixed(1)}
+          {this.state.values[0].toFixed(1)} - {this.state.values[1].toFixed(1)}{' '}
+          - {this.state.values[2].toFixed(1)}
         </output>
       </div>
     );
   }
 }
 
-export default Basic;
+export default MultipleThumbs;

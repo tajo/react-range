@@ -5,9 +5,9 @@ const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
 
-class Basic extends React.Component {
+class TwoThumbs extends React.Component {
   state = {
-    values: [50]
+    values: [25, 75]
   };
   render() {
     return (
@@ -43,7 +43,7 @@ class Basic extends React.Component {
                   borderRadius: '4px',
                   background: getTrackBackground({
                     values: this.state.values,
-                    colors: ['#548BF4', '#ccc'],
+                    colors: ['#ccc', '#548BF4', '#ccc'],
                     min: MIN,
                     max: MAX
                   }),
@@ -80,11 +80,11 @@ class Basic extends React.Component {
           )}
         />
         <output style={{ marginTop: '30px' }}>
-          {this.state.values[0].toFixed(1)}
+          {this.state.values[0].toFixed(1)} - {this.state.values[1].toFixed(1)}
         </output>
       </div>
     );
   }
 }
 
-export default Basic;
+export default TwoThumbs;

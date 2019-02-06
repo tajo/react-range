@@ -5,7 +5,7 @@ const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
 
-class Basic extends React.Component {
+class Disabled extends React.Component {
   state = {
     values: [50]
   };
@@ -19,12 +19,13 @@ class Basic extends React.Component {
         }}
       >
         <Range
+          disabled
           values={this.state.values}
           step={STEP}
           min={MIN}
           max={MAX}
           onChange={values => this.setState({ values })}
-          renderTrack={({ props, children }) => (
+          renderTrack={({ props, children, disabled }) => (
             <div
               onMouseDown={props.onMouseDown}
               onTouchStart={props.onTouchStart}
@@ -43,7 +44,7 @@ class Basic extends React.Component {
                   borderRadius: '4px',
                   background: getTrackBackground({
                     values: this.state.values,
-                    colors: ['#548BF4', '#ccc'],
+                    colors: [disabled ? '#9CBCF8' : '#548BF4', '#ccc'],
                     min: MIN,
                     max: MAX
                   }),
@@ -79,12 +80,10 @@ class Basic extends React.Component {
             </div>
           )}
         />
-        <output style={{ marginTop: '30px' }}>
-          {this.state.values[0].toFixed(1)}
-        </output>
+        <output style={{ marginTop: '30px' }}>{this.state.values[0]}</output>
       </div>
     );
   }
 }
 
-export default Basic;
+export default Disabled;

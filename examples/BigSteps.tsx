@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Range, getTrackBackground } from '../src/index';
 
-const STEP = 0.1;
+const STEP = 10;
 const MIN = 0;
 const MAX = 100;
 
-class Basic extends React.Component {
+class BigSteps extends React.Component {
   state = {
     values: [50]
   };
@@ -87,4 +87,4 @@ class Basic extends React.Component {
   }
 }
 
-export default Basic;
+export default BigSteps;

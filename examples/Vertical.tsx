@@ -5,7 +5,7 @@ const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
 
-class Basic extends React.Component {
+class Vertical extends React.Component {
   state = {
     values: [50]
   };
@@ -14,11 +14,13 @@ class Basic extends React.Component {
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap'
+          alignItems: 'center',
+          height: '100%',
+          flexDirection: 'column'
         }}
       >
         <Range
+          isVertical
           values={this.state.values}
           step={STEP}
           min={MIN}
@@ -30,22 +32,24 @@ class Basic extends React.Component {
               onTouchStart={props.onTouchStart}
               style={{
                 ...props.style,
-                height: '36px',
+                flexGrow: 1,
+                width: '36px',
                 display: 'flex',
-                width: '100%'
+                height: '300px'
               }}
             >
               <div
                 ref={props.ref}
                 style={{
-                  height: '5px',
-                  width: '100%',
+                  width: '5px',
+                  height: '100%',
                   borderRadius: '4px',
                   background: getTrackBackground({
                     values: this.state.values,
                     colors: ['#548BF4', '#ccc'],
                     min: MIN,
-                    max: MAX
+                    max: MAX,
+                    direction: 'to bottom'
                   }),
                   alignSelf: 'center'
                 }}
@@ -71,20 +75,22 @@ class Basic extends React.Component {
             >
               <div
                 style={{
-                  height: '16px',
-                  width: '5px',
+                  width: '16px',
+                  height: '5px',
                   backgroundColor: isDragged ? '#548BF4' : '#CCC'
                 }}
               />
             </div>
           )}
         />
-        <output style={{ marginTop: '30px' }}>
-          {this.state.values[0].toFixed(1)}
-        </output>
+        {
+          <output style={{ marginTop: '50px', width: '56px' }}>
+            {this.state.values[0].toFixed(1)}
+          </output>
+        }
       </div>
     );
   }
 }
 
-export default Basic;
+export default Vertical;

@@ -27,6 +27,7 @@ class Range extends React.Component<IProps> {
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
+  schdOnWindowResize: () => void;
 
   state = {
     draggedThumbIndex: -1
@@ -37,9 +38,11 @@ class Range extends React.Component<IProps> {
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
+    this.schdOnWindowResize = schd(this.onWindowResize);
   }
 
   componentDidMount() {
+    window.addEventListener('resize', this.schdOnWindowResize);
     !this.props.allowOverlap && checkInitialOverlap(this.props.values);
     this.props.values.forEach(value =>
       checkBoundaries(value, this.props.min, this.props.max)
@@ -55,6 +58,10 @@ class Range extends React.Component<IProps> {
       !this.props.allowOverlap && checkInitialOverlap(this.props.values);
       translateThumbs(this.getThumbs(), this.getOffsets());
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.schdOnWindowResize);
   }
 
   getOffsets = () => {
@@ -130,6 +137,10 @@ class Range extends React.Component<IProps> {
       },
       () => this.onMove(e.clientX, e.clientY)
     );
+  };
+
+  onWindowResize = () => {
+    translateThumbs(this.getThumbs(), this.getOffsets());
   };
 
   onTouchStartTrack = (e: React.TouchEvent) => {
