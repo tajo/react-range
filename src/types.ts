@@ -1,5 +1,10 @@
-import { number, string } from 'prop-types';
-
+export interface ITrackBackground {
+  min: number;
+  max: number;
+  values: number[];
+  colors: string[];
+  direction?: string;
+}
 export interface IProps {
   values: number[];
   min: number;

@@ -1,3 +1,4 @@
 import Range from './Range';
+import { getTrackBackground } from './utils';
 
-export { Range };
+export { Range, getTrackBackground };

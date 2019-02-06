@@ -1,16 +1,26 @@
 import * as React from 'react';
-import { Range } from '../src/index';
+import { Range, getTrackBackground } from '../src/index';
 
 const thumbStyle = {
-  borderWidth: '4px',
-  borderStyle: 'solid',
-  height: '28px',
-  width: '28px',
-  borderRadius: '6px',
-  backgroundColor: '#FFF'
+  height: '42px',
+  width: '42px',
+  borderRadius: '4px',
+  backgroundColor: '#FFF',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  boxShadow: '0px 2px 6px #AAA'
 };
-
-const BLUE = '#276EF1';
+const BLUE = '#548BF4';
+const ThumbCenter = ({ isDragged }: { isDragged: boolean }) => (
+  <div
+    style={{
+      height: '16px',
+      width: '5px',
+      backgroundColor: isDragged ? BLUE : '#CCC'
+    }}
+  />
+);
 
 class Basic extends React.Component {
   state = {
@@ -23,9 +33,9 @@ class Basic extends React.Component {
       <React.Fragment>
         <Range
           values={this.state.valuesOne}
-          step={10}
-          min={0}
-          max={100}
+          step={1}
+          min={10}
+          max={110}
           onChange={valuesOne => {
             console.log('valuesOne', valuesOne);
             this.setState({ valuesOne });
@@ -47,7 +57,13 @@ class Basic extends React.Component {
                 style={{
                   height: '5px',
                   width: '100%',
-                  backgroundColor: '#ccc',
+                  borderRadius: '4px',
+                  background: getTrackBackground({
+                    values: this.state.valuesOne,
+                    colors: [BLUE, '#ccc'],
+                    min: 10,
+                    max: 110
+                  }),
                   alignSelf: 'center'
                 }}
               >
@@ -60,10 +76,11 @@ class Basic extends React.Component {
               {...props}
               style={{
                 ...props.style,
-                ...thumbStyle,
-                borderColor: isDragged ? BLUE : '#CCC'
+                ...thumbStyle
               }}
-            />
+            >
+              <ThumbCenter isDragged={isDragged} />
+            </div>
           )}
         />
         <Range
@@ -77,16 +94,33 @@ class Basic extends React.Component {
           }}
           renderTrack={({ props, children }) => (
             <div
-              {...props}
+              onMouseDown={props.onMouseDown}
+              onTouchStart={props.onTouchStart}
               style={{
                 ...props.style,
                 height: '36px',
+                display: 'flex',
                 width: '900px',
-                margin: '30px',
-                backgroundColor: '#ccc'
+                margin: '30px'
               }}
             >
-              {children}
+              <div
+                ref={props.ref}
+                style={{
+                  height: '5px',
+                  width: '100%',
+                  borderRadius: '4px',
+                  background: getTrackBackground({
+                    values: this.state.valuesTwo,
+                    colors: ['#ccc', BLUE, '#ccc'],
+                    min: 0,
+                    max: 100
+                  }),
+                  alignSelf: 'center'
+                }}
+              >
+                {children}
+              </div>
             </div>
           )}
           renderThumb={({ props, isDragged }) => (
@@ -94,10 +128,11 @@ class Basic extends React.Component {
               {...props}
               style={{
                 ...props.style,
-                ...thumbStyle,
-                borderColor: isDragged ? BLUE : '#ccc'
+                ...thumbStyle
               }}
-            />
+            >
+              <ThumbCenter isDragged={isDragged} />
+            </div>
           )}
         />
         <Range
@@ -122,7 +157,15 @@ class Basic extends React.Component {
                   height: '100%',
                   width: '5px',
                   justifySelf: 'center',
-                  backgroundColor: '#ccc'
+
+                  borderRadius: '4px',
+                  background: getTrackBackground({
+                    values: this.state.valuesThree,
+                    colors: ['#ccc', BLUE, '#ccc'],
+                    min: 0,
+                    max: 100,
+                    direction: 'to bottom'
+                  })
                 }}
               >
                 {children}
@@ -134,10 +177,17 @@ class Basic extends React.Component {
               {...props}
               style={{
                 ...props.style,
-                ...thumbStyle,
-                borderColor: isDragged ? BLUE : '#ccc'
+                ...thumbStyle
               }}
-            />
+            >
+              <div
+                style={{
+                  width: '16px',
+                  height: '5px',
+                  backgroundColor: isDragged ? BLUE : '#CCC'
+                }}
+              />
+            </div>
           )}
         />
       </React.Fragment>

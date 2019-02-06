@@ -1,4 +1,4 @@
-import { TThumbOffsets } from './types';
+import { TThumbOffsets, ITrackBackground } from './types';
 
 export function normalizeValue(
   value: number,
@@ -92,4 +92,22 @@ export function replaceAt(values: number[], index: number, value: number) {
   const ret = values.slice(0);
   ret[index] = value;
   return ret;
+}
+
+export function getTrackBackground({
+  values,
+  colors,
+  min,
+  max,
+  direction = 'to right'
+}: ITrackBackground) {
+  const progress = values.map(value => ((value - min) / (max - min)) * 100);
+  const middle = progress.reduce(
+    (acc, point, index) => `${acc}, ${colors[index]} ${point}%,
+  ${colors[index + 1]} ${point}%`,
+    ''
+  );
+  return `linear-gradient(${direction}, ${colors[0]} 0%${middle}, ${
+    colors[colors.length - 1]
+  } 100%)`;
 }
