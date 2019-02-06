@@ -32,6 +32,7 @@ class Basic extends React.Component {
     return (
       <React.Fragment>
         <Range
+          disabled
           values={this.state.valuesOne}
           step={0.1}
           min={0}
@@ -40,7 +41,7 @@ class Basic extends React.Component {
             console.log('valuesOne', valuesOne);
             this.setState({ valuesOne });
           }}
-          renderTrack={({ props, children }) => (
+          renderTrack={({ props, children, disabled }) => (
             <div
               onMouseDown={props.onMouseDown}
               onTouchStart={props.onTouchStart}
@@ -60,7 +61,7 @@ class Basic extends React.Component {
                   borderRadius: '4px',
                   background: getTrackBackground({
                     values: this.state.valuesOne,
-                    colors: [BLUE, '#ccc'],
+                    colors: [disabled ? '#9CBCF8' : BLUE, '#ccc'],
                     min: 0,
                     max: 100
                   }),

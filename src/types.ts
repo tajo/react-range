@@ -12,6 +12,7 @@ export interface IProps {
   step: number;
   isVertical: boolean;
   allowOverlap: boolean;
+  disabled: boolean;
   onChange: (values: number[]) => void;
   renderThumb: (params: {
     props: IThumbProps;
@@ -23,13 +24,14 @@ export interface IProps {
     props: ITrackProps;
     children: React.ReactNode;
     isDragged: boolean;
+    disabled: boolean;
   }) => React.ReactNode;
 }
 
 export interface IThumbProps {
   key: number;
   style: React.CSSProperties;
-  tabIndex: number;
+  tabIndex?: number;
   'aria-valuemax': number;
   'aria-valuemin': number;
   'aria-valuenow': number;

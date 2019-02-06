@@ -122,3 +122,5 @@ export function getTrackBackground({
     colors[colors.length - 1]
   } 100%)`;
 }
+
+export function voidFn() {}

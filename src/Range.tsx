@@ -8,7 +8,8 @@ import {
   relativeValue,
   schd,
   normalizeValue,
-  checkInitialOverlap
+  checkInitialOverlap,
+  voidFn
 } from './utils';
 import { IProps, TThumbOffsets, TEvent } from './types';
 
@@ -16,6 +17,7 @@ class Range extends React.Component<IProps> {
   static defaultProps = {
     step: 1,
     isVertical: false,
+    disabled: false,
     allowOverlap: false,
     min: 0,
     max: 100
@@ -254,7 +256,8 @@ class Range extends React.Component<IProps> {
       values,
       min,
       max,
-      allowOverlap
+      allowOverlap,
+      disabled
     } = this.props;
     const { draggedThumbIndex } = this.state;
     return renderTrack({
@@ -263,15 +266,16 @@ class Range extends React.Component<IProps> {
           cursor:
             draggedThumbIndex > -1
               ? 'grabbing'
-              : values.length === 1
+              : values.length === 1 && !disabled
               ? 'pointer'
               : 'inherit'
         },
-        onMouseDown: this.onMouseDownTrack,
-        onTouchStart: this.onTouchStartTrack,
+        onMouseDown: disabled ? voidFn : this.onMouseDownTrack,
+        onTouchStart: disabled ? voidFn : this.onTouchStartTrack,
         ref: this.trackRef
       },
       isDragged: this.state.draggedThumbIndex > -1,
+      disabled,
       children: values.map((value, index) => {
         const isDragged = this.state.draggedThumbIndex === index;
         return renderThumb({
@@ -281,19 +285,19 @@ class Range extends React.Component<IProps> {
           props: {
             style: {
               position: 'absolute',
-              cursor: isDragged ? 'grabbing' : 'grab'
+              cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab'
             } as React.CSSProperties,
             key: index,
-            tabIndex: 0,
+            tabIndex: disabled ? undefined : 0,
             'aria-valuemax': allowOverlap ? max : values[index + 1] || max,
             'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
             'aria-valuenow': value,
             draggable: false,
             role: 'slider',
-            onMouseDown: this.onMouseDown,
-            onTouchStart: this.onTouchStart,
-            onKeyDown: this.onKeyDown,
-            onKeyUp: this.onKeyUp
+            onMouseDown: disabled ? voidFn : this.onMouseDown,
+            onTouchStart: disabled ? voidFn : this.onTouchStart,
+            onKeyDown: disabled ? voidFn : this.onKeyDown,
+            onKeyUp: disabled ? voidFn : this.onKeyUp
           }
         });
       })
