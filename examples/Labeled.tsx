@@ -5,7 +5,7 @@ const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
 
-class Disabled extends React.Component {
+class Labeled extends React.Component {
   state = {
     values: [50]
   };
@@ -19,13 +19,12 @@ class Disabled extends React.Component {
         }}
       >
         <Range
-          disabled
           values={this.state.values}
           step={STEP}
           min={MIN}
           max={MAX}
           onChange={values => this.setState({ values })}
-          renderTrack={({ props, children, disabled }) => (
+          renderTrack={({ props, children }) => (
             <div
               onMouseDown={props.onMouseDown}
               onTouchStart={props.onTouchStart}
@@ -44,7 +43,7 @@ class Disabled extends React.Component {
                   borderRadius: '4px',
                   background: getTrackBackground({
                     values: this.state.values,
-                    colors: [disabled ? '#999' : '#548BF4', '#ccc'],
+                    colors: ['#548BF4', '#ccc'],
                     min: MIN,
                     max: MAX
                   }),
@@ -72,6 +71,21 @@ class Disabled extends React.Component {
             >
               <div
                 style={{
+                  position: 'absolute',
+                  top: '-28px',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  fontFamily: 'Arial,Helvetica Neue,Helvetica,sans-serif',
+                  padding: '4px',
+                  borderRadius: '4px',
+                  backgroundColor: '#548BF4'
+                }}
+              >
+                {this.state.values[0].toFixed(1)}
+              </div>
+              <div
+                style={{
                   height: '16px',
                   width: '5px',
                   backgroundColor: isDragged ? '#548BF4' : '#CCC'
@@ -80,12 +94,9 @@ class Disabled extends React.Component {
             </div>
           )}
         />
-        <output style={{ marginTop: '30px' }}>
-          {this.state.values[0].toFixed(1)}
-        </output>
       </div>
     );
   }
 }
 
-export default Disabled;
+export default Labeled;

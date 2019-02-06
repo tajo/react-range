@@ -190,7 +190,7 @@ class Range extends React.Component<IProps> {
     const { values, onChange, step } = this.props;
     const index = this.getTargetIndex(e);
     if (index === -1) return;
-    if (['ArrowRight', 'ArrowDown', 'j'].includes(e.key)) {
+    if (['ArrowRight', 'ArrowUp', 'k', 'PageUp'].includes(e.key)) {
       e.preventDefault();
       this.setState({
         draggedThumbIndex: index
@@ -199,10 +199,13 @@ class Range extends React.Component<IProps> {
         replaceAt(
           values,
           index,
-          this.normalizeValue(values[index] + step, index)
+          this.normalizeValue(
+            values[index] + (e.key === 'PageUp' ? step * 10 : step),
+            index
+          )
         )
       );
-    } else if (['ArrowLeft', 'ArrowUp', 'k'].includes(e.key)) {
+    } else if (['ArrowLeft', 'ArrowDown', 'j', 'PageDown'].includes(e.key)) {
       e.preventDefault();
       this.setState({
         draggedThumbIndex: index
@@ -211,7 +214,10 @@ class Range extends React.Component<IProps> {
         replaceAt(
           values,
           index,
-          this.normalizeValue(values[index] - step, index)
+          this.normalizeValue(
+            values[index] - (e.key === 'PageDown' ? step * 10 : step),
+            index
+          )
         )
       );
     } else if (e.key === 'Tab') {
@@ -296,7 +302,13 @@ class Range extends React.Component<IProps> {
           props: {
             style: {
               position: 'absolute',
-              cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab'
+              zIndex: isDragged ? 1 : undefined,
+              cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
+              userSelect: 'none',
+              touchAction: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              msUserSelect: 'none'
             } as React.CSSProperties,
             key: index,
             tabIndex: disabled ? undefined : 0,

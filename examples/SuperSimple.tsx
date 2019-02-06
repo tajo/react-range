@@ -31,7 +31,7 @@ class SuperSimple extends React.Component {
               ...props.style,
               height: '42px',
               width: '42px',
-              backgroundColor: '#ccc'
+              backgroundColor: '#999'
             }}
           />
         )}
