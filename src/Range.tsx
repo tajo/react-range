@@ -169,6 +169,41 @@ class Range extends React.Component<IProps> {
     this.onMove(e.touches[0].clientX, e.touches[0].clientY);
   };
 
+  onKeyDown = (e: React.KeyboardEvent) => {
+    const { values, onChange, step } = this.props;
+    const index = this.getTargetIndex(e);
+    if (index === -1) return;
+    if (['ArrowRight', 'ArrowDown', 'j'].includes(e.key)) {
+      e.preventDefault();
+      this.setState({
+        draggedThumbIndex: index
+      });
+      onChange(
+        replaceAt(
+          values,
+          index,
+          this.normalizeValue(values[index] + step, index)
+        )
+      );
+    } else if (['ArrowLeft', 'ArrowUp', 'k'].includes(e.key)) {
+      e.preventDefault();
+      this.setState({
+        draggedThumbIndex: index
+      });
+      onChange(
+        replaceAt(
+          values,
+          index,
+          this.normalizeValue(values[index] - step, index)
+        )
+      );
+    }
+  };
+
+  onKeyUp = (e: React.KeyboardEvent) => {
+    this.setState({ draggedThumbIndex: -1 });
+  };
+
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex } = this.state;
     const { isVertical, min, max, onChange, values, step } = this.props;
@@ -192,6 +227,8 @@ class Range extends React.Component<IProps> {
   };
 
   normalizeValue = (value: number, index: number) => {
+    const BIG_NUM = 10e10;
+    value = Math.round(value * BIG_NUM) / BIG_NUM;
     const { min, max, step, allowOverlap, values } = this.props;
     if (!allowOverlap) {
       const prev = values[index - 1];
@@ -201,9 +238,9 @@ class Range extends React.Component<IProps> {
     }
     if (value > max) return max;
     if (value < min) return min;
-    const remainder = value % step;
-    const rounded =
-      remainder === 0 ? value : Math.round((value - remainder) * 10e10) / 10e10;
+    const remainder = Math.round(value * BIG_NUM) % Math.round(step * BIG_NUM);
+    const closestBigNum = Math.round(value * BIG_NUM - remainder);
+    const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
     return rounded;
   };
 
@@ -218,28 +255,55 @@ class Range extends React.Component<IProps> {
   };
 
   render() {
-    const trackStyle = {};
-    const thumbStyle = { position: 'absolute' } as React.CSSProperties;
-    const { renderTrack, renderThumb, values } = this.props;
+    const {
+      renderTrack,
+      renderThumb,
+      values,
+      min,
+      max,
+      allowOverlap
+    } = this.props;
+    const { draggedThumbIndex } = this.state;
     return renderTrack({
       props: {
-        style: trackStyle,
+        style: {
+          cursor:
+            draggedThumbIndex > -1
+              ? 'grabbing'
+              : values.length === 1
+              ? 'poinnter'
+              : 'inherit'
+        },
         onMouseDown: this.onMouseDownTrack,
         onTouchStart: this.onTouchStartTrack,
-        children: values.map((value, index) =>
-          renderThumb({
+        children: values.map((value, index) => {
+          const isDragged = this.state.draggedThumbIndex === index;
+          return renderThumb({
             index,
             value,
+            isDragged,
             props: {
-              style: thumbStyle,
+              style: {
+                position: 'absolute',
+                cursor: isDragged ? 'grabbing' : 'grab'
+              } as React.CSSProperties,
               key: index,
+              tabIndex: 0,
+              'aria-valuemax': allowOverlap ? max : values[index + 1] || max,
+              'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
+              'aria-valuenow': value,
+              draggable: false,
+              role: 'slider',
               onMouseDown: this.onMouseDown,
-              onTouchStart: this.onTouchStart
+              onTouchStart: this.onTouchStart,
+              onKeyDown: this.onKeyDown,
+              onKeyUp: this.onKeyUp
             }
-          })
-        ),
+          });
+        }),
         ref: this.trackRef
-      }
+      },
+      isDragged: this.state.draggedThumbIndex > -1
     });
   }
 }

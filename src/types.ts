@@ -1,3 +1,5 @@
+import { number, string } from 'prop-types';
+
 export interface IProps {
   values: number[];
   min: number;
@@ -10,14 +12,25 @@ export interface IProps {
     props: IThumbProps;
     value: number;
     index: number;
+    isDragged: boolean;
   }) => React.ReactNode;
-  renderTrack: (params: { props: ITrackProps }) => React.ReactNode;
+  renderTrack: (params: {
+    props: ITrackProps;
+    isDragged: boolean;
+  }) => React.ReactNode;
 }
 
 export interface IThumbProps {
   key: number;
   style: React.CSSProperties;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  tabIndex: number;
+  'aria-valuemax': number;
+  'aria-valuemin': number;
+  'aria-valuenow': number;
+  draggable: boolean;
+  role: string;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+  onKeyUp: (e: React.KeyboardEvent) => void;
   onMouseDown: (e: React.MouseEvent) => void;
   onTouchStart: (e: React.TouchEvent) => void;
 }

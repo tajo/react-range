@@ -2,40 +2,37 @@ import * as React from 'react';
 import { Range } from '../src/index';
 
 const thumbStyle = {
-  border: '1px solid black',
-  height: '30px',
-  width: '30px',
-  borderRadius: '20px'
+  border: '4px solid #CCC',
+  height: '28px',
+  width: '28px',
+  borderRadius: '6px'
 };
 
 const trackStyle = {
-  height: '3px',
+  height: '5px',
   width: '900px',
-  margin: '40px',
-  padding: '2px',
+  margin: '80px',
   backgroundColor: '#ccc'
 };
 
 const verticalTrackStyle = {
   height: '300px',
-  width: '3px',
-  margin: '40px',
-  padding: '3px',
+  width: '5px',
+  margin: '80px',
   backgroundColor: '#ccc'
 };
 
 class Basic extends React.Component {
   state = {
-    values: [20, 70]
+    values: [20, 60]
   };
   render() {
     return (
       <React.Fragment>
-        <p>Test</p>
-        <p>Test</p>
         <Range
           values={this.state.values}
-          step={0.1}
+          step={10}
+          min={0}
           max={100}
           onChange={values => {
             console.log(values);
@@ -44,8 +41,15 @@ class Basic extends React.Component {
           renderTrack={({ props }) => (
             <div {...props} style={{ ...props.style, ...trackStyle }} />
           )}
-          renderThumb={({ props }) => (
-            <div {...props} style={{ ...props.style, ...thumbStyle }} />
+          renderThumb={({ props, isDragged }) => (
+            <div
+              {...props}
+              style={{
+                ...props.style,
+                ...thumbStyle,
+                backgroundColor: isDragged ? '#EEE' : '#FFF'
+              }}
+            />
           )}
         />
         <Range
@@ -53,10 +57,23 @@ class Basic extends React.Component {
           values={this.state.values}
           onChange={values => this.setState({ values })}
           renderTrack={({ props }) => (
-            <div {...props} style={{ ...props.style, ...verticalTrackStyle }} />
+            <div
+              {...props}
+              style={{
+                ...props.style,
+                ...verticalTrackStyle
+              }}
+            />
           )}
-          renderThumb={({ props }) => (
-            <div {...props} style={{ ...props.style, ...thumbStyle }} />
+          renderThumb={({ props, isDragged }) => (
+            <div
+              {...props}
+              style={{
+                ...props.style,
+                ...thumbStyle,
+                backgroundColor: isDragged ? '#EEE' : '#FFF'
+              }}
+            />
           )}
         />
       </React.Fragment>
