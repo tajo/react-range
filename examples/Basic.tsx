@@ -24,7 +24,7 @@ const ThumbCenter = ({ isDragged }: { isDragged: boolean }) => (
 
 class Basic extends React.Component {
   state = {
-    valuesOne: [20],
+    valuesOne: [50],
     valuesTwo: [30, 60],
     valuesThree: [20, 60]
   };
@@ -33,9 +33,9 @@ class Basic extends React.Component {
       <React.Fragment>
         <Range
           values={this.state.valuesOne}
-          step={1}
-          min={10}
-          max={110}
+          step={0.1}
+          min={0}
+          max={100}
           onChange={valuesOne => {
             console.log('valuesOne', valuesOne);
             this.setState({ valuesOne });
@@ -61,8 +61,8 @@ class Basic extends React.Component {
                   background: getTrackBackground({
                     values: this.state.valuesOne,
                     colors: [BLUE, '#ccc'],
-                    min: 10,
-                    max: 110
+                    min: 0,
+                    max: 100
                   }),
                   alignSelf: 'center'
                 }}
@@ -85,7 +85,7 @@ class Basic extends React.Component {
         />
         <Range
           values={this.state.valuesTwo}
-          step={1}
+          step={0.1}
           min={0}
           max={100}
           onChange={valuesTwo => {

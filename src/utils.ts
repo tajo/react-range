@@ -22,7 +22,9 @@ export function normalizeValue(
   const remainder = Math.round(value * BIG_NUM) % Math.round(step * BIG_NUM);
   const closestBigNum = Math.round(value * BIG_NUM - remainder);
   const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
-  return remainder / BIG_NUM < step / 2 ? rounded : rounded + step;
+  const res = remainder / BIG_NUM < step / 2 ? rounded : rounded + step;
+  const afterDot = step.toString().split('.')[1];
+  return afterDot ? parseFloat(res.toFixed(afterDot.length)) : res;
 }
 
 export function relativeValue(value: number, min: number, max: number) {
@@ -38,6 +40,15 @@ export function checkBoundaries(value: number, min: number, max: number) {
   }
   if (value > max) {
     throw new RangeError(`value (${value}) is bigger than max (${max})`);
+  }
+}
+
+export function checkInitialOverlap(values: number[]) {
+  if (values.length < 2) return;
+  if (!values.slice(1).every((item, i) => values[i] <= item)) {
+    throw new RangeError(
+      `values={[${values}]} needs to be sorted when allowOverlap={false}`
+    );
   }
 }
 

@@ -7,7 +7,8 @@ import {
   checkBoundaries,
   relativeValue,
   schd,
-  normalizeValue
+  normalizeValue,
+  checkInitialOverlap
 } from './utils';
 import { IProps, TThumbOffsets, TEvent } from './types';
 
@@ -37,6 +38,7 @@ class Range extends React.Component<IProps> {
   }
 
   componentDidMount() {
+    !this.props.allowOverlap && checkInitialOverlap(this.props.values);
     this.props.values.forEach(value =>
       checkBoundaries(value, this.props.min, this.props.max)
     );
@@ -48,6 +50,7 @@ class Range extends React.Component<IProps> {
       (value, index) => value !== prevProps.values[index]
     );
     if (valuesUpdated) {
+      !this.props.allowOverlap && checkInitialOverlap(this.props.values);
       translateThumbs(this.getThumbs(), this.getOffsets());
     }
   }
@@ -217,7 +220,7 @@ class Range extends React.Component<IProps> {
     const pointerOffset = isVertical
       ? clientY - trackRect.top
       : clientX - trackRect.left;
-    const newValue = (pointerOffset / trackLength) * (max - min);
+    const newValue = (pointerOffset / trackLength) * (max - min) + min;
     if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
       onChange(
         replaceAt(
