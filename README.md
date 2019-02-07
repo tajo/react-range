@@ -21,7 +21,7 @@ yarn add react-range
 
 ```jsx
 import * as React from 'react';
-import { Range } from '../src/index';
+import { Range } from 'react-range';
 
 class SuperSimple extends React.Component {
   state = { values: [50] };
@@ -65,9 +65,9 @@ class SuperSimple extends React.Component {
 
 ## Features
 
-- Range input supporting vertical and horizontal sliding
+- Range input supporting **vertical and horizontal sliding**
 - Unopinionated styling, great for **CSS in JS** too
-- No wrapping divs or additional markup, specify your own!
+- No wrapping divs or additional markup, bring your own!
 - **Accessible**, made for keyboards and screen readers
 - **Touchable**, works on mobile devices
 - Can handle negative and decimal values
@@ -102,12 +102,12 @@ renderTrack: (params: {
 }) => React.ReactNode;
 ```
 
-`renderTrack` prop to define your track (root) element. **Your function gets three parameters and should return a React component**:
+`renderTrack` prop to define your track (root) element. **Your function gets four parameters and should return a React component**:
 
 - `props` - this needs to be spread over the root track element, it connects mouse and touch events, adds a ref and some necessary styling
-- `children` - the thumbs rendered, thumb structure should be specified in a different `renderThumb` prop
+- `children` - the rendered thumbs, thumb structure should be specified in a different prop - `renderThumb`
 - `isDragged` - `true` if any thumb is being dragged
-- `disabled` - `true` if `<Range disabled={true} />` is used
+- `disabled` - `true` if `<Range disabled={true} />` is set
 
 ### renderThumb
 
@@ -133,7 +133,7 @@ renderThumb: (params: {
 }) => React.ReactNode;
 ```
 
-`renderThumb` prop to define your thumb. \*\*Your function gets four parameters and should return a React component:
+`renderThumb` prop to define your thumb. **Your function gets four parameters and should return a React component**:
 
 - `props` - it has multiple props that you need to spread over your thumb element
 - `value` - a number, relative value based on `min`, `max`, `step` and the thumb's position
@@ -146,7 +146,7 @@ renderThumb: (params: {
 values: number[];
 ```
 
-An array of numbers. It controls the position of thumbs on the track. `values.length` equals to the number of thumbs displayed.
+An array of numbers. It controls the position of thumbs on the track. `values.length` equals to the number of rendered thumbs.
 
 ### onChange
 
@@ -162,7 +162,7 @@ Called when a thumb is moved, provides new `values`.
 min: number;
 ```
 
-The start of range. Can be decimal or negative. Default is `0`.
+The range start. Can be decimal or negative. Default is `0`.
 
 ### max (optional)
 
@@ -170,7 +170,7 @@ The start of range. Can be decimal or negative. Default is `0`.
 max: number;
 ```
 
-The end of range. Can be decimal or negative. Default is `100`.
+The range end. Can be decimal or negative. Default is `100`.
 
 ### step (optional)
 
@@ -178,7 +178,7 @@ The end of range. Can be decimal or negative. Default is `100`.
 min: number;
 ```
 
-The minimal distance between two values. Can be decimal. Default is `1`.
+The minimal distance between two `values`. Can be decimal. Default is `1`.
 
 ### allowOverlap (optional)
 
@@ -186,7 +186,7 @@ The minimal distance between two values. Can be decimal. Default is `1`.
 allowOverlap: boolean;
 ```
 
-When there are multiple thumbs, should they be allowed to overlap? Default is `false`.
+When there are multiple thumbs on a single track, should they be allowed to overlap? Default is `false`.
 
 ### direction (optional)
 
@@ -222,18 +222,16 @@ If `true`, it ignores all touch and mouse events and makes the component not foc
 There is an additional helper function being exported from `react-range`. Your track is most likely a `div` with some background. What if you want to achieve a nice "progress bar" effect where the part before the thumb has different color than the part after? What if you want to have the same thing even with multiple thumbs (aka differently colored segments)? **You don't need to glue together multiple divs in order to do that!** You can use a single `div` and set `background: linear-gradient(...)`. `getTrackBackground` function builds this verbose `linear-gradient(...)` for you!
 
 ```ts
-getTrackBackground(params);
-
-interface params {
+getTrackBackground: (params: {
   min: number;
   max: number;
   values: number[];
   colors: string[];
   direction?: Direction;
-}
+}) => string;
 ```
 
-`min`, `max`, `values`, `direction` should be same as for the `<Range />` component. `colors` is a list of colors. This needs to be true:
+`min`, `max`, `values` and `direction` should be same as for the `<Range />` component. `colors` is a list of colors. This needs to be true:
 
 ```js
 values.length + 1 === colors.length;
@@ -261,13 +259,13 @@ There are also many `React` based solutions but most of them are too bloated, do
 `react-range` has two main goals:
 
 - **Small footprint** - less then 4kB gzipped, single component.
-- **Bring your own styles and HTML markup** - `react-range` is more low-level approach than other libraries, it doesn't come with any styling (except some positioning) or markup. It's up to the user to specify both! Think about `react-range` as a foundation for other styled input ranges.
+- **Bring your own styles and HTML markup** - `react-range` is a more low-level approach than other libraries. It doesn't come with any styling (except some positioning) or markup. It's up to the user to specify both! Think about `react-range` as a foundation for other styled input ranges.
 
 ## End to end testing
 
-**This library is tightly coupled to many DOM APIs**. It would be very hard to ensure 100% unit test coverage that would not involve a lot of mocking. Or we could re-architect the library to better abstract all DOM interfaces but that would mean more code and bigger footprint.
+**This library is tightly coupled to many DOM APIs**. It would be very hard to ensure 100% test coverage just with unit tests that would not involve a lot of mocking. Or we could re-architect the library to better abstract all DOM interfaces but that would mean more code and bigger footprint.
 
-Instead of that, `react-range` is thoroughly tested by end to end tests powered by [puppeteer](https://github.com/GoogleChrome/puppeteer).
+Instead of that, `react-range` adds thorough end to end tests powered by [puppeteer](https://github.com/GoogleChrome/puppeteer).
 
 All tests are automatically ran in Travis CI with headless chromium. This way, the public API is well tested, including pixel-perfect positioning. Also, the tests are pretty fast, reliable and very descriptive.
 
