@@ -3,20 +3,271 @@
 [![npm version](https://img.shields.io/npm/v/react-range.svg?style=flat-square)](https://www.npmjs.com/package/react-range)
 [![npm downloads](https://img.shields.io/npm/dm/react-range.svg?style=flat-square)](https://www.npmjs.com/package/react-range)
 [![Build Status](https://travis-ci.org/tajo/react-range.svg?branch=master)](https://travis-ci.org/tajo/react-range)
+[![size](https://img.shields.io/bundlephobia/minzip/react-range.svg?style=flat)](https://bundlephobia.com/result?p=react-range)
+
+![Labeled Range](https://raw.githubusercontent.com/tajo/react-range/master/assets/react-range.gif?raw=true)
+
+[![Edit react-range](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rlp1j1183n)
 
 [See all the other examples](https://react-range.netlify.com) and [their source code](https://github.com/tajo/react-range/tree/master/examples)!
 
 ## Installation
 
 ```
-yarn add react react-dom react-range
+yarn add react-range
 ```
+
+## Usage
+
+```jsx
+import * as React from 'react';
+import { Range } from '../src/index';
+
+class SuperSimple extends React.Component {
+  state = { values: [50] };
+  render() {
+    return (
+      <Range
+        step={0.1}
+        min={0}
+        max={100}
+        values={this.state.values}
+        onChange={values => this.setState({ values })}
+        renderTrack={({ props, children }) => (
+          <div
+            {...props}
+            style={{
+              ...props.style,
+              height: '6px',
+              width: '100%',
+              backgroundColor: '#ccc'
+            }}
+          >
+            {children}
+          </div>
+        )}
+        renderThumb={({ props }) => (
+          <div
+            {...props}
+            style={{
+              ...props.style,
+              height: '42px',
+              width: '42px',
+              backgroundColor: '#999'
+            }}
+          />
+        )}
+      />
+    );
+  }
+}
+```
+
+## Features
+
+- Range input supporting vertical and horizontal sliding
+- Unopinionated styling, great for **CSS in JS** too
+- No wrapping divs or additional markup, specify your own!
+- **Accessible**, made for keyboards and screen readers
+- **Touchable**, works on mobile devices
+- Can handle negative and decimal values
+- Stateless and controlled single component
+- Typescript and Flow type definitions
+- **No dependencies, less than 4kB (gzipped)**
+- Coverage by [e2e puppeteer tests](#end-to-end-testing)
+
+## Keyboard support
+
+- `tab` and `shift+tab` to focus thumbs
+- `arrow up` or `arrow right` or `k` to increase the thumb value by one step
+- `arrow down` or `arrow left` or `j` to decrease the thumb value by one step
+- `page up` to increase the thumb value by ten steps
+- `page down` to decrease the thumb value by ten steps
+
+## `<Range />` props
+
+### renderTrack
+
+```ts
+renderTrack: (params: {
+  props: {
+    style: React.CSSProperties;
+    ref: React.RefObject<any>;
+    onMouseDown: (e: React.MouseEvent) => void;
+    onTouchStart: (e: React.TouchEvent) => void;
+  };
+  children: React.ReactNode;
+  isDragged: boolean;
+  disabled: boolean;
+}) => React.ReactNode;
+```
+
+`renderTrack` prop to define your track (root) element. **Your function gets three parameters and should return a React component**:
+
+- `props` - this needs to be spread over the root track element, it connects mouse and touch events, adds a ref and some necessary styling
+- `children` - the thumbs rendered, thumb structure should be specified in a different `renderThumb` prop
+- `isDragged` - `true` if any thumb is being dragged
+- `disabled` - `true` if `<Range disabled={true} />` is used
+
+### renderThumb
+
+```ts
+renderThumb: (params: {
+  props: {
+    key: number;
+    style: React.CSSProperties;
+    tabIndex?: number;
+    'aria-valuemax': number;
+    'aria-valuemin': number;
+    'aria-valuenow': number;
+    draggable: boolean;
+    role: string;
+    onKeyDown: (e: React.KeyboardEvent) => void;
+    onKeyUp: (e: React.KeyboardEvent) => void;
+    onMouseDown: (e: React.MouseEvent) => void;
+    onTouchStart: (e: React.TouchEvent) => void;
+  };
+  value: number;
+  index: number;
+  isDragged: boolean;
+}) => React.ReactNode;
+```
+
+`renderThumb` prop to define your thumb. \*\*Your function gets four parameters and should return a React component:
+
+- `props` - it has multiple props that you need to spread over your thumb element
+- `value` - a number, relative value based on `min`, `max`, `step` and the thumb's position
+- `index` - the thumb index (order)
+- `isDragged` - `true` if the thumb is dragged, great for styling purposes
+
+### values
+
+```ts
+values: number[];
+```
+
+An array of numbers. It controls the position of thumbs on the track. `values.length` equals to the number of thumbs displayed.
+
+### onChange
+
+```ts
+onChange: (values: number[]) => void;
+```
+
+Called when a thumb is moved, provides new `values`.
+
+### min (optional)
+
+```ts
+min: number;
+```
+
+The start of range. Can be decimal or negative. Default is `0`.
+
+### max (optional)
+
+```ts
+max: number;
+```
+
+The end of range. Can be decimal or negative. Default is `100`.
+
+### step (optional)
+
+```ts
+min: number;
+```
+
+The minimal distance between two values. Can be decimal. Default is `1`.
+
+### allowOverlap (optional)
+
+```ts
+allowOverlap: boolean;
+```
+
+When there are multiple thumbs, should they be allowed to overlap? Default is `false`.
+
+### direction (optional)
+
+```ts
+direction: Direction;
+
+enum Direction {
+  Right = 'to right',
+  Left = 'to left',
+  Down = 'to bottom',
+  Up = 'to top'
+}
+```
+
+It sets the orientation (vertical vs horizontal) and the direction in which the value increases. You can get this enum by:
+
+```js
+import { Direction } from 'react-range';
+```
+
+Default value is `Direction.Right`.
+
+### disabled (optional)
+
+```ts
+disabled: boolean;
+```
+
+If `true`, it ignores all touch and mouse events and makes the component not focusable. Default is `false`.
+
+## getTrackBackground
+
+There is an additional helper function being exported from `react-range`. Your track is most likely a `div` with some background. What if you want to achieve a nice "progress bar" effect where the part before the thumb has different color than the part after? What if you want to have the same thing even with multiple thumbs (aka differently colored segments)? **You don't need to glue together multiple divs in order to do that!** You can use a single `div` and set `background: linear-gradient(...)`. `getTrackBackground` function builds this verbose `linear-gradient(...)` for you!
+
+```ts
+getTrackBackground(params);
+
+interface params {
+  min: number;
+  max: number;
+  values: number[];
+  colors: string[];
+  direction?: Direction;
+}
+```
+
+`min`, `max`, `values`, `direction` should be same as for the `<Range />` component. `colors` is a list of colors. This needs to be true:
+
+```js
+values.length + 1 === colors.length;
+```
+
+That's because **one thumb** (one value) splits the track into **two segments**, so you need **two colors**.
+
+## Motivation
+
+There is a native [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range) solution:
+
+```html
+<input type="range" />
+```
+
+However, it has some serious shortcomings:
+
+- vertical-oriented slider is [not supported in all browsers](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#Browser_compatibility)
+- supports only a single direction
+- very limited styling options
+- no support for multiple thumbs
+
+There are also many `React` based solutions but most of them are too bloated, don't support styling through CSS in JS or have lacking performance.
+
+`react-range` has two main goals:
+
+- **Small footprint** - less then 4kB gzipped, single component.
+- **Bring your own styles and HTML markup** - `react-range` is more low-level approach than other libraries, it doesn't come with any styling (except some positioning) or markup. It's up to the user to specify both! Think about `react-range` as a foundation for other styled input ranges.
 
 ## End to end testing
 
-**This library is tightly coupled to many DOM APIs**. It would be very hard to write unit tests that would not involve a lot of mocking. Or we could re-architect the library to better abstract all DOM interfaces but that would mean more code and bigger footprint.
+**This library is tightly coupled to many DOM APIs**. It would be very hard to ensure 100% unit test coverage that would not involve a lot of mocking. Or we could re-architect the library to better abstract all DOM interfaces but that would mean more code and bigger footprint.
 
-Instead of that, `react-range` is thoroughly tested by end to end tests powered by [puppeteer](https://github.com/GoogleChrome/puppeteer). It tests all user interactions:
+Instead of that, `react-range` is thoroughly tested by end to end tests powered by [puppeteer](https://github.com/GoogleChrome/puppeteer).
 
 All tests are automatically ran in Travis CI with headless chromium. This way, the public API is well tested, including pixel-perfect positioning. Also, the tests are pretty fast, reliable and very descriptive.
 
@@ -54,7 +305,7 @@ yarn storybook
 
 ## Shoutouts 🙏
 
-Big big shoutout to [Tom MacWright](https://macwright.org/) for donating the `react-range` npm handle! ❤️
+Big big shoutout to **[Tom MacWright](https://macwright.org/)** for donating the `react-range` npm handle! ❤️
 
 <img src="https://raw.githubusercontent.com/tajo/react-range/master/assets/browserstack-logo.png?raw=true" height="80" title="BrowserStack Logo" alt="BrowserStack Logo" />
 
