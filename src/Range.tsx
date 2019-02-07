@@ -257,7 +257,6 @@ class Range extends React.Component<IProps> {
   };
 
   onMove = (clientX: number, clientY: number) => {
-    console.log(clientX, clientY);
     const { draggedThumbIndex } = this.state;
     const { direction, min, max, onChange, values, step } = this.props;
     if (draggedThumbIndex === -1) return null;

@@ -16,11 +16,11 @@ export const getTestUrl = (example: Examples): string => {
     case Examples.TWO_THUMBS:
       return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Two%20thumbs`;
     case Examples.UP_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Up%20Direction`;
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Up%20direction`;
     case Examples.LEFT_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Left%20Direction`;
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Left%20direction`;
     case Examples.DOWN_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Down%20Direction`;
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Down%20direction`;
   }
 };
 
