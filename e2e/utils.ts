@@ -3,18 +3,24 @@ import * as puppeteer from 'puppeteer';
 export enum Examples {
   BASIC,
   TWO_THUMBS,
-  UP_DIRECTION
+  UP_DIRECTION,
+  LEFT_DIRECTION,
+  DOWN_DIRECTION
 }
 
 export const getTestUrl = (example: Examples): string => {
   const PORT = process.env.E2E === 'dev' ? 9010 : 9011;
   switch (example) {
     case Examples.BASIC:
-      return `http://localhost:${PORT}/iframe.html?selectedRange=List&selectedStory=Basic`;
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Basic`;
     case Examples.TWO_THUMBS:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Two%20thumbs`;
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Two%20thumbs`;
     case Examples.UP_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Up%20Direction`;
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Up%20Direction`;
+    case Examples.LEFT_DIRECTION:
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Left%20Direction`;
+    case Examples.DOWN_DIRECTION:
+      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Down%20Direction`;
   }
 };
 
