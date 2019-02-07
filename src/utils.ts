@@ -22,7 +22,10 @@ export function normalizeValue(
   const remainder = Math.round(value * BIG_NUM) % Math.round(step * BIG_NUM);
   const closestBigNum = Math.round(value * BIG_NUM - remainder);
   const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
-  const res = remainder / BIG_NUM < step / 2 ? rounded : rounded + step;
+  const res =
+    Math.abs(remainder / BIG_NUM) < step / 2
+      ? rounded
+      : rounded + step * Math.sign(value);
   const afterDot = step.toString().split('.')[1];
   return afterDot ? parseFloat(res.toFixed(afterDot.length)) : res;
 }
@@ -118,8 +121,8 @@ export function getTrackBackground({
 }: ITrackBackground) {
   const progress = values.map(value => ((value - min) / (max - min)) * 100);
   const middle = progress.reduce(
-    (acc, point, index) => `${acc}, ${colors[index]} ${point}%,
-  ${colors[index + 1]} ${point}%`,
+    (acc, point, index) =>
+      `${acc}, ${colors[index]} ${point}%, ${colors[index + 1]} ${point}%`,
     ''
   );
   return `linear-gradient(${direction}, ${colors[0]} 0%${middle}, ${
