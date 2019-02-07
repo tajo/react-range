@@ -79,7 +79,7 @@ class TwoThumbs extends React.Component {
             </div>
           )}
         />
-        <output style={{ marginTop: '30px' }}>
+        <output style={{ marginTop: '30px' }} id="output">
           {this.state.values[0].toFixed(1)} - {this.state.values[1].toFixed(1)}
         </output>
       </div>

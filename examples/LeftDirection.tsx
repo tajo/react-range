@@ -84,7 +84,7 @@ class LeftDirection extends React.Component {
           )}
         />
         {
-          <output style={{ marginTop: '30px' }}>
+          <output style={{ marginTop: '30px' }} id="output">
             {this.state.values[0].toFixed(1)}
           </output>
         }

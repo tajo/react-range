@@ -79,7 +79,7 @@ class Basic extends React.Component {
             </div>
           )}
         />
-        <output style={{ marginTop: '30px' }}>
+        <output style={{ marginTop: '30px' }} id="output">
           {this.state.values[0].toFixed(1)}
         </output>
       </div>

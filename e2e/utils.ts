@@ -119,11 +119,8 @@ const hideCursor = () => {
 const fontStyles = () => {
   const styleElement = document.createElement('style');
   styleElement.innerHTML = `
-  li {
-    font-weight: normal;
-    font-style: normal;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
+  body {
+    color: #fff;
   }
   `;
   document.head.appendChild(styleElement);

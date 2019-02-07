@@ -84,7 +84,7 @@ class UpDirection extends React.Component {
           )}
         />
         {
-          <output style={{ marginTop: '50px', width: '56px' }}>
+          <output style={{ marginTop: '50px', width: '56px' }} id="output">
             {this.state.values[0].toFixed(1)}
           </output>
         }
