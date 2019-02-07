@@ -2,40 +2,20 @@ import * as puppeteer from 'puppeteer';
 
 export enum Examples {
   BASIC,
-  HEIGHTS,
-  SCROLLING_CONTAINER,
-  SCROLLING_WINDOW
+  TWO_THUMBS,
+  UP_DIRECTION
 }
 
 export const getTestUrl = (example: Examples): string => {
   const PORT = process.env.E2E === 'dev' ? 9010 : 9011;
   switch (example) {
     case Examples.BASIC:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Basic`;
-    case Examples.HEIGHTS:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Varying%20heights`;
-    case Examples.SCROLLING_CONTAINER:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Scrolling%20container`;
-    case Examples.SCROLLING_WINDOW:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Scrolling%20window`;
+      return `http://localhost:${PORT}/iframe.html?selectedRange=List&selectedStory=Basic`;
+    case Examples.TWO_THUMBS:
+      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Two%20thumbs`;
+    case Examples.UP_DIRECTION:
+      return `http://localhost:${PORT}/iframe.html?selectedKind=List&selectedStory=Up%20Direction`;
   }
-};
-
-export const makeDnd = async (
-  mouse: puppeteer.Mouse,
-  from: number,
-  to: number,
-  positions: number[][]
-) => {
-  await mouse.move(positions[from - 1][0], positions[from - 1][1]);
-  await mouse.down();
-  await mouse.move(positions[to - 1][0], positions[to - 1][1]);
-  await mouse.up();
-  // make sure that originally dragged item is visible (rendered)
-  // in a new place
-  await page.waitForSelector(`#root li:nth-child(${from})`, {
-    visible: true
-  });
 };
 
 export const trackMouse = async (page: puppeteer.Page) => {
