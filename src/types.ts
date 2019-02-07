@@ -3,14 +3,14 @@ export interface ITrackBackground {
   max: number;
   values: number[];
   colors: string[];
-  direction?: string;
+  direction?: Direction;
 }
 export interface IProps {
   values: number[];
   min: number;
   max: number;
   step: number;
-  isVertical: boolean;
+  direction: Direction;
   allowOverlap: boolean;
   disabled: boolean;
   onChange: (values: number[]) => void;
@@ -52,3 +52,9 @@ export interface ITrackProps {
 
 export type TThumbOffsets = { x: number; y: number }[];
 export type TEvent = React.MouseEvent | React.TouchEvent | React.KeyboardEvent;
+export enum Direction {
+  Right = 'to right',
+  Left = 'to left',
+  Down = 'to bottom',
+  Up = 'to top'
+}

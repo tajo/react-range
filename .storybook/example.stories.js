@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import Basic from '../examples/Basic';
-import SuperSimple from '../examples/SuperSimple';
 import Disabled from '../examples/Disabled';
+import SuperSimple from '../examples/SuperSimple';
 import TwoThumbs from '../examples/TwoThumbs';
-import Vertical from '../examples/Vertical';
+import UpDirection from '../examples/UpDirection';
+import DownDirection from '../examples/DownDirection';
+import LeftDirection from '../examples/LeftDirection';
 import MultipleThumbs from '../examples/MultipleThumbs';
 import AllowOverlap from '../examples/AllowOverlap';
 import BigSteps from '../examples/BigSteps';
@@ -15,7 +17,9 @@ storiesOf('Range', module)
   .add('Disabled', () => <Disabled />)
   .add('SuperSimple', () => <SuperSimple />)
   .add('Two thumbs', () => <TwoThumbs />)
-  .add('Vertical', () => <Vertical />)
+  .add('Up Direction', () => <UpDirection />)
+  .add('Down Direction', () => <DownDirection />)
+  .add('Left Direction', () => <LeftDirection />)
   .add('Multiple thumbs', () => <MultipleThumbs />)
   .add('Allow overlap', () => <AllowOverlap />)
   .add('Big steps', () => <BigSteps />)

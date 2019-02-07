@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Range, getTrackBackground } from '../src/index';
+import { Range, Direction, getTrackBackground } from '../src/index';
 
 const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
 
-class Vertical extends React.Component {
+class UpDirection extends React.Component {
   state = {
     values: [50]
   };
@@ -20,7 +20,7 @@ class Vertical extends React.Component {
         }}
       >
         <Range
-          isVertical
+          direction={Direction.Up}
           values={this.state.values}
           step={STEP}
           min={MIN}
@@ -49,7 +49,7 @@ class Vertical extends React.Component {
                     colors: ['#548BF4', '#ccc'],
                     min: MIN,
                     max: MAX,
-                    direction: 'to bottom'
+                    direction: Direction.Up
                   }),
                   alignSelf: 'center'
                 }}
@@ -93,4 +93,4 @@ class Vertical extends React.Component {
   }
 }
 
-export default Vertical;
+export default UpDirection;

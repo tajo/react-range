@@ -1,4 +1,4 @@
-import { TThumbOffsets, ITrackBackground } from './types';
+import { TThumbOffsets, ITrackBackground, Direction } from './types';
 
 export function normalizeValue(
   value: number,
@@ -29,6 +29,10 @@ export function normalizeValue(
 
 export function relativeValue(value: number, min: number, max: number) {
   return (value - min) / (max - min);
+}
+
+export function isVertical(direction: Direction) {
+  return direction === Direction.Up || direction === Direction.Down;
 }
 
 export function checkBoundaries(value: number, min: number, max: number) {
@@ -110,7 +114,7 @@ export function getTrackBackground({
   colors,
   min,
   max,
-  direction = 'to right'
+  direction = Direction.Right
 }: ITrackBackground) {
   const progress = values.map(value => ((value - min) / (max - min)) * 100);
   const middle = progress.reduce(
@@ -124,3 +128,7 @@ export function getTrackBackground({
 }
 
 export function voidFn() {}
+
+export function assertUnreachable(x: never): never {
+  throw new Error("Didn't expect to get here");
+}

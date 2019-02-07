@@ -9,14 +9,16 @@ import {
   schd,
   normalizeValue,
   checkInitialOverlap,
-  voidFn
+  voidFn,
+  isVertical,
+  assertUnreachable
 } from './utils';
-import { IProps, TThumbOffsets, TEvent } from './types';
+import { IProps, TThumbOffsets, TEvent, Direction } from './types';
 
 class Range extends React.Component<IProps> {
   static defaultProps = {
     step: 1,
-    isVertical: false,
+    direction: Direction.Right,
     disabled: false,
     allowOverlap: false,
     min: 0,
@@ -65,7 +67,7 @@ class Range extends React.Component<IProps> {
   }
 
   getOffsets = () => {
-    const { isVertical, values, min, max } = this.props;
+    const { direction, values, min, max } = this.props;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
     const trackPadding = getPadding(trackElement);
@@ -73,25 +75,50 @@ class Range extends React.Component<IProps> {
       const thumbOffsets = { x: 0, y: 0 };
       const thumbRect = thumb.getBoundingClientRect();
       const thumbMargins = getMargin(thumb);
-      thumbOffsets.x = isVertical
-        ? ((thumbRect.width - trackRect.width) / 2 +
-            thumbMargins.left +
-            trackPadding.left) *
-          -1
-        : (thumbMargins.left + trackPadding.left) * -1;
-      thumbOffsets.y = isVertical
-        ? -trackPadding.left
-        : ((thumbRect.height - trackRect.height) / 2 + trackPadding.top) * -1;
-      if (isVertical) {
-        thumbOffsets.y +=
-          trackRect.height * relativeValue(values[index], min, max) -
-          thumbRect.height / 2;
-      } else {
-        thumbOffsets.x +=
-          trackRect.width * relativeValue(values[index], min, max) -
-          thumbRect.width / 2;
+      switch (direction) {
+        case Direction.Right:
+          thumbOffsets.x = (thumbMargins.left + trackPadding.left) * -1;
+          thumbOffsets.y =
+            ((thumbRect.height - trackRect.height) / 2 + trackPadding.top) * -1;
+          thumbOffsets.x +=
+            trackRect.width * relativeValue(values[index], min, max) -
+            thumbRect.width / 2;
+          return thumbOffsets;
+        case Direction.Left:
+          thumbOffsets.x = (thumbMargins.right + trackPadding.right) * -1;
+          thumbOffsets.y =
+            ((thumbRect.height - trackRect.height) / 2 + trackPadding.top) * -1;
+          thumbOffsets.x +=
+            trackRect.width -
+            trackRect.width * relativeValue(values[index], min, max) -
+            thumbRect.width / 2;
+          return thumbOffsets;
+        case Direction.Up:
+          thumbOffsets.x =
+            ((thumbRect.width - trackRect.width) / 2 +
+              thumbMargins.left +
+              trackPadding.left) *
+            -1;
+          thumbOffsets.y = -trackPadding.left;
+          thumbOffsets.y +=
+            trackRect.height -
+            trackRect.height * relativeValue(values[index], min, max) -
+            thumbRect.height / 2;
+          return thumbOffsets;
+        case Direction.Down:
+          thumbOffsets.x =
+            ((thumbRect.width - trackRect.width) / 2 +
+              thumbMargins.left +
+              trackPadding.left) *
+            -1;
+          thumbOffsets.y = -trackPadding.left;
+          thumbOffsets.y +=
+            trackRect.height * relativeValue(values[index], min, max) -
+            thumbRect.height / 2;
+          return thumbOffsets;
+        default:
+          return assertUnreachable(direction);
       }
-      return thumbOffsets;
     });
   };
 
@@ -231,15 +258,38 @@ class Range extends React.Component<IProps> {
 
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex } = this.state;
-    const { isVertical, min, max, onChange, values, step } = this.props;
+    const { direction, min, max, onChange, values, step } = this.props;
     if (draggedThumbIndex === -1) return null;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
-    const trackLength = isVertical ? trackRect.height : trackRect.width;
-    const pointerOffset = isVertical
-      ? clientY - trackRect.top
-      : clientX - trackRect.left;
-    const newValue = (pointerOffset / trackLength) * (max - min) + min;
+    const trackLength = isVertical(direction)
+      ? trackRect.height
+      : trackRect.width;
+    let newValue = 0;
+    switch (direction) {
+      case Direction.Right:
+        newValue =
+          ((clientX - trackRect.left) / trackLength) * (max - min) + min;
+        break;
+      case Direction.Left:
+        newValue =
+          ((trackLength - (clientX - trackRect.left)) / trackLength) *
+            (max - min) +
+          min;
+        break;
+      case Direction.Down:
+        newValue =
+          ((clientY - trackRect.top) / trackLength) * (max - min) + min;
+        break;
+      case Direction.Up:
+        newValue =
+          ((trackLength - (clientY - trackRect.top)) / trackLength) *
+            (max - min) +
+          min;
+        break;
+      default:
+        assertUnreachable(direction);
+    }
     if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
       onChange(
         replaceAt(
