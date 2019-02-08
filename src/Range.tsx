@@ -53,13 +53,7 @@ class Range extends React.Component<IProps> {
   }
 
   componentDidUpdate(prevProps: IProps) {
-    const valuesUpdated = this.props.values.some(
-      (value, index) => value !== prevProps.values[index]
-    );
-    if (valuesUpdated) {
-      !this.props.allowOverlap && checkInitialOverlap(this.props.values);
-      translateThumbs(this.getThumbs(), this.getOffsets());
-    }
+    translateThumbs(this.getThumbs(), this.getOffsets());
   }
 
   componentWillUnmount() {
