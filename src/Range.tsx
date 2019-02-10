@@ -25,7 +25,6 @@ class Range extends React.Component<IProps> {
     max: 100
   };
   trackRef = React.createRef<HTMLElement>();
-  thumbOffsets: TThumbOffsets = [];
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;

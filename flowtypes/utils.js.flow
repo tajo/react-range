@@ -1,0 +1,9 @@
+// @flow
+
+declare export function getTrackBackground(params: {
+  min: number,
+  max: number,
+  values: number[],
+  colors: string[],
+  direction?: string;
+}): string;

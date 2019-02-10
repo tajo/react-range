@@ -1,0 +1,48 @@
+// @flow
+
+import * as React from 'react';
+
+declare type IThumbProps = {
+  key: number,
+  style: CSSStyleDeclaration,
+  tabIndex?: number,
+  "aria-valuemax": number,
+  "aria-valuemin": number,
+  "aria-valuenow": number,
+  draggable: boolean,
+  role: string,
+  onKeyDown: (e: SyntheticEvent<*>) => void,
+  onKeyUp: (e: SyntheticEvent<*>) => void,
+  onMouseDown: (e: SyntheticEvent<*>) => void,
+  onTouchStart: (e: SyntheticEvent<*>) => void
+};
+declare interface ITrackProps {
+  style: CSSStyleDeclaration;
+  ref: React.Ref<any>;
+  onMouseDown: (e: SyntheticEvent<*>) => void;
+  onTouchStart: (e: SyntheticEvent<*>) => void;
+}
+declare interface IProps {
+  values: number[];
+  min?: number;
+  max?: number;
+  step?: number;
+  direction?: string;
+  allowOverlap?: boolean;
+  disabled?: boolean;
+  onChange: (values: number[]) => void;
+  renderThumb: (params: {
+    props: IThumbProps,
+    value: number,
+    index: number,
+    isDragged: boolean
+  }) => React.Node;
+  renderTrack: (params: {
+    props: ITrackProps,
+    children: React.Node,
+    isDragged: boolean,
+    disabled: boolean
+  }) => React.Node;
+}
+
+declare export default class Range extends React$Component<IProps> {}
