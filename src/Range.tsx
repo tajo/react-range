@@ -11,9 +11,10 @@ import {
   checkInitialOverlap,
   voidFn,
   isVertical,
-  assertUnreachable
+  assertUnreachable,
+  isTouchEvent
 } from './utils';
-import { IProps, TThumbOffsets, TEvent, Direction } from './types';
+import { IProps, Direction } from './types';
 
 class Range extends React.Component<IProps> {
   static defaultProps = {
@@ -44,6 +45,12 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     window.addEventListener('resize', this.schdOnWindowResize);
+    document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
+      passive: false
+    });
+    document.addEventListener('mousedown', this.onMouseOrTouchStart as any, {
+      passive: false
+    });
     !this.props.allowOverlap && checkInitialOverlap(this.props.values);
     this.props.values.forEach(value =>
       checkBoundaries(value, this.props.min, this.props.max)
@@ -57,6 +64,8 @@ class Range extends React.Component<IProps> {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.schdOnWindowResize);
+    document.removeEventListener('mousedown', this.onMouseOrTouchStart as any);
+    document.removeEventListener('mousedown', this.onMouseOrTouchStart as any);
   }
 
   getOffsets = () => {
@@ -125,12 +134,12 @@ class Range extends React.Component<IProps> {
     return [];
   };
 
-  getTargetIndex = (e: TEvent) =>
+  getTargetIndex = (e: Event) =>
     this.getThumbs().findIndex(
-      child => child === e.target || child.contains(e.currentTarget)
+      child => child === e.target || child.contains(e.target as Node)
     );
 
-  addTouchEvents = (e: React.TouchEvent) => {
+  addTouchEvents = (e: TouchEvent) => {
     e.preventDefault();
     document.addEventListener('touchmove', this.schdOnTouchMove, {
       passive: false
@@ -139,7 +148,7 @@ class Range extends React.Component<IProps> {
     document.addEventListener('touchcancel', this.schdOnEnd);
   };
 
-  addMouseEvents = (e: React.MouseEvent) => {
+  addMouseEvents = (e: MouseEvent) => {
     e.preventDefault();
     document.addEventListener('mousemove', this.schdOnMouseMove);
     document.addEventListener('mouseup', this.schdOnEnd);
@@ -150,7 +159,7 @@ class Range extends React.Component<IProps> {
     // moving the thumb to a place where the track is clicked
     if (e.button !== 0 || this.props.values.length > 1) return;
     e.persist();
-    this.addMouseEvents(e);
+    this.addMouseEvents(e.nativeEvent);
     this.setState(
       {
         draggedThumbIndex: 0
@@ -168,7 +177,7 @@ class Range extends React.Component<IProps> {
     // moving the thumb to a place where the track is clicked
     if (this.props.values.length > 1) return;
     e.persist();
-    this.addTouchEvents(e);
+    this.addTouchEvents(e.nativeEvent);
     this.setState(
       {
         draggedThumbIndex: 0
@@ -177,20 +186,18 @@ class Range extends React.Component<IProps> {
     );
   };
 
-  onMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
-    this.addMouseEvents(e);
+  onMouseOrTouchStart = (e: MouseEvent & TouchEvent) => {
+    if (this.props.disabled) return;
+    const isTouch = isTouchEvent(e);
+    if (!isTouch && e.button !== 0) return;
     const index = this.getTargetIndex(e);
     if (index === -1) return;
-    this.setState({
-      draggedThumbIndex: index
-    });
-  };
-
-  onTouchStart = (e: React.TouchEvent) => {
-    this.addTouchEvents(e);
-    const index = this.getTargetIndex(e);
-    if (index === -1) return;
+    e.preventDefault();
+    if (isTouch) {
+      this.addTouchEvents(e);
+    } else {
+      this.addMouseEvents(e);
+    }
     this.setState({
       draggedThumbIndex: index
     });
@@ -208,7 +215,7 @@ class Range extends React.Component<IProps> {
 
   onKeyDown = (e: React.KeyboardEvent) => {
     const { values, onChange, step } = this.props;
-    const index = this.getTargetIndex(e);
+    const index = this.getTargetIndex(e.nativeEvent);
     if (index === -1) return;
     if (['ArrowRight', 'ArrowUp', 'k', 'PageUp'].includes(e.key)) {
       e.preventDefault();
@@ -360,8 +367,6 @@ class Range extends React.Component<IProps> {
             'aria-valuenow': value,
             draggable: false,
             role: 'slider',
-            onMouseDown: disabled ? voidFn : this.onMouseDown,
-            onTouchStart: disabled ? voidFn : this.onTouchStart,
             onKeyDown: disabled ? voidFn : this.onKeyDown,
             onKeyUp: disabled ? voidFn : this.onKeyUp
           }

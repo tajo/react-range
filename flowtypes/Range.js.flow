@@ -6,15 +6,13 @@ declare type IThumbProps = {
   key: number,
   style: CSSStyleDeclaration,
   tabIndex?: number,
-  "aria-valuemax": number,
-  "aria-valuemin": number,
-  "aria-valuenow": number,
+  'aria-valuemax': number,
+  'aria-valuemin': number,
+  'aria-valuenow': number,
   draggable: boolean,
   role: string,
   onKeyDown: (e: SyntheticEvent<*>) => void,
-  onKeyUp: (e: SyntheticEvent<*>) => void,
-  onMouseDown: (e: SyntheticEvent<*>) => void,
-  onTouchStart: (e: SyntheticEvent<*>) => void
+  onKeyUp: (e: SyntheticEvent<*>) => void
 };
 declare interface ITrackProps {
   style: CSSStyleDeclaration;

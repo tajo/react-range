@@ -126,8 +126,6 @@ renderThumb: (params: {
     role: string;
     onKeyDown: (e: React.KeyboardEvent) => void;
     onKeyUp: (e: React.KeyboardEvent) => void;
-    onMouseDown: (e: React.MouseEvent) => void;
-    onTouchStart: (e: React.TouchEvent) => void;
   };
   value: number;
   index: number;

@@ -39,8 +39,6 @@ export interface IThumbProps {
   role: string;
   onKeyDown: (e: React.KeyboardEvent) => void;
   onKeyUp: (e: React.KeyboardEvent) => void;
-  onMouseDown: (e: React.MouseEvent) => void;
-  onTouchStart: (e: React.TouchEvent) => void;
 }
 
 export interface ITrackProps {
@@ -51,7 +49,7 @@ export interface ITrackProps {
 }
 
 export type TThumbOffsets = { x: number; y: number }[];
-export type TEvent = React.MouseEvent | React.TouchEvent | React.KeyboardEvent;
+
 export enum Direction {
   Right = 'to right',
   Left = 'to left',

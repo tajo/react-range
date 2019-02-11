@@ -1,5 +1,12 @@
 import { TThumbOffsets, ITrackBackground, Direction } from './types';
 
+export function isTouchEvent(event: TouchEvent & MouseEvent) {
+  return (
+    (event.touches && event.touches.length) ||
+    (event.changedTouches && event.changedTouches.length)
+  );
+}
+
 export function normalizeValue(
   value: number,
   index: number,
