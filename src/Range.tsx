@@ -327,6 +327,20 @@ class Range extends React.Component<IProps> {
       disabled
     } = this.props;
     const { draggedThumbIndex } = this.state;
+
+    const zIndexes = new Array(values.length).fill(0);
+    const lenValues = values.length;
+
+    // Only need special handling of zIndexes when there are multiple values
+    // and at least one value (the last one) is at the max value
+    if (lenValues > 1 && values[lenValues - 1] === max && values[lenValues - 2] === max) {
+      for (let i = lenValues - 2; i >= 0; i--) {
+        if (values[i] === max && values[i] === values[i+1]) {
+          zIndexes[i] = zIndexes[i + 1] + 1;
+        }
+      }
+    }
+
     return renderTrack({
       props: {
         style: {
@@ -345,6 +359,7 @@ class Range extends React.Component<IProps> {
       disabled,
       children: values.map((value, index) => {
         const isDragged = this.state.draggedThumbIndex === index;
+
         return renderThumb({
           index,
           value,
@@ -352,7 +367,7 @@ class Range extends React.Component<IProps> {
           props: {
             style: {
               position: 'absolute',
-              zIndex: isDragged ? 1 : undefined,
+              zIndex: isDragged ? 9999 : zIndexes[index],
               cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
               userSelect: 'none',
               touchAction: 'none',
