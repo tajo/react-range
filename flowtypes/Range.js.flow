@@ -11,14 +11,14 @@ declare type IThumbProps = {
   'aria-valuenow': number,
   draggable: boolean,
   role: string,
-  onKeyDown: (e: SyntheticEvent<*>) => void,
-  onKeyUp: (e: SyntheticEvent<*>) => void
+  onKeyDown: (e: SyntheticEvent<*>) => mixed,
+  onKeyUp: (e: SyntheticEvent<*>) => mixed
 };
 declare interface ITrackProps {
   style: CSSStyleDeclaration;
   ref: React.Ref<any>;
-  onMouseDown: (e: SyntheticEvent<*>) => void;
-  onTouchStart: (e: SyntheticEvent<*>) => void;
+  onMouseDown: (e: SyntheticEvent<*>) => mixed;
+  onTouchStart: (e: SyntheticEvent<*>) => mixed;
 }
 declare interface IProps {
   values: number[];
@@ -28,7 +28,7 @@ declare interface IProps {
   direction?: string;
   allowOverlap?: boolean;
   disabled?: boolean;
-  onChange: (values: number[]) => void;
+  onChange: (values: number[]) => mixed;
   renderThumb: (params: {
     props: IThumbProps,
     value: number,
