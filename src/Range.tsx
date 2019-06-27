@@ -32,7 +32,8 @@ class Range extends React.Component<IProps> {
   schdOnWindowResize: () => void;
 
   state = {
-    draggedThumbIndex: -1
+    draggedThumbIndex: -1,
+    lastActiveThumb: undefined,
   };
 
   constructor(props: IProps) {
@@ -199,7 +200,8 @@ class Range extends React.Component<IProps> {
       this.addMouseEvents(e);
     }
     this.setState({
-      draggedThumbIndex: index
+      draggedThumbIndex: index,
+      lastActiveThumb: index
     });
   };
 
@@ -326,7 +328,8 @@ class Range extends React.Component<IProps> {
       allowOverlap,
       disabled
     } = this.props;
-    const { draggedThumbIndex } = this.state;
+    const { draggedThumbIndex, lastActiveThumb } = this.state;
+
     return renderTrack({
       props: {
         style: {
@@ -352,7 +355,7 @@ class Range extends React.Component<IProps> {
           props: {
             style: {
               position: 'absolute',
-              zIndex: isDragged ? 1 : undefined,
+              zIndex: lastActiveThumb === index ? 1 : undefined,
               cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
               userSelect: 'none',
               touchAction: 'none',
