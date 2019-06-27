@@ -353,7 +353,6 @@ class Range extends React.Component<IProps> {
       disabled,
       children: values.map((value, index) => {
         const isDragged = this.state.draggedThumbIndex === index;
-        console.info(thumbZIndexes);
         return renderThumb({
           index,
           value,
