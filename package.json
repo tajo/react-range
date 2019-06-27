@@ -38,17 +38,18 @@
     "interval"
   ],
   "devDependencies": {
-    "@storybook/addon-options": "4.2.0-alpha.8",
-    "@storybook/addons": "4.2.0-alpha.8",
-    "@storybook/react": "4.2.0-alpha.8",
+    "babel-loader": "^8.0.6",
+    "@storybook/addon-options": "5.1.9",
+    "@storybook/addons": "5.1.9",
+    "@storybook/react": "5.1.9",
     "@types/expect-puppeteer": "^3.3.0",
     "@types/jest": "^23.3.13",
     "@types/jest-environment-puppeteer": "^2.2.1",
     "@types/jest-image-snapshot": "^2.4.0",
     "@types/node": "^10.12.18",
     "@types/puppeteer": "^1.11.2",
-    "@types/react": "^16.7.20",
-    "@types/react-dom": "^16.0.11",
+    "@types/react": "^16.8.6",
+    "@types/react-dom": "^16.8.4",
     "@types/storybook__react": "^4.0.0",
     "awesome-typescript-loader": "^5.2.1",
     "fork-ts-checker-webpack-plugin": "^0.5.2",
@@ -62,8 +63,8 @@
     "typescript": "^3.2.4"
   },
   "peerDependencies": {
-    "react": "^16.3.0-0 || ^17.0.0-0",
-    "react-dom": "^16.3.0-0 || ^17.0.0-0"
+    "react": "^16.8.0-0 || ^17.0.0-0",
+    "react-dom": "^16.8.0-0 || ^17.0.0-0"
   },
   "jest": {
     "roots": [
