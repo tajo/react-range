@@ -11,6 +11,7 @@ import MultipleThumbs from '../examples/MultipleThumbs';
 import AllowOverlap from '../examples/AllowOverlap';
 import BigSteps from '../examples/BigSteps';
 import Labeled from '../examples/Labeled';
+import LabeledTwoThumbs from '../examples/LabeledTwoThumbs';
 
 storiesOf('Range', module)
   .add('Basic', () => <Basic />)
@@ -23,4 +24,5 @@ storiesOf('Range', module)
   .add('Multiple thumbs', () => <MultipleThumbs />)
   .add('Allow overlap', () => <AllowOverlap />)
   .add('Big steps', () => <BigSteps />)
-  .add('Labeled', () => <Labeled />);
+  .add('Labeled', () => <Labeled />)
+  .add('Labeled two thumbs', () => <LabeledTwoThumbs/>);

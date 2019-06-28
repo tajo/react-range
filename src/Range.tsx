@@ -32,7 +32,8 @@ class Range extends React.Component<IProps> {
   schdOnWindowResize: () => void;
 
   state = {
-    draggedThumbIndex: -1
+    draggedThumbIndex: -1,
+    thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i)
   };
 
   constructor(props: IProps) {
@@ -199,7 +200,13 @@ class Range extends React.Component<IProps> {
       this.addMouseEvents(e);
     }
     this.setState({
-      draggedThumbIndex: index
+      draggedThumbIndex: index,
+      thumbZIndexes: this.state.thumbZIndexes.map((t, i) =>
+        i === index &&
+        this.state.thumbZIndexes[i] !== Math.max(...this.state.thumbZIndexes)
+          ? Math.max(...this.state.thumbZIndexes) + 1
+          : this.state.thumbZIndexes[i]
+      )
     });
   };
 
@@ -326,7 +333,8 @@ class Range extends React.Component<IProps> {
       allowOverlap,
       disabled
     } = this.props;
-    const { draggedThumbIndex } = this.state;
+    const { draggedThumbIndex, thumbZIndexes } = this.state;
+
     return renderTrack({
       props: {
         style: {
@@ -345,6 +353,7 @@ class Range extends React.Component<IProps> {
       disabled,
       children: values.map((value, index) => {
         const isDragged = this.state.draggedThumbIndex === index;
+        console.info(thumbZIndexes);
         return renderThumb({
           index,
           value,
@@ -352,7 +361,7 @@ class Range extends React.Component<IProps> {
           props: {
             style: {
               position: 'absolute',
-              zIndex: isDragged ? 1 : undefined,
+              zIndex: thumbZIndexes[index],
               cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
               userSelect: 'none',
               touchAction: 'none',
