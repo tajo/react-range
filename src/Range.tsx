@@ -33,7 +33,7 @@ class Range extends React.Component<IProps> {
 
   state = {
     draggedThumbIndex: -1,
-    lastActiveThumb: undefined,
+    thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i)
   };
 
   constructor(props: IProps) {
@@ -201,7 +201,12 @@ class Range extends React.Component<IProps> {
     }
     this.setState({
       draggedThumbIndex: index,
-      lastActiveThumb: index
+      thumbZIndexes: this.state.thumbZIndexes.map((t, i) =>
+        i === index &&
+        this.state.thumbZIndexes[i] !== Math.max(...this.state.thumbZIndexes)
+          ? Math.max(...this.state.thumbZIndexes) + 1
+          : this.state.thumbZIndexes[i]
+      )
     });
   };
 
@@ -328,7 +333,7 @@ class Range extends React.Component<IProps> {
       allowOverlap,
       disabled
     } = this.props;
-    const { draggedThumbIndex, lastActiveThumb } = this.state;
+    const { draggedThumbIndex, thumbZIndexes } = this.state;
 
     return renderTrack({
       props: {
@@ -348,6 +353,7 @@ class Range extends React.Component<IProps> {
       disabled,
       children: values.map((value, index) => {
         const isDragged = this.state.draggedThumbIndex === index;
+        console.info(thumbZIndexes);
         return renderThumb({
           index,
           value,
@@ -355,7 +361,7 @@ class Range extends React.Component<IProps> {
           props: {
             style: {
               position: 'absolute',
-              zIndex: lastActiveThumb === index ? 1 : undefined,
+              zIndex: thumbZIndexes[index],
               cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
               userSelect: 'none',
               touchAction: 'none',
