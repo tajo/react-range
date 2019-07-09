@@ -66,7 +66,8 @@ class Range extends React.Component<IProps> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.schdOnWindowResize);
     document.removeEventListener('mousedown', this.onMouseOrTouchStart as any);
-    document.removeEventListener('mousedown', this.onMouseOrTouchStart as any);
+    document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
+    document.removeEventListener('touchend', this.schdOnEnd as any);
   }
 
   getOffsets = () => {
