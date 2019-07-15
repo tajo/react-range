@@ -21,10 +21,11 @@ test('Overlap thumbs 1 and 2', async () => {
   await page.mouse.move(270, 80);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('[draggable]:nth-of-type(1) div');
-  const hidden = await page.$('[draggable]:nth-of-type(2) div');
+  await page.waitForSelector('[data-label="1"]', {
+    hidden: true
+  });
+  const output = await page.$('[data-label="0"]');
   expect(await page.evaluate(e => e.textContent, output)).toBe('44.4 - 50.0');
-  expect(await page.evaluate(e => e.style.display, hidden)).toBe('none');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -39,10 +40,16 @@ test('Overlap thumbs 1, 2 and 3', async () => {
   await page.mouse.move(330, 80);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('[draggable]:nth-of-type(1) div');
-  const hidden = await page.$('[draggable]:nth-of-type(2) div');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('44.4 - 50.0 - 55.6');
-  expect(await page.evaluate(e => e.style.display, hidden)).toBe('none');
+  await page.waitForSelector('[data-label="1"]', {
+    hidden: true
+  });
+  await page.waitForSelector('[data-label="2"]', {
+    hidden: true
+  });
+  const output = await page.$('[data-label="0"]');
+  expect(await page.evaluate(e => e.textContent, output)).toBe(
+    '44.4 - 50.0 - 55.6'
+  );
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -57,9 +64,15 @@ test('Overlap thumbs 1, 2 and 3 in a different order', async () => {
   await page.mouse.move(330, 80);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('[draggable]:nth-of-type(3) div');
-  const hidden = await page.$('[draggable]:nth-of-type(1) div');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('44.4 - 50.0 - 55.6');
-  expect(await page.evaluate(e => e.style.display, hidden)).toBe('none');
+  await page.waitForSelector('[data-label="0"]', {
+    hidden: true
+  });
+  await page.waitForSelector('[data-label="1"]', {
+    hidden: true
+  });
+  const output = await page.$('[data-label="2"]');
+  expect(await page.evaluate(e => e.textContent, output)).toBe(
+    '44.4 - 50.0 - 55.6'
+  );
   expect(await page.screenshot()).toMatchImageSnapshot();
 });

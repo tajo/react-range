@@ -20,6 +20,7 @@ const ThumbLabel = ({
   const [labelValue, style] = useThumbOverlap(rangeRef, values, index);
   return (
     <div
+      data-label={index}
       style={{
         display: 'block',
         position: 'absolute',
