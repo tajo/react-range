@@ -6,7 +6,7 @@ export enum Examples {
   UP_DIRECTION,
   LEFT_DIRECTION,
   DOWN_DIRECTION,
-  MERGING_LABELS,
+  MERGING_LABELS
 }
 
 export const getTestUrl = (example: Examples): string => {
@@ -130,6 +130,10 @@ const fontStyles = () => {
   styleElement.innerHTML = `
   body {
     color: #fff;
+    font-weight: normal;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
   `;
   document.head.appendChild(styleElement);
