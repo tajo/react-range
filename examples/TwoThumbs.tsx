@@ -23,7 +23,9 @@ class TwoThumbs extends React.Component {
           step={STEP}
           min={MIN}
           max={MAX}
-          onChange={values => this.setState({ values })}
+          onChange={values => {
+            this.setState({ values })
+          }}
           renderTrack={({ props, children }) => (
             <div
               onMouseDown={props.onMouseDown}
