@@ -130,6 +130,10 @@ const fontStyles = () => {
   styleElement.innerHTML = `
   body {
     color: #fff;
+    font-weight: normal;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
   `;
   document.head.appendChild(styleElement);
