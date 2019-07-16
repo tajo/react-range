@@ -7,3 +7,10 @@ declare export function getTrackBackground(params: {
   colors: string[],
   direction?: string;
 }): string;
+
+declare export function useThumbOverlap(params: {
+  rangeRef: HTMLElement,
+  values: number[],
+  index: number,
+  separator?: string,
+}): mixed[];

@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface ITrackBackground {
   min: number;
   max: number;

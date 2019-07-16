@@ -5,22 +5,25 @@ export enum Examples {
   TWO_THUMBS,
   UP_DIRECTION,
   LEFT_DIRECTION,
-  DOWN_DIRECTION
+  DOWN_DIRECTION,
+  MERGING_LABELS,
 }
 
 export const getTestUrl = (example: Examples): string => {
   const PORT = process.env.E2E === 'dev' ? 9010 : 9011;
   switch (example) {
     case Examples.BASIC:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Basic`;
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--basic`;
     case Examples.TWO_THUMBS:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Two%20thumbs`;
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--two-thumbs`;
     case Examples.UP_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Up%20direction`;
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--up-direction`;
     case Examples.LEFT_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Left%20direction`;
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--left-direction`;
     case Examples.DOWN_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?selectedKind=Range&selectedStory=Down%20direction`;
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--down-direction`;
+    case Examples.MERGING_LABELS:
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels`;
   }
 };
 

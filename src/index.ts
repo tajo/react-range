@@ -1,5 +1,5 @@
 import Range from './Range';
-import { getTrackBackground } from './utils';
+import { getTrackBackground, useThumbOverlap } from './utils';
 import { Direction } from './types';
 
-export { Range, getTrackBackground, Direction };
+export { Range, getTrackBackground, Direction, useThumbOverlap };
