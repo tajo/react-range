@@ -7,6 +7,7 @@ export enum Examples {
   LEFT_DIRECTION,
   DOWN_DIRECTION,
   MERGING_LABELS,
+  SKINNY_MERGING_LABELS,
 }
 
 export const getTestUrl = (example: Examples): string => {
@@ -24,6 +25,8 @@ export const getTestUrl = (example: Examples): string => {
       return `http://localhost:${PORT}/iframe.html?path=/story/range--down-direction`;
     case Examples.MERGING_LABELS:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels`;
+    case Examples.SKINNY_MERGING_LABELS:
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels-skinny`;
   }
 };
 
