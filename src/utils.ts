@@ -146,6 +146,41 @@ export function assertUnreachable(x: never): never {
 }
 
 /**
+ * Util function for grabbing the true largest width of a thumb
+ * including the label
+ * @param thumbEl - Thumb element to grab the largest width from
+ * @param value - Thumb value, not label value
+ * @param separator - Label separator value
+ */
+const getThumbWidth = (thumbEl: Element, value: number, separator: string) => {
+  const width = Math.ceil(
+    [thumbEl, ...Array.from(thumbEl.children)].reduce(
+      (width: number, el: Element) => {
+        let elWidth = Math.ceil(el.getBoundingClientRect().width);
+        /**
+         * If a label contains a merged label value, it won't return the true
+         * label width for that Thumb. Clone the label and change the value
+         * to that individual Thumb value in order to grab the true width.
+         */
+        if (
+          (el as HTMLElement).innerText.includes(separator) &&
+          el.childElementCount === 0
+        ) {
+          const elClone = el.cloneNode(true) as HTMLElement;
+          elClone.innerHTML = value.toFixed(1);
+          elClone.style.visibility = 'hidden';
+          document.body.append(elClone);
+          elWidth = Math.ceil(elClone.getBoundingClientRect().width);
+          elClone.remove();
+        }
+        return elWidth > width ? elWidth : width;
+      },
+      thumbEl.getBoundingClientRect().width
+    )
+  );
+  return width;
+};
+/**
  * Bulk of logic for thumb overlaps
  * Consider a scenario with 5 thumbs;
  * Thumb 1 overlaps with thumb 0 and thumb 2
@@ -155,13 +190,17 @@ export function assertUnreachable(x: never): never {
  * and all thumbs overlapping linked to those and so on
  * @param index - Thumb index calculating overlaps for
  * @param offsets - Current Array of Thumb offsets for Range
- * @param thumbSize - Thumb element width in pixels
+ * @param thumbs - Array of Thumb elements
+ * @param values - Array of Thumb values
+ * @param separator - String separator for merged label values
  * @returns overlaps - Array of all overlapping thumbs from the index
  */
 const getOverlaps = (
   index: number,
   offsets: { x: number; y: number }[],
-  thumbSize: number
+  thumbs: Element[],
+  values: number[],
+  separator: string
 ) => {
   let overlaps: number[] = [];
   /**
@@ -170,6 +209,11 @@ const getOverlaps = (
    * @param thumbIndex current Thumb index to find overlaps from
    */
   const buildOverlaps = (thumbIndex: number) => {
+    const thumbXWidth = getThumbWidth(
+      thumbs[thumbIndex],
+      values[thumbIndex],
+      separator
+    );
     const thumbX = offsets[thumbIndex].x;
     /**
      * Iterate through the Thumb offsets, if there is a match
@@ -177,23 +221,28 @@ const getOverlaps = (
      *
      * Then build overlaps from the overlapping siblingIndex
      */
-    offsets.forEach(({x: siblingX}, siblingIndex) => {
+    offsets.forEach(({ x: siblingX }, siblingIndex) => {
+      const siblingWidth = getThumbWidth(
+        thumbs[siblingIndex],
+        values[siblingIndex],
+        separator
+      );
       if (
         thumbIndex !== siblingIndex &&
-        ((thumbX >= siblingX && thumbX <= siblingX + thumbSize) ||
-          (thumbX + thumbSize >= siblingX &&
-            thumbX + thumbSize <= siblingX + thumbSize))
+        ((thumbX >= siblingX && thumbX <= siblingX + siblingWidth) ||
+          (thumbX + thumbXWidth >= siblingX &&
+            thumbX + thumbXWidth <= siblingX + siblingWidth))
       ) {
         if (!overlaps.includes(siblingIndex)) {
-          overlaps.push(thumbIndex)
-          overlaps.push(siblingIndex)
-          overlaps = [...overlaps, thumbIndex, siblingIndex]
-          buildOverlaps(siblingIndex)
+          overlaps.push(thumbIndex);
+          overlaps.push(siblingIndex);
+          overlaps = [...overlaps, thumbIndex, siblingIndex];
+          buildOverlaps(siblingIndex);
         }
       }
-    })
+    });
   };
-  buildOverlaps(index)
+  buildOverlaps(index);
   // Sort and remove duplicates from the built overlaps
   return Array.from(new Set(overlaps.sort()));
 };
@@ -219,14 +268,9 @@ export const useThumbOverlap = (
   // When the rangeRef or values change, update the Thumb label values and styling
   useEffect(() => {
     if (rangeRef) {
-      if (rangeRef.getThumbs().length < 1) return;
+      const thumbs = rangeRef.getThumbs();
+      if (thumbs.length < 1) return;
       const newStyle: React.CSSProperties = {};
-      /**
-       * Grab the Thumb styling width. This is used to calculate overlaps
-       * between Thumbs. Offsets returns the left edge of a Thumb. Left edge
-       * plus thumbSize gives the right side of a Thumb.
-       */
-      const thumbSize = (rangeRef.getThumbs()[0] as HTMLElement).offsetWidth;
       const offsets = rangeRef.getOffsets();
       /**
        * Get any overlaps for the given Thumb index. This must return all linked
@@ -234,7 +278,7 @@ export const useThumbOverlap = (
        * getting the overlaps for Thumb 1 and it overlaps only Thumb 2, we must get
        * 2, 3 and 4 also.
        */
-      const overlaps = getOverlaps(index, offsets, thumbSize);
+      const overlaps = getOverlaps(index, offsets, thumbs, values, separator);
       // Set a default label value of the Thumb value
       let labelValue = values[index].toFixed(1);
       /**
@@ -284,11 +328,14 @@ export const useThumbOverlap = (
            */
           const first = Math.min(...offsetsX);
           const last = Math.max(...offsetsX);
-          newStyle.left = `${Math.abs(first - (last + thumbSize)) / 2}px`;
+          const lastWidth = thumbs[
+            overlaps[offsetsX.indexOf(last)]
+          ].getBoundingClientRect().width;
+          newStyle.left = `${Math.abs(first - (last + lastWidth)) / 2}px`;
           newStyle.transform = 'translate(-50%, 0)';
         } else {
           // If the Thumb isn't the left most Thumb, hide the Label!
-          newStyle.display = 'none';
+          newStyle.visibility = 'hidden';
         }
       }
       // Update the label value and style
