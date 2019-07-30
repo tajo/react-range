@@ -1,4 +1,5 @@
 // @flow
+import Range from './Range';
 
 declare export function getTrackBackground(params: {
   min: number,
@@ -9,7 +10,7 @@ declare export function getTrackBackground(params: {
 }): string;
 
 declare export function useThumbOverlap(
-  rangeRef: HTMLElement,
+  rangeRef: Range | null,
   values: number[],
   index: number,
   separator?: string,
