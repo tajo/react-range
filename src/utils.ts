@@ -88,9 +88,10 @@ export function getPadding(element: Element) {
   };
 }
 
-export function translateThumbs(elements: Element[], offsets: TThumbOffsets) {
+export function translateThumbs(elements: Element[], offsets: TThumbOffsets, rtl: boolean) {
+  const inverter = rtl ? -1 : 1;
   elements.forEach((element, index) =>
-    translate(element, offsets[index].x, offsets[index].y)
+    translate(element, inverter * offsets[index].x, offsets[index].y)
   );
 }
 
@@ -126,8 +127,14 @@ export function getTrackBackground({
   colors,
   min,
   max,
-  direction = Direction.Right
+  direction = Direction.Right,
+  rtl = false,
 }: ITrackBackground) {
+  if (rtl && direction === Direction.Right) {
+    direction = Direction.Left;
+  } else if (rtl && Direction.Left) {
+    direction = Direction.Right;
+  }
   const progress = values.map(value => ((value - min) / (max - min)) * 100);
   const middle = progress.reduce(
     (acc, point, index) =>

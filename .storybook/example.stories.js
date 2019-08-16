@@ -4,6 +4,8 @@ import Basic from '../examples/Basic';
 import Disabled from '../examples/Disabled';
 import SuperSimple from '../examples/SuperSimple';
 import TwoThumbs from '../examples/TwoThumbs';
+import Rtl from '../examples/Rtl';
+import RtlTwoThumbs from '../examples/RtlTwoThumbs';
 import UpDirection from '../examples/UpDirection';
 import DownDirection from '../examples/DownDirection';
 import LeftDirection from '../examples/LeftDirection';
@@ -20,6 +22,8 @@ storiesOf('Range', module)
   .add('Disabled', () => <Disabled />)
   .add('Super simple', () => <SuperSimple />)
   .add('Two thumbs', () => <TwoThumbs />)
+  .add('Rtl', () => <Rtl />)
+  .add('Rtl Two Thumbs', () => <RtlTwoThumbs />)
   .add('Up direction', () => <UpDirection />)
   .add('Down direction', () => <DownDirection />)
   .add('Left direction', () => <LeftDirection />)

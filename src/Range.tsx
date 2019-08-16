@@ -20,6 +20,7 @@ class Range extends React.Component<IProps> {
   static defaultProps = {
     step: 1,
     direction: Direction.Right,
+    rtl: false,
     disabled: false,
     allowOverlap: false,
     min: 0,
@@ -56,11 +57,11 @@ class Range extends React.Component<IProps> {
     this.props.values.forEach(value =>
       checkBoundaries(value, this.props.min, this.props.max)
     );
-    translateThumbs(this.getThumbs(), this.getOffsets());
+    translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
   }
 
   componentDidUpdate(prevProps: IProps) {
-    translateThumbs(this.getThumbs(), this.getOffsets());
+    translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
   }
 
   componentWillUnmount() {
@@ -171,7 +172,7 @@ class Range extends React.Component<IProps> {
   };
 
   onWindowResize = () => {
-    translateThumbs(this.getThumbs(), this.getOffsets());
+    translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
   };
 
   onTouchStartTrack = (e: React.TouchEvent) => {
@@ -222,8 +223,9 @@ class Range extends React.Component<IProps> {
   };
 
   onKeyDown = (e: React.KeyboardEvent) => {
-    const { values, onChange, step } = this.props;
+    const { values, onChange, step, rtl } = this.props;
     const index = this.getTargetIndex(e.nativeEvent);
+    const inverter = rtl ? -1 : 1;
     if (index === -1) return;
     if (['ArrowRight', 'ArrowUp', 'k', 'PageUp'].includes(e.key)) {
       e.preventDefault();
@@ -235,7 +237,7 @@ class Range extends React.Component<IProps> {
           values,
           index,
           this.normalizeValue(
-            values[index] + (e.key === 'PageUp' ? step * 10 : step),
+            values[index] + inverter * (e.key === 'PageUp' ? step * 10 : step),
             index
           )
         )
@@ -250,7 +252,7 @@ class Range extends React.Component<IProps> {
           values,
           index,
           this.normalizeValue(
-            values[index] - (e.key === 'PageDown' ? step * 10 : step),
+            values[index] - inverter * (e.key === 'PageDown' ? step * 10 : step),
             index
           )
         )
@@ -266,7 +268,7 @@ class Range extends React.Component<IProps> {
 
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex } = this.state;
-    const { direction, min, max, onChange, values, step } = this.props;
+    const { direction, min, max, onChange, values, step, rtl } = this.props;
     if (draggedThumbIndex === -1) return null;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
@@ -297,6 +299,10 @@ class Range extends React.Component<IProps> {
         break;
       default:
         assertUnreachable(direction);
+    }
+    // invert for RTL
+    if (rtl) {
+      newValue = max - newValue;
     }
     if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
       onChange(

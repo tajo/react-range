@@ -7,6 +7,7 @@ declare export function getTrackBackground(params: {
   values: number[],
   colors: string[],
   direction?: string;
+  rtl?: boolean,
 }): string;
 
 declare export function useThumbOverlap(

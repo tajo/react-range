@@ -28,6 +28,7 @@ declare interface IProps {
   direction?: string;
   allowOverlap?: boolean;
   disabled?: boolean;
+  rtl?: boolean;
   onChange: (values: number[]) => mixed;
   renderThumb: (params: {
     props: IThumbProps,

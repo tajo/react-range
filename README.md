@@ -75,6 +75,7 @@ class SuperSimple extends React.Component {
 - Typescript and Flow type definitions
 - **No dependencies, less than 4kB (gzipped)**
 - Coverage by [e2e puppeteer tests](#end-to-end-testing)
+- RTL support
 
 ## Keyboard support
 
@@ -217,6 +218,15 @@ disabled: boolean;
 
 If `true`, it ignores all touch and mouse events and makes the component not focusable. Default is `false`.
 
+### rtl (optional)
+
+```ts
+rtl: boolean;
+```
+
+If `true`, the slider will be optimized for RTL layouts. Default is `false`.
+
+
 ## getTrackBackground
 
 There is an additional helper function being exported from `react-range`. Your track is most likely a `div` with some background. What if you want to achieve a nice "progress bar" effect where the part before the thumb has different color than the part after? What if you want to have the same thing even with multiple thumbs (aka differently colored segments)? **You don't need to glue together multiple divs in order to do that!** You can use a single `div` and set `background: linear-gradient(...)`. `getTrackBackground` function builds this verbose `linear-gradient(...)` for you!
@@ -228,6 +238,7 @@ getTrackBackground: (params: {
   values: number[];
   colors: string[];
   direction?: Direction;
+  rtl?: boolean;
 }) => string;
 ```
 
