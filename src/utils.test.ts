@@ -150,4 +150,24 @@ test('getTrackBackground', () => {
       direction: Direction.Down
     })
   ).toBe('linear-gradient(to bottom, #aaa 0%, #aaa 40%, #bbb 40%, #bbb 100%)');
+  expect(
+    getTrackBackground({
+      values: [40],
+      colors: ['#aaa', '#bbb'],
+      min: 0,
+      max: 100,
+      direction: Direction.Right,
+      rtl: true
+    })
+  ).toBe('linear-gradient(to left, #aaa 0%, #aaa 40%, #bbb 40%, #bbb 100%)');
+  expect(
+    getTrackBackground({
+      values: [40],
+      colors: ['#aaa', '#bbb'],
+      min: 0,
+      max: 100,
+      direction: Direction.Left,
+      rtl: true
+    })
+  ).toBe('linear-gradient(to right, #aaa 0%, #aaa 40%, #bbb 40%, #bbb 100%)');
 });

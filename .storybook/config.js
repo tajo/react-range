@@ -1,5 +1,8 @@
 import { configure, addDecorator } from '@storybook/react';
 import { withOptions } from '@storybook/addon-options';
+import { initializeRTL } from 'storybook-addon-rtl';
+
+initializeRTL();
 
 addDecorator(
   withOptions({

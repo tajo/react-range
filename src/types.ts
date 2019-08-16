@@ -6,6 +6,7 @@ export interface ITrackBackground {
   values: number[];
   colors: string[];
   direction?: Direction;
+  rtl?: boolean;
 }
 export interface IProps {
   values: number[];
@@ -15,6 +16,7 @@ export interface IProps {
   direction: Direction;
   allowOverlap: boolean;
   disabled: boolean;
+  rtl: boolean,
   onChange: (values: number[]) => void;
   renderThumb: (params: {
     props: IThumbProps;
