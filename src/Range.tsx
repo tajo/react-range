@@ -328,6 +328,8 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('touchup', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
     this.setState({ draggedThumbIndex: -1 });
+    const { values, onFinalChange } = this.props;
+    onFinalChange(values);
   };
 
   render() {
