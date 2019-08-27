@@ -176,7 +176,7 @@ The range end. Can be decimal or negative. Default is `100`.
 ### step (optional)
 
 ```ts
-min: number;
+step: number;
 ```
 
 The minimal distance between two `values`. Can be decimal. Default is `1`.
