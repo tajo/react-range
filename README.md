@@ -157,13 +157,13 @@ onChange: (values: number[]) => void;
 
 Called when a thumb is moved, provides new `values`.
 
-### onDragEnd
+### onFinalChange
 
 ```ts
-onDragEnd: (values: number[]) => void;
+onFinalChange: (values: number[]) => void;
 ```
 
-Called when a drag is finished, provides current `values`.
+Called when a change is finished (mouse/touch up, or keyup), provides current `values`. Use this event when you have to make for example ajax request with new values.
 
 ### min (optional)
 

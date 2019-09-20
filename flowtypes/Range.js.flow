@@ -30,7 +30,7 @@ declare interface IProps {
   disabled?: boolean;
   rtl?: boolean;
   onChange: (values: number[]) => mixed;
-  onDragEnd?: (values: number[]) => mixed;
+  onFinalChange?: (values: number[]) => mixed;
   renderThumb: (params: {
     props: IThumbProps,
     value: number,

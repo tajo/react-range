@@ -16,13 +16,10 @@ import {
 } from './utils';
 import { IProps, Direction } from './types';
 
-interface IState {
-  draggedThumbIndex: number;
-  thumbZIndexes: number[];
-  isChanged?: boolean;
-}
+const INCREASE_KEYS = ['ArrowRight', 'ArrowUp', 'k', 'PageUp'];
+const DECREASE_KEYS = ['ArrowLeft', 'ArrowDown', 'j', 'PageDown'];
 
-class Range extends React.Component<IProps, IState> {
+class Range extends React.Component<IProps> {
   static defaultProps = {
     step: 1,
     direction: Direction.Right,
@@ -38,7 +35,7 @@ class Range extends React.Component<IProps, IState> {
   schdOnEnd: (e: Event) => void;
   schdOnWindowResize: () => void;
 
-  state: IState = {
+  state = {
     draggedThumbIndex: -1,
     thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i)
   };
@@ -233,11 +230,11 @@ class Range extends React.Component<IProps, IState> {
     const index = this.getTargetIndex(e.nativeEvent);
     const inverter = rtl ? -1 : 1;
     if (index === -1) return;
-    if (['ArrowRight', 'ArrowUp', 'k', 'PageUp'].includes(e.key)) {
+
+    if (INCREASE_KEYS.includes(e.key)) {
       e.preventDefault();
       this.setState({
-        draggedThumbIndex: index,
-        isChanged: true
+        draggedThumbIndex: index
       });
       onChange(
         replaceAt(
@@ -249,11 +246,10 @@ class Range extends React.Component<IProps, IState> {
           )
         )
       );
-    } else if (['ArrowLeft', 'ArrowDown', 'j', 'PageDown'].includes(e.key)) {
+    } else if (DECREASE_KEYS.includes(e.key)) {
       e.preventDefault();
       this.setState({
-        draggedThumbIndex: index,
-        isChanged: true
+        draggedThumbIndex: index
       });
       onChange(
         replaceAt(
@@ -271,14 +267,14 @@ class Range extends React.Component<IProps, IState> {
   };
 
   onKeyUp = (e: React.KeyboardEvent) => {
-    const { isChanged } = this.state;
-
     this.setState({
-      draggedThumbIndex: -1,
-      isChanged: false
+      draggedThumbIndex: -1
     }, () => {
-      if (isChanged && this.props.onDragEnd) {
-        this.props.onDragEnd(this.props.values);
+      if (INCREASE_KEYS.includes(e.key) || DECREASE_KEYS.includes(e.key)) {
+        const { onFinalChange, values } = this.props;
+        if (onFinalChange) {
+          onFinalChange(values);
+        }
       }
     });
   };
@@ -345,8 +341,9 @@ class Range extends React.Component<IProps, IState> {
     document.removeEventListener('touchup', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
     this.setState({ draggedThumbIndex: -1 }, () => {
-      if (this.props.onDragEnd) {
-        this.props.onDragEnd(this.props.values);
+      const { onFinalChange, values } = this.props;
+      if (onFinalChange) {
+        onFinalChange(values);
       }
     });
   };
