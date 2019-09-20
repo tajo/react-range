@@ -157,6 +157,14 @@ onChange: (values: number[]) => void;
 
 Called when a thumb is moved, provides new `values`.
 
+### onDragEnd
+
+```ts
+onDragEnd: (values: number[]) => void;
+```
+
+Called when a drag is finished, provides current `values`.
+
 ### min (optional)
 
 ```ts

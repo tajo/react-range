@@ -18,6 +18,7 @@ export interface IProps {
   disabled: boolean;
   rtl: boolean,
   onChange: (values: number[]) => void;
+  onDragEnd: (values: number[]) => void;
   renderThumb: (params: {
     props: IThumbProps;
     value: number;

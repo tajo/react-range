@@ -16,7 +16,13 @@ import {
 } from './utils';
 import { IProps, Direction } from './types';
 
-class Range extends React.Component<IProps> {
+interface IState {
+  draggedThumbIndex: number;
+  thumbZIndexes: number[];
+  isChanged?: boolean;
+}
+
+class Range extends React.Component<IProps, IState> {
   static defaultProps = {
     step: 1,
     direction: Direction.Right,
@@ -32,7 +38,7 @@ class Range extends React.Component<IProps> {
   schdOnEnd: (e: Event) => void;
   schdOnWindowResize: () => void;
 
-  state = {
+  state: IState = {
     draggedThumbIndex: -1,
     thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i)
   };
@@ -230,7 +236,8 @@ class Range extends React.Component<IProps> {
     if (['ArrowRight', 'ArrowUp', 'k', 'PageUp'].includes(e.key)) {
       e.preventDefault();
       this.setState({
-        draggedThumbIndex: index
+        draggedThumbIndex: index,
+        isChanged: true
       });
       onChange(
         replaceAt(
@@ -245,7 +252,8 @@ class Range extends React.Component<IProps> {
     } else if (['ArrowLeft', 'ArrowDown', 'j', 'PageDown'].includes(e.key)) {
       e.preventDefault();
       this.setState({
-        draggedThumbIndex: index
+        draggedThumbIndex: index,
+        isChanged: true
       });
       onChange(
         replaceAt(
@@ -263,7 +271,16 @@ class Range extends React.Component<IProps> {
   };
 
   onKeyUp = (e: React.KeyboardEvent) => {
-    this.setState({ draggedThumbIndex: -1 });
+    const { isChanged } = this.state;
+
+    this.setState({
+      draggedThumbIndex: -1,
+      isChanged: false
+    }, () => {
+      if (isChanged && this.props.onDragEnd) {
+        this.props.onDragEnd(this.props.values);
+      }
+    });
   };
 
   onMove = (clientX: number, clientY: number) => {
@@ -327,7 +344,11 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('mouseup', this.schdOnEnd);
     document.removeEventListener('touchup', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
-    this.setState({ draggedThumbIndex: -1 });
+    this.setState({ draggedThumbIndex: -1 }, () => {
+      if (this.props.onDragEnd) {
+        this.props.onDragEnd(this.props.values);
+      }
+    });
   };
 
   render() {
