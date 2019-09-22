@@ -37,7 +37,8 @@ class Range extends React.Component<IProps> {
 
   state = {
     draggedThumbIndex: -1,
-    thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i)
+    thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i),
+    isChanged: false,
   };
 
   constructor(props: IProps) {
@@ -227,6 +228,7 @@ class Range extends React.Component<IProps> {
 
   onKeyDown = (e: React.KeyboardEvent) => {
     const { values, onChange, step, rtl } = this.props;
+    const { isChanged } = this.state;
     const index = this.getTargetIndex(e.nativeEvent);
     const inverter = rtl ? -1 : 1;
     if (index === -1) return;
@@ -234,7 +236,8 @@ class Range extends React.Component<IProps> {
     if (INCREASE_KEYS.includes(e.key)) {
       e.preventDefault();
       this.setState({
-        draggedThumbIndex: index
+        draggedThumbIndex: index,
+        isChanged: true,
       });
       onChange(
         replaceAt(
@@ -249,7 +252,8 @@ class Range extends React.Component<IProps> {
     } else if (DECREASE_KEYS.includes(e.key)) {
       e.preventDefault();
       this.setState({
-        draggedThumbIndex: index
+        draggedThumbIndex: index,
+        isChanged: true,
       });
       onChange(
         replaceAt(
@@ -262,20 +266,28 @@ class Range extends React.Component<IProps> {
         )
       );
     } else if (e.key === 'Tab') {
-      this.setState({ draggedThumbIndex: -1 });
+      this.setState({ draggedThumbIndex: -1 }, () => {
+        // If key pressed when thumb was moving, fire onFinalChange
+        if (isChanged) {
+          this.fireOnFinalChange();
+        }
+      });
+    } else {
+      if (isChanged) {
+        this.fireOnFinalChange();
+      }
     }
   };
 
   onKeyUp = (e: React.KeyboardEvent) => {
-    const eventKey = e.key;
+    const { isChanged } = this.state;
+    console.log('keyup', 'isChanged', isChanged);
     this.setState({
-      draggedThumbIndex: -1
+      draggedThumbIndex: -1,
+      isChanged: false,
     }, () => {
-      if (INCREASE_KEYS.includes(eventKey) || DECREASE_KEYS.includes(eventKey)) {
-        const { onFinalChange, values } = this.props;
-        if (onFinalChange) {
-          onFinalChange(values);
-        }
+      if (isChanged) {
+        this.fireOnFinalChange();
       }
     });
   };
@@ -342,11 +354,15 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('touchup', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
     this.setState({ draggedThumbIndex: -1 }, () => {
-      const { onFinalChange, values } = this.props;
-      if (onFinalChange) {
-        onFinalChange(values);
-      }
+      this.fireOnFinalChange();
     });
+  };
+
+  fireOnFinalChange = () => {
+    const { onFinalChange, values } = this.props;
+    if (onFinalChange) {
+      onFinalChange(values);
+    }
   };
 
   render() {

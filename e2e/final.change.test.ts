@@ -25,6 +25,7 @@ test('dnd the thumb final change event', async () => {
   expect(await page.evaluate(e => e.textContent, output)).toBe('79.6');
   await page.mouse.up();
   await untrackMouse(page);
+  await page.waitFor(100);
   expect(await page.evaluate(e => e.textContent, finalOutput)).toBe('79.6');
 });
 
