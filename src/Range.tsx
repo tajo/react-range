@@ -283,7 +283,6 @@ class Range extends React.Component<IProps> {
     const { isChanged } = this.state;
     this.setState({
       draggedThumbIndex: -1,
-      isChanged: false,
     }, () => {
       if (isChanged) {
         this.fireOnFinalChange();
@@ -358,6 +357,7 @@ class Range extends React.Component<IProps> {
   };
 
   fireOnFinalChange = () => {
+    this.setState({ isChanged: false });
     const { onFinalChange, values } = this.props;
     if (onFinalChange) {
       onFinalChange(values);
