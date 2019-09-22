@@ -43,3 +43,19 @@ test('keyboard the thumb final change event', async () => {
   await untrackMouse(page);
   expect(await page.evaluate(e => e.textContent, finalOutput)).toBe('50.2');
 });
+
+test('keyboard the thumb and press another key final change event', async () => {
+  const output = await page.$('#output');
+  const finalOutput = await page.$('#final-output');
+  await trackMouse(page);
+  await page.mouse.click(10, 10);
+  await page.keyboard.press("Tab");
+  await page.keyboard.down('ArrowRight');
+  await page.keyboard.down('ArrowRight');
+  expect(await page.evaluate(e => e.textContent, finalOutput)).toBe('50.0');
+  expect(await page.evaluate(e => e.textContent, output)).toBe('50.2');
+  await page.keyboard.press('Tab');
+  await page.keyboard.up('Tab');
+  await untrackMouse(page);
+  expect(await page.evaluate(e => e.textContent, finalOutput)).toBe('50.2');
+});
