@@ -267,10 +267,11 @@ class Range extends React.Component<IProps> {
   };
 
   onKeyUp = (e: React.KeyboardEvent) => {
+    const eventKey = e.key;
     this.setState({
       draggedThumbIndex: -1
     }, () => {
-      if (INCREASE_KEYS.includes(e.key) || DECREASE_KEYS.includes(e.key)) {
+      if (INCREASE_KEYS.includes(eventKey) || DECREASE_KEYS.includes(eventKey)) {
         const { onFinalChange, values } = this.props;
         if (onFinalChange) {
           onFinalChange(values);
