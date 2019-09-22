@@ -281,7 +281,6 @@ class Range extends React.Component<IProps> {
 
   onKeyUp = (e: React.KeyboardEvent) => {
     const { isChanged } = this.state;
-    console.log('keyup', 'isChanged', isChanged);
     this.setState({
       draggedThumbIndex: -1,
       isChanged: false,
