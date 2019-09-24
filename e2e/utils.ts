@@ -9,6 +9,7 @@ export enum Examples {
   MERGING_LABELS,
   SKINNY_MERGING_LABELS,
   RTL,
+  FINAL_CHANGE_EVENT,
 }
 
 export const getTestUrl = (example: Examples): string => {
@@ -30,6 +31,8 @@ export const getTestUrl = (example: Examples): string => {
       return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels-skinny`;
     case Examples.RTL:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--rtl`;
+    case Examples.FINAL_CHANGE_EVENT:
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--onfinalchange-event`;
   }
 };
 

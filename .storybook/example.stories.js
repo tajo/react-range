@@ -16,6 +16,7 @@ import Labeled from '../examples/Labeled';
 import LabeledTwoThumbs from '../examples/LabeledTwoThumbs';
 import LabeledMerge from '../examples/LabeledMerge';
 import LabeledMergeSkinny from '../examples/LabeledMergeSkinny';
+import FinalChangeEvent from '../examples/FinalChangeEvent';
 
 storiesOf('Range', module)
   .add('Basic', () => <Basic />)
@@ -33,4 +34,5 @@ storiesOf('Range', module)
   .add('Labeled', () => <Labeled />)
   .add('Labeled two thumbs', () => <LabeledTwoThumbs/>)
   .add('Merging labels', () => <LabeledMerge />)
-  .add('Merging labels skinny', () => <LabeledMergeSkinny />);
+  .add('Merging labels skinny', () => <LabeledMergeSkinny />)
+  .add('onFinalChange event', () => <FinalChangeEvent />);
