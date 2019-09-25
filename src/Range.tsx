@@ -379,6 +379,9 @@ class Range extends React.Component<IProps> {
     return renderTrack({
       props: {
         style: {
+          // creates stacking context that prevents z-index applied to thumbs 
+          // interfere with other elements
+          transform: 'scale(1)',
           cursor:
             draggedThumbIndex > -1
               ? 'grabbing'
