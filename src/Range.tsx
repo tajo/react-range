@@ -349,13 +349,12 @@ class Range extends React.Component<IProps> {
 
   onEnd = (e: Event) => {
     e.preventDefault();
-    if (this.trackRef.current) {
-      this.trackRef.current.removeEventListener('mousemove', this.schdOnMouseMove);
-      this.trackRef.current.removeEventListener('touchmove', this.schdOnTouchMove);
-      this.trackRef.current.removeEventListener('mouseup', this.schdOnEnd);
-      this.trackRef.current.removeEventListener('touchup', this.schdOnEnd);
-      this.trackRef.current.removeEventListener('touchcancel', this.schdOnEnd);
-    }
+
+    this.trackRef.current.removeEventListener('mousemove', this.schdOnMouseMove);
+    this.trackRef.current.removeEventListener('touchmove', this.schdOnTouchMove);
+    this.trackRef.current.removeEventListener('mouseup', this.schdOnEnd);
+    this.trackRef.current.removeEventListener('touchup', this.schdOnEnd);
+    this.trackRef.current.removeEventListener('touchcancel', this.schdOnEnd);
 
     this.setState({ draggedThumbIndex: -1 }, () => {
       this.fireOnFinalChange();
