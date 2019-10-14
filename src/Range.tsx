@@ -52,12 +52,14 @@ class Range extends React.Component<IProps> {
   componentDidMount() {
     window.addEventListener('resize', this.schdOnWindowResize);
 
-    this.trackRef.current.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
-      passive: false
-    });
-    this.trackRef.current.addEventListener('mousedown', this.onMouseOrTouchStart as any, {
-      passive: false
-    });
+    if (this.trackRef.current) {
+      this.trackRef.current.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
+        passive: false
+      });
+      this.trackRef.current.addEventListener('mousedown', this.onMouseOrTouchStart as any, {
+        passive: false
+      });
+    }
 
     !this.props.allowOverlap && checkInitialOverlap(this.props.values);
     this.props.values.forEach(value =>
@@ -73,9 +75,11 @@ class Range extends React.Component<IProps> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.schdOnWindowResize);
 
-    this.trackRef.current.removeEventListener('mousedown', this.onMouseOrTouchStart as any);
-    this.trackRef.current.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
-    this.trackRef.current.removeEventListener('touchend', this.schdOnEnd as any);
+    if (this.trackRef.current) {
+      this.trackRef.current.removeEventListener('mousedown', this.onMouseOrTouchStart as any);
+      this.trackRef.current.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
+      this.trackRef.current.removeEventListener('touchend', this.schdOnEnd as any);
+    }
   }
 
   getOffsets = () => {
@@ -151,17 +155,23 @@ class Range extends React.Component<IProps> {
 
   addTouchEvents = (e: TouchEvent) => {
     e.preventDefault();
-    this.trackRef.current.addEventListener('touchmove', this.schdOnTouchMove, {
-      passive: false
-    });
-    this.trackRef.current.addEventListener('touchend', this.schdOnEnd);
-    this.trackRef.current.addEventListener('touchcancel', this.schdOnEnd);
+
+    if (this.trackRef.current) {
+      this.trackRef.current.addEventListener('touchmove', this.schdOnTouchMove, {
+        passive: false
+      });
+      this.trackRef.current.addEventListener('touchend', this.schdOnEnd);
+      this.trackRef.current.addEventListener('touchcancel', this.schdOnEnd);
+    }
   };
 
   addMouseEvents = (e: MouseEvent) => {
     e.preventDefault();
-    this.trackRef.current.addEventListener('mousemove', this.schdOnMouseMove);
-    this.trackRef.current.addEventListener('mouseup', this.schdOnEnd);
+
+    if (this.trackRef.current) {
+      this.trackRef.current.addEventListener('mousemove', this.schdOnMouseMove);
+      this.trackRef.current.addEventListener('mouseup', this.schdOnEnd);
+    }
   };
 
   onMouseDownTrack = (e: React.MouseEvent) => {
@@ -350,11 +360,13 @@ class Range extends React.Component<IProps> {
   onEnd = (e: Event) => {
     e.preventDefault();
 
-    this.trackRef.current.removeEventListener('mousemove', this.schdOnMouseMove);
-    this.trackRef.current.removeEventListener('touchmove', this.schdOnTouchMove);
-    this.trackRef.current.removeEventListener('mouseup', this.schdOnEnd);
-    this.trackRef.current.removeEventListener('touchup', this.schdOnEnd);
-    this.trackRef.current.removeEventListener('touchcancel', this.schdOnEnd);
+    if (this.trackRef.current) {
+      this.trackRef.current.removeEventListener('mousemove', this.schdOnMouseMove);
+      this.trackRef.current.removeEventListener('touchmove', this.schdOnTouchMove);
+      this.trackRef.current.removeEventListener('mouseup', this.schdOnEnd);
+      this.trackRef.current.removeEventListener('touchup', this.schdOnEnd);
+      this.trackRef.current.removeEventListener('touchcancel', this.schdOnEnd);
+    }
 
     this.setState({ draggedThumbIndex: -1 }, () => {
       this.fireOnFinalChange();
