@@ -326,7 +326,7 @@ class Range extends React.Component<IProps> {
     }
     // invert for RTL
     if (rtl) {
-      newValue = max - newValue;
+      newValue = (max+min) - newValue;
     }
     if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
       onChange(
