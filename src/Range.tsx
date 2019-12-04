@@ -47,6 +47,10 @@ class Range extends React.Component<IProps> {
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
     this.schdOnWindowResize = schd(this.onWindowResize);
+
+    if ((props.max - props.min) % props.step !== 0) {
+      console.warn('The difference of `max` and `min` must be divisible by `step`');
+    }
   }
 
   componentDidMount() {

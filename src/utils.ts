@@ -28,7 +28,8 @@ export function normalizeValue(
   }
   if (value > max) return max;
   if (value < min) return min;
-  const remainder = Math.round(value * BIG_NUM) % Math.round(step * BIG_NUM);
+  const inverter = min < 0 ? -1: 1;
+  const remainder = Math.round(value * BIG_NUM  - inverter * min * BIG_NUM) % Math.round(step * BIG_NUM);
   const closestBigNum = Math.round(value * BIG_NUM - remainder);
   const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
   const res =
