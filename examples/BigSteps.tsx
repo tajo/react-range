@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Range, getTrackBackground } from '../src/index';
 
 const STEP = 10;
-const MIN = 0;
-const MAX = 100;
+const MIN = 5;
+const MAX = 105;
 
 class BigSteps extends React.Component {
   state = {
-    values: [50]
+    values: [55]
   };
   render() {
     return (
