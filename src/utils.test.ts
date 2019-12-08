@@ -14,6 +14,7 @@ describe('normalizeValue', () => {
     expect(normalizeValue(51, 0, 0, 100, 1, false, [50])).toBe(51);
     expect(normalizeValue(51.2, 0, 0, 100, 1, false, [50])).toBe(51);
     expect(normalizeValue(50.8, 0, 0, 100, 1, false, [50])).toBe(51);
+    expect(normalizeValue(12.8, 0, 5, 95, 5, false, [55])).toBe(15);
   });
   test('negative', () => {
     expect(normalizeValue(-51, 0, -100, 0, 1, false, [-50])).toBe(-51);

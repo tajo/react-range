@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Range, getTrackBackground } from '../src/index';
 
 const STEP = 0.1;
-const MIN = 0;
+const MIN = 50;
 const MAX = 100;
 
 class Basic extends React.Component {
@@ -10,7 +10,7 @@ class Basic extends React.Component {
     values: [50]
   };
   render() {
-    return ( 
+    return (
       <div
         style={{
           display: 'flex',

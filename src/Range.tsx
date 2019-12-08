@@ -47,6 +47,10 @@ class Range extends React.Component<IProps> {
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
     this.schdOnWindowResize = schd(this.onWindowResize);
+
+    if ((props.max - props.min) % props.step !== 0) {
+      console.warn('The difference of `max` and `min` must be divisible by `step`');
+    }
   }
 
   componentDidMount() {
@@ -207,12 +211,12 @@ class Range extends React.Component<IProps> {
     }
     this.setState({
       draggedThumbIndex: index,
-      thumbZIndexes: this.state.thumbZIndexes.map((t, i) =>
-        i === index &&
-        this.state.thumbZIndexes[i] !== Math.max(...this.state.thumbZIndexes)
-          ? Math.max(...this.state.thumbZIndexes) + 1
-          : this.state.thumbZIndexes[i]
-      )
+      thumbZIndexes: this.state.thumbZIndexes.map((t, i) => {
+        if (i === index) {
+          return Math.max(...this.state.thumbZIndexes);
+        }
+        return t <= this.state.thumbZIndexes[index] ? t : t - 1;
+      })
     });
   };
 
@@ -326,7 +330,7 @@ class Range extends React.Component<IProps> {
     }
     // invert for RTL
     if (rtl) {
-      newValue = max - newValue;
+      newValue = (max+min) - newValue;
     }
     if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
       onChange(
