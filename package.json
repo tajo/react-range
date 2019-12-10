@@ -1,6 +1,6 @@
 {
   "name": "react-range",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "Range input. Slides in all directions.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
