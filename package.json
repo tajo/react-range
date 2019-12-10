@@ -90,8 +90,5 @@
       "node"
     ],
     "preset": "jest-puppeteer"
-  },
-  "dependencies": {
-    "fusion-cli": "^2.5.0"
   }
 }
