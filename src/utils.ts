@@ -35,7 +35,7 @@ export function normalizeValue(
   const res =
     Math.abs(remainder / BIG_NUM) < step / 2
       ? rounded
-      : rounded + step * Math.sign(value);
+      : rounded + step * (((value > 0) ? 1 : 0 ) + ((value < 0) ? -1 : 0 ) || +value);
   const afterDot = step.toString().split('.')[1];
   return afterDot ? parseFloat(res.toFixed(afterDot.length)) : res;
 }
