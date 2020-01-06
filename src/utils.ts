@@ -42,7 +42,7 @@ export function normalizeValue(
   const res =
     Math.abs(remainder / BIG_NUM) < step / 2
       ? rounded
-      : rounded + step * Math.sign(value);
+      : rounded + step * (((value > 0) ? 1 : 0 ) + ((value < 0) ? -1 : 0 ) || +value);
   const decimalPlaces = getStepDecimals(step);
   return parseFloat(res.toFixed(decimalPlaces));
 }
