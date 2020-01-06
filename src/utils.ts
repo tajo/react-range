@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import Range from './Range';
 import { TThumbOffsets, ITrackBackground, Direction } from './types';
 
+export const getStepDecimals = (step: number): number => {
+  const decimals = step.toString().split('.')[1];
+  return decimals ? decimals.length : 0;
+};
+
 export function isTouchEvent(event: TouchEvent & MouseEvent) {
   return (
     (event.touches && event.touches.length) ||
@@ -28,16 +33,18 @@ export function normalizeValue(
   }
   if (value > max) return max;
   if (value < min) return min;
-  const inverter = min < 0 ? -1: 1;
-  const remainder = Math.round(value * BIG_NUM  - inverter * min * BIG_NUM) % Math.round(step * BIG_NUM);
+  const inverter = min < 0 ? -1 : 1;
+  const remainder =
+    Math.round(value * BIG_NUM - inverter * min * BIG_NUM) %
+    Math.round(step * BIG_NUM);
   const closestBigNum = Math.round(value * BIG_NUM - remainder);
   const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
   const res =
     Math.abs(remainder / BIG_NUM) < step / 2
       ? rounded
       : rounded + step * (((value > 0) ? 1 : 0 ) + ((value < 0) ? -1 : 0 ) || +value);
-  const afterDot = step.toString().split('.')[1];
-  return afterDot ? parseFloat(res.toFixed(afterDot.length)) : res;
+  const decimalPlaces = getStepDecimals(step);
+  return parseFloat(res.toFixed(decimalPlaces));
 }
 
 export function relativeValue(value: number, min: number, max: number) {
@@ -89,7 +96,11 @@ export function getPadding(element: Element) {
   };
 }
 
-export function translateThumbs(elements: Element[], offsets: TThumbOffsets, rtl: boolean) {
+export function translateThumbs(
+  elements: Element[],
+  offsets: TThumbOffsets,
+  rtl: boolean
+) {
   const inverter = rtl ? -1 : 1;
   elements.forEach((element, index) =>
     translate(element, inverter * offsets[index].x, offsets[index].y)
@@ -129,7 +140,7 @@ export function getTrackBackground({
   min,
   max,
   direction = Direction.Right,
-  rtl = false,
+  rtl = false
 }: ITrackBackground) {
   if (rtl && direction === Direction.Right) {
     direction = Direction.Left;
@@ -260,6 +271,7 @@ const getOverlaps = (
  * @param rangeRef - React ref value of Range component
  * @param values - current Range values Array
  * @param index - thumb index
+ * @param step - step value, used to calculate the number of decimal places
  * @param separator - string to separate thumb values
  * @returns label value + styling for thumb label
  */
@@ -267,11 +279,15 @@ export const useThumbOverlap = (
   rangeRef: Range | null,
   values: number[],
   index: number,
+  step = 0.1,
   separator = ' - '
 ) => {
+  const decimalPlaces = getStepDecimals(step);
   // Create initial label style and value. Label value defaults to thumb value
   const [labelStyle, setLabelStyle] = useState<React.CSSProperties>({});
-  const [labelValue, setLabelValue] = useState(values[index].toFixed(1));
+  const [labelValue, setLabelValue] = useState(
+    values[index].toFixed(decimalPlaces)
+  );
 
   // When the rangeRef or values change, update the Thumb label values and styling
   useEffect(() => {
@@ -288,7 +304,7 @@ export const useThumbOverlap = (
        */
       const overlaps = getOverlaps(index, offsets, thumbs, values, separator);
       // Set a default label value of the Thumb value
-      let labelValue = values[index].toFixed(1);
+      let labelValue = values[index].toFixed(decimalPlaces);
       /**
        * If there are overlaps for the Thumb, we need to calculate the correct
        * Label value along with the relevant styling. We only want to show a Label
@@ -319,7 +335,7 @@ export const useThumbOverlap = (
            */
           const labelValues: string[] = [];
           overlaps.forEach(thumb => {
-            labelValues.push(values[thumb].toFixed(1));
+            labelValues.push(values[thumb].toFixed(decimalPlaces));
           });
           /**
            *  Update the labelValue with the resulting Array
