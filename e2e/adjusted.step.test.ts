@@ -15,6 +15,7 @@ beforeEach(async () => {
 });
 
 test('dnd the thumb to right', async () => {
+  const output = await page.$('#output');
   expect(await page.evaluate(e => e.textContent, output)).toBe('53.0');
   await trackMouse(page);
   await page.mouse.move(300, 80);
@@ -22,12 +23,12 @@ test('dnd the thumb to right', async () => {
   await page.mouse.move(460, 80);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
   expect(await page.evaluate(e => e.textContent, output)).toBe('83.0');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
 test('dnd the thumb to left', async () => {
+  const output = await page.$('#output');
   expect(await page.evaluate(e => e.textContent, output)).toBe('53.0');
   await trackMouse(page);
   await page.mouse.move(300, 80);
@@ -35,7 +36,6 @@ test('dnd the thumb to left', async () => {
   await page.mouse.move(140, 80);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
   expect(await page.evaluate(e => e.textContent, output)).toBe('23.0');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
