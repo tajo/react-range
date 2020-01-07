@@ -5,7 +5,8 @@ import {
   checkBoundaries,
   checkInitialOverlap,
   replaceAt,
-  getTrackBackground
+  getTrackBackground,
+  getStepDecimals
 } from './utils';
 import { Direction } from './types';
 
@@ -171,4 +172,13 @@ test('getTrackBackground', () => {
       rtl: true
     })
   ).toBe('linear-gradient(to right, #aaa 0%, #aaa 40%, #bbb 40%, #bbb 100%)');
+});
+
+test('getStepDecimals', () => {
+  expect(getStepDecimals(1)).toBe(0);
+  expect(getStepDecimals(1.0)).toBe(0);
+  expect(getStepDecimals(1.1)).toBe(1);
+  expect(getStepDecimals(1.5)).toBe(1);
+  expect(getStepDecimals(1.55)).toBe(2);
+  expect(getStepDecimals(1.2345)).toBe(4);
 });

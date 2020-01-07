@@ -1,6 +1,6 @@
 {
   "name": "react-range",
-  "version": "1.4.4",
+  "version": "1.4.7",
   "description": "Range input. Slides in all directions.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,7 +24,8 @@
     "test:e2e": "start-server-and-test storybook:ci http-get://localhost:9011 jest:e2e",
     "test:e2e:dev": "E2E=dev yarn jest:e2e",
     "test:e2e:update": "start-server-and-test storybook:ci http-get://localhost:9011 jest:e2e:update",
-    "test:unit": "jest src"
+    "test:unit": "jest src",
+    "typecheck": "tsc --noEmit"
   },
   "tags": [
     "react"
@@ -38,29 +39,28 @@
     "interval"
   ],
   "devDependencies": {
-    "@storybook/addon-options": "5.1.9",
-    "@storybook/addons": "5.1.9",
-    "@storybook/react": "5.1.9",
+    "@storybook/addon-options": "5.2.8",
+    "@storybook/addons": "5.2.8",
+    "@storybook/react": "5.2.8",
     "@types/expect-puppeteer": "^3.3.0",
-    "@types/jest": "^23.3.13",
-    "@types/jest-environment-puppeteer": "^2.2.1",
+    "@types/jest": "^24.0.23",
+    "@types/jest-environment-puppeteer": "^4.3.1",
     "@types/jest-image-snapshot": "^2.4.0",
-    "@types/node": "^10.12.18",
-    "@types/puppeteer": "^1.11.2",
+    "@types/node": "^12.12.17",
+    "@types/puppeteer": "^2.0.0",
     "@types/react": "^16.8.6",
     "@types/react-dom": "^16.8.4",
-    "@types/storybook__react": "^4.0.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
-    "fork-ts-checker-webpack-plugin": "^0.5.2",
+    "fork-ts-checker-webpack-plugin": "^3.1.1",
     "imgur": "^0.3.1",
-    "jest": "^23.6.0",
+    "jest": "^24.9.0",
     "jest-image-snapshot": "^2.7.0",
-    "jest-puppeteer": "^3.9.0",
-    "puppeteer": "^1.11.0",
+    "jest-puppeteer": "^4.3.0",
+    "puppeteer": "^2.0.0",
     "start-server-and-test": "^1.7.11",
     "storybook-addon-rtl": "^0.2.2",
-    "ts-jest": "^23.10.5",
+    "ts-jest": "^24.2.0",
     "typescript": "^3.2.4"
   },
   "peerDependencies": {
@@ -76,7 +76,9 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$",
-    "setupTestFrameworkScriptFile": "./setupTests.js",
+    "setupFilesAfterEnv": [
+      "./setupTests.js"
+    ],
     "reporters": [
       "default",
       "<rootDir>/image-reporter.js"
