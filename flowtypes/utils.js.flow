@@ -6,13 +6,14 @@ declare export function getTrackBackground(params: {
   max: number,
   values: number[],
   colors: string[],
-  direction?: string;
-  rtl?: boolean,
+  direction?: string,
+  rtl?: boolean
 }): string;
 
 declare export function useThumbOverlap(
   rangeRef: Range | null,
   values: number[],
   index: number,
-  separator?: string,
+  step?: number,
+  separator?: string
 ): mixed[];
