@@ -30,6 +30,7 @@ class Range extends React.Component<IProps> {
     max: 100
   };
   trackRef = React.createRef<HTMLElement>();
+  thumbRefs :React.RefObject<HTMLElement>[] = [];
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
@@ -47,6 +48,7 @@ class Range extends React.Component<IProps> {
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
     this.schdOnWindowResize = schd(this.onWindowResize);
+    this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
 
     if ((props.max - props.min) % props.step !== 0) {
       console.warn('The difference of `max` and `min` must be divisible by `step`');
@@ -160,7 +162,6 @@ class Range extends React.Component<IProps> {
   };
 
   addMouseEvents = (e: MouseEvent) => {
-    e.preventDefault();
     document.addEventListener('mousemove', this.schdOnMouseMove);
     document.addEventListener('mouseup', this.schdOnEnd);
   };
@@ -169,7 +170,9 @@ class Range extends React.Component<IProps> {
     // in case there is a single thumb, we want to support
     // moving the thumb to a place where the track is clicked
     if (e.button !== 0 || this.props.values.length > 1) return;
+    this.thumbRefs[0].current?.focus();
     e.persist();
+    e.preventDefault();
     this.addMouseEvents(e.nativeEvent);
     this.setState(
       {
@@ -203,7 +206,6 @@ class Range extends React.Component<IProps> {
     if (!isTouch && e.button !== 0) return;
     const index = this.getTargetIndex(e);
     if (index === -1) return;
-    e.preventDefault();
     if (isTouch) {
       this.addTouchEvents(e);
     } else {
@@ -423,6 +425,7 @@ class Range extends React.Component<IProps> {
             'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
             'aria-valuenow': value,
             draggable: false,
+            ref: this.thumbRefs[index],
             role: 'slider',
             onKeyDown: disabled ? voidFn : this.onKeyDown,
             onKeyUp: disabled ? voidFn : this.onKeyUp
