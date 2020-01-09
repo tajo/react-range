@@ -54,6 +54,7 @@ class Range extends React.Component<IProps> {
   }
 
   componentDidMount() {
+    const {values, min, step} = this.props;
     window.addEventListener('resize', this.schdOnWindowResize);
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
       passive: false
@@ -66,6 +67,12 @@ class Range extends React.Component<IProps> {
       checkBoundaries(value, this.props.min, this.props.max)
     );
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
+
+    values.forEach(value => {
+      if (((value - min) % step)) {
+        console.warn('The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that are accessible using the min, max an step values');
+      }
+    })
   }
 
   componentDidUpdate(prevProps: IProps) {
