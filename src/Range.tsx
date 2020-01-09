@@ -70,7 +70,7 @@ class Range extends React.Component<IProps> {
 
     values.forEach(value => {
       if (((value - min) % step)) {
-        console.warn('The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that other accessible using the min, max an step values');
+        console.warn('The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that are accessible using the min, max an step values');
       }
     })
   }
