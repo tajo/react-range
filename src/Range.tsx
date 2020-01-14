@@ -162,8 +162,12 @@ class Range extends React.Component<IProps> {
     document.addEventListener('touchmove', this.schdOnTouchMove, {
       passive: false
     });
-    document.addEventListener('touchend', this.schdOnEnd);
-    document.addEventListener('touchcancel', this.schdOnEnd);
+    document.addEventListener('touchend', this.schdOnEnd, {
+      passive: false
+    });
+    document.addEventListener('touchcancel', this.schdOnEnd, {
+      passive: false
+    });
   };
 
   addMouseEvents = (e: MouseEvent) => {
@@ -177,7 +181,6 @@ class Range extends React.Component<IProps> {
     // moving the thumb to a place where the track is clicked
     if (e.button !== 0 || this.props.values.length > 1) return;
     e.persist();
-    this.addMouseEvents(e.nativeEvent);
     this.setState(
       {
         draggedThumbIndex: 0
@@ -195,7 +198,6 @@ class Range extends React.Component<IProps> {
     // moving the thumb to a place where the track is clicked
     if (this.props.values.length > 1) return;
     e.persist();
-    this.addTouchEvents(e.nativeEvent);
     this.setState(
       {
         draggedThumbIndex: 0
