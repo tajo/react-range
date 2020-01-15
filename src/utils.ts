@@ -14,6 +14,11 @@ export function isTouchEvent(event: TouchEvent & MouseEvent) {
   );
 }
 
+export function isStepDivisible(min: number, max: number, step: number): boolean {
+  const res = (max - min) / step;
+  return parseInt(res.toString(), 10) === res;
+}
+
 export function normalizeValue(
   value: number,
   index: number,

@@ -12,7 +12,8 @@ import {
   voidFn,
   isVertical,
   assertUnreachable,
-  isTouchEvent
+  isTouchEvent,
+  isStepDivisible
 } from './utils';
 import { IProps, Direction } from './types';
 
@@ -48,10 +49,7 @@ class Range extends React.Component<IProps> {
     this.schdOnEnd = schd(this.onEnd);
     this.schdOnWindowResize = schd(this.onWindowResize);
 
-    if (
-      (props.max - props.min) % props.step !== 0 &&
-      Number.isInteger(props.step)
-    ) {
+    if (!isStepDivisible(props.min, props.max, props.step)) {
       console.warn(
         'The difference of `max` and `min` must be divisible by `step`'
       );
@@ -74,7 +72,7 @@ class Range extends React.Component<IProps> {
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
 
     values.forEach(value => {
-      if ((value - min) % step && Number.isInteger(step)) {
+      if (!isStepDivisible(min, value, step)) {
         console.warn(
           'The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that are accessible using the min, max an step values'
         );
