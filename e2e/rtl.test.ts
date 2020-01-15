@@ -20,7 +20,7 @@ import {
   test('dnd the thumb to right', async () => {
     await trackMouse(page);
     expect(await page.screenshot()).toMatchImageSnapshot();
-    await page.mouse.move(300, 80);
+    await page.mouse.move(572, 80);
     await page.mouse.down();
     await page.mouse.move(460, 80);
     await page.mouse.up();
