@@ -38,7 +38,7 @@ class Range extends React.Component<IProps> {
   state = {
     draggedThumbIndex: -1,
     thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i),
-    isChanged: false,
+    isChanged: false
   };
 
   constructor(props: IProps) {
@@ -48,13 +48,18 @@ class Range extends React.Component<IProps> {
     this.schdOnEnd = schd(this.onEnd);
     this.schdOnWindowResize = schd(this.onWindowResize);
 
-    if ((props.max - props.min) % props.step !== 0) {
-      console.warn('The difference of `max` and `min` must be divisible by `step`');
+    if (
+      (props.max - props.min) % props.step !== 0 &&
+      Number.isInteger(props.step)
+    ) {
+      console.warn(
+        'The difference of `max` and `min` must be divisible by `step`'
+      );
     }
   }
 
   componentDidMount() {
-    const {values, min, step} = this.props;
+    const { values, min, step } = this.props;
     window.addEventListener('resize', this.schdOnWindowResize);
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
       passive: false
@@ -69,10 +74,12 @@ class Range extends React.Component<IProps> {
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
 
     values.forEach(value => {
-      if (((value - min) % step)) {
-        console.warn('The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that are accessible using the min, max an step values');
+      if ((value - min) % step && Number.isInteger(step)) {
+        console.warn(
+          'The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that are accessible using the min, max an step values'
+        );
       }
-    })
+    });
   }
 
   componentDidUpdate(prevProps: IProps) {
@@ -158,7 +165,6 @@ class Range extends React.Component<IProps> {
     );
 
   addTouchEvents = (e: TouchEvent) => {
-    e.preventDefault();
     document.addEventListener('touchmove', this.schdOnTouchMove, {
       passive: false
     });
@@ -171,7 +177,6 @@ class Range extends React.Component<IProps> {
   };
 
   addMouseEvents = (e: MouseEvent) => {
-    e.preventDefault();
     document.addEventListener('mousemove', this.schdOnMouseMove);
     document.addEventListener('mouseup', this.schdOnEnd);
   };
@@ -181,6 +186,7 @@ class Range extends React.Component<IProps> {
     // moving the thumb to a place where the track is clicked
     if (e.button !== 0 || this.props.values.length > 1) return;
     e.persist();
+    this.addMouseEvents(e.nativeEvent);
     this.setState(
       {
         draggedThumbIndex: 0
@@ -198,6 +204,7 @@ class Range extends React.Component<IProps> {
     // moving the thumb to a place where the track is clicked
     if (this.props.values.length > 1) return;
     e.persist();
+    this.addTouchEvents(e.nativeEvent);
     this.setState(
       {
         draggedThumbIndex: 0
@@ -250,7 +257,7 @@ class Range extends React.Component<IProps> {
       e.preventDefault();
       this.setState({
         draggedThumbIndex: index,
-        isChanged: true,
+        isChanged: true
       });
       onChange(
         replaceAt(
@@ -266,14 +273,15 @@ class Range extends React.Component<IProps> {
       e.preventDefault();
       this.setState({
         draggedThumbIndex: index,
-        isChanged: true,
+        isChanged: true
       });
       onChange(
         replaceAt(
           values,
           index,
           this.normalizeValue(
-            values[index] - inverter * (e.key === 'PageDown' ? step * 10 : step),
+            values[index] -
+              inverter * (e.key === 'PageDown' ? step * 10 : step),
             index
           )
         )
@@ -294,13 +302,16 @@ class Range extends React.Component<IProps> {
 
   onKeyUp = (e: React.KeyboardEvent) => {
     const { isChanged } = this.state;
-    this.setState({
-      draggedThumbIndex: -1,
-    }, () => {
-      if (isChanged) {
-        this.fireOnFinalChange();
+    this.setState(
+      {
+        draggedThumbIndex: -1
+      },
+      () => {
+        if (isChanged) {
+          this.fireOnFinalChange();
+        }
       }
-    });
+    );
   };
 
   onMove = (clientX: number, clientY: number) => {
@@ -339,7 +350,7 @@ class Range extends React.Component<IProps> {
     }
     // invert for RTL
     if (rtl) {
-      newValue = (max+min) - newValue;
+      newValue = max + min - newValue;
     }
     if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
       onChange(
@@ -364,6 +375,7 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('mouseup', this.schdOnEnd);
     document.removeEventListener('touchup', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
+    if (this.state.draggedThumbIndex === -1) return;
     this.setState({ draggedThumbIndex: -1 }, () => {
       this.fireOnFinalChange();
     });
@@ -392,7 +404,7 @@ class Range extends React.Component<IProps> {
     return renderTrack({
       props: {
         style: {
-          // creates stacking context that prevents z-index applied to thumbs 
+          // creates stacking context that prevents z-index applied to thumbs
           // interfere with other elements
           transform: 'scale(1)',
           cursor:
