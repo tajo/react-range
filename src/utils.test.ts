@@ -6,7 +6,8 @@ import {
   checkInitialOverlap,
   replaceAt,
   getTrackBackground,
-  getStepDecimals
+  getStepDecimals,
+  isStepDivisible
 } from './utils';
 import { Direction } from './types';
 
@@ -55,6 +56,21 @@ test('isVertical', () => {
   expect(isVertical(Direction.Left)).toBeFalsy();
   expect(isVertical(Direction.Right)).toBeFalsy();
 });
+
+test('isStepDivisible', () => {
+  expect(isStepDivisible(0, 1, 0.1)).toEqual(true);
+  expect(isStepDivisible(0, 100, 0.1)).toEqual(true);
+  expect(isStepDivisible(0, 10, 1)).toEqual(true);
+  expect(isStepDivisible(0, 10, 10)).toEqual(true);
+  expect(isStepDivisible(0, 10, 2.5)).toEqual(true);
+  expect(isStepDivisible(10, 20, 2.5)).toEqual(true);
+  expect(isStepDivisible(10, 20, 5)).toEqual(true);
+
+  expect(isStepDivisible(0, 1, 0.3)).toEqual(false);
+  expect(isStepDivisible(0, 35, 6)).toEqual(false);
+  expect(isStepDivisible(0, 10, 20)).toEqual(false);
+  expect(isStepDivisible(0, 10, 0)).toEqual(false);
+})
 
 test('checkBoundaries', () => {
   expect(() => checkBoundaries(-10, 0, 100)).toThrow(
