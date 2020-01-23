@@ -301,6 +301,10 @@ yarn test:e2e:dev #run the e2e tests
 yarn test:e2e
 ```
 
+### Focus-visible style
+
+For the Storybook purposes and E2E tests, the example [stories](https://github.com/tajo/react-range/blob/master/.storybook/example.stories.js#L20) use `focus-visible` polyfill package, which applies focus ring only when input is initiated by keyboard. In the future, all browsers will support this CSS pseudo-class. The polyfill is not part of the library and you can use your own solution or setup the polyfill in a different manner (this mostly concerns you when using css class generating frameworks like Styled-components, Emotion and so on).
+
 ## Browser support
 
 - **Chrome** (latest, mac, windows, iOS, Android)

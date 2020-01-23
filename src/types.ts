@@ -41,6 +41,7 @@ export interface IThumbProps {
   'aria-valuemin': number;
   'aria-valuenow': number;
   draggable: boolean;
+  ref: React.RefObject<any>;
   role: string;
   onKeyDown: (e: React.KeyboardEvent) => void;
   onKeyUp: (e: React.KeyboardEvent) => void;
