@@ -21,10 +21,13 @@ test('dnd the thumb, then use arrows', async () => {
   await page.mouse.move(460, 80);
   await page.mouse.up();
   await untrackMouse(page);
+  const outputBeforeArrowInput = await page.$('#output');
+  expect(await page.evaluate(e => e.textContent, outputBeforeArrowInput)).toBe('79.6');
+
   await page.keyboard.press('ArrowLeft');
 
-  const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('79.5');
+  const outputAfterArrowInput = await page.$('#output');
+  expect(await page.evaluate(e => e.textContent, outputAfterArrowInput)).toBe('79.5');
   await page.mouse.click(1, 1);
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
