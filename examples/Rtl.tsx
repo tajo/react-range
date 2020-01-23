@@ -9,6 +9,12 @@ class Basic extends React.Component {
   state = {
     values: [50]
   };
+  componentDidMount() {
+    document.body.setAttribute('dir', 'rtl');
+  }
+  componentWillUnmount() {
+    document.body.removeAttribute('dir');
+  }
   render() {
     return (
       <div
@@ -47,7 +53,7 @@ class Basic extends React.Component {
                     colors: ['#548BF4', '#ccc'],
                     min: MIN,
                     max: MAX,
-                    rtl: true,
+                    rtl: true
                   }),
                   alignSelf: 'center'
                 }}

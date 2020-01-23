@@ -9,6 +9,12 @@ class TwoThumbs extends React.Component {
   state = {
     values: [25, 75]
   };
+  componentDidMount() {
+    document.body.setAttribute('dir', 'rtl');
+  }
+  componentWillUnmount() {
+    document.body.removeAttribute('dir');
+  }
   render() {
     return (
       <div
@@ -25,7 +31,7 @@ class TwoThumbs extends React.Component {
           max={MAX}
           rtl
           onChange={values => {
-            this.setState({ values })
+            this.setState({ values });
           }}
           renderTrack={({ props, children }) => (
             <div
@@ -49,7 +55,7 @@ class TwoThumbs extends React.Component {
                     colors: ['#ccc', '#548BF4', '#ccc'],
                     min: MIN,
                     max: MAX,
-                    rtl: true,
+                    rtl: true
                   }),
                   alignSelf: 'center'
                 }}
