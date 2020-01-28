@@ -2,7 +2,7 @@ import * as puppeteer from 'puppeteer';
 
 export enum Examples {
   BASIC,
-  BASIC_WITH_BORDERS,
+  BASIC_WITH_BORDER,
   TWO_THUMBS,
   UP_DIRECTION,
   LEFT_DIRECTION,
@@ -18,7 +18,7 @@ export const getTestUrl = (example: Examples): string => {
   switch (example) {
     case Examples.BASIC:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--basic`;
-    case Examples.BASIC_WITH_BORDERS:
+    case Examples.BASIC_WITH_BORDER:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--basic-with-border`;
     case Examples.TWO_THUMBS:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--two-thumbs`;
