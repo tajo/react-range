@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   getMargin,
-  getPadding,
+  getPaddingAndBorder,
   translateThumbs,
   replaceAt,
   checkBoundaries,
@@ -97,7 +97,7 @@ class Range extends React.Component<IProps> {
     const { direction, values, min, max } = this.props;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
-    const trackPadding = getPadding(trackElement);
+    const trackPadding = getPaddingAndBorder(trackElement);
     return this.getThumbs().map((thumb, index) => {
       const thumbOffsets = { x: 0, y: 0 };
       const thumbRect = thumb.getBoundingClientRect();

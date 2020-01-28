@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import Basic from '../examples/Basic';
+import BasicWithBorder from '../examples/BasicWithBorder';
 import Disabled from '../examples/Disabled';
 import SuperSimple from '../examples/SuperSimple';
 import TwoThumbs from '../examples/TwoThumbs';
@@ -22,6 +23,7 @@ import '../node_modules/focus-visible/dist/focus-visible.min.js';
 
 storiesOf('Range', module)
   .add('Basic', () => <Basic />)
+  .add('Basic with border', () => <BasicWithBorder />)
   .add('Disabled', () => <Disabled />)
   .add('Super simple', () => <SuperSimple />)
   .add('Two thumbs', () => <TwoThumbs />)
