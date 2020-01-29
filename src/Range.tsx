@@ -87,8 +87,11 @@ class Range extends React.Component<IProps> {
   }
 
   componentWillUnmount() {
+    const options: AddEventListenerOptions = {
+      passive: false
+    };
     window.removeEventListener('resize', this.schdOnWindowResize);
-    document.removeEventListener('mousedown', this.onMouseOrTouchStart as any);
+    document.removeEventListener('mousedown', this.onMouseOrTouchStart as any, options);
     document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
     document.removeEventListener('touchend', this.schdOnEnd as any);
   }
