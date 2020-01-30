@@ -94,10 +94,10 @@ export function getMargin(element: Element) {
 export function getPaddingAndBorder(element: Element) {
   const style = window.getComputedStyle(element);
   return {
-    top: parseInt(style['padding-top' as any], 10) + parseInt(style['border-top' as any], 10),
-    bottom: parseInt(style['padding-bottom' as any], 10) + parseInt(style['border-bottom' as any], 10),
-    left: parseInt(style['padding-left' as any], 10) + parseInt(style['border-left' as any], 10),
-    right: parseInt(style['padding-right' as any], 10) + parseInt(style['border-right' as any], 10),
+    top: parseInt(style['padding-top' as any], 10) + parseInt(style['border-top-width' as any], 10),
+    bottom: parseInt(style['padding-bottom' as any], 10) + parseInt(style['border-bottom-width' as any], 10),
+    left: parseInt(style['padding-left' as any], 10) + parseInt(style['border-left-width' as any], 10),
+    right: parseInt(style['padding-right' as any], 10) + parseInt(style['border-right-width' as any], 10),
   };
 }
 
