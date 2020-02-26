@@ -10,13 +10,13 @@ export interface ITrackBackground {
 }
 export interface IProps {
   values: number[];
-  min: number;
-  max: number;
-  step: number;
-  direction: Direction;
-  allowOverlap: boolean;
-  disabled: boolean;
-  rtl: boolean,
+  min?: number;
+  max?: number;
+  step?: number;
+  direction?: Direction;
+  allowOverlap?: boolean;
+  disabled?: boolean;
+  rtl?: boolean,
   onChange: (values: number[]) => void;
   onFinalChange?: (values: number[]) => void;
   renderThumb: (params: {
