@@ -234,7 +234,6 @@ rtl: boolean;
 
 If `true`, the slider will be optimized for RTL layouts. Default is `false`.
 
-
 ## getTrackBackground
 
 There is an additional helper function being exported from `react-range`. Your track is most likely a `div` with some background. What if you want to achieve a nice "progress bar" effect where the part before the thumb has different color than the part after? What if you want to have the same thing even with multiple thumbs (aka differently colored segments)? **You don't need to glue together multiple divs in order to do that!** You can use a single `div` and set `background: linear-gradient(...)`. `getTrackBackground` function builds this verbose `linear-gradient(...)` for you!
@@ -331,6 +330,8 @@ Big big shoutout to **[Tom MacWright](https://macwright.org/)** for donating the
 <img src="https://raw.githubusercontent.com/tajo/react-range/master/assets/browserstack-logo.png?raw=true" height="80" title="BrowserStack Logo" alt="BrowserStack Logo" />
 
 Big thanks to [BrowserStack](https://www.browserstack.com) for letting the maintainers use their service to debug browser issues.
+
+And [Netlify](https://www.netlify.com/) for free hosting.
 
 ## Author
 
