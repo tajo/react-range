@@ -181,7 +181,7 @@ const getThumbWidth = (
   value: number,
   separator: string,
   decimalPlaces: number,
-  valueToLabel = (value) => label
+  valueToLabel = (value: string): string => value
 ) => {
   const width = Math.ceil(
     [thumbEl, ...Array.from(thumbEl.children)].reduce(
@@ -232,7 +232,7 @@ const getOverlaps = (
   values: number[],
   separator: string,
   decimalPlaces: number,
-  valueToLabel = (value) => value
+  valueToLabel = (value: string): string => value
 ) => {
   let overlaps: number[] = [];
   /**
@@ -298,7 +298,7 @@ export const useThumbOverlap = (
   index: number,
   step = 0.1,
   separator = ' - ',
-  valueToLabel = (value) => value
+  valueToLabel = (value: string): string => value
 ) => {
   const decimalPlaces = getStepDecimals(step);
   // Create initial label style and value. Label value defaults to thumb value

@@ -7,7 +7,15 @@ const MAX = 100;
 const COLORS = ['#CCC', '#276EF1', '#CCC'];
 const THUMB_SIZE = 20;
 
-function ThumbLabel({ rangeRef, values, index }) {
+function ThumbLabel({
+  rangeRef,
+  values,
+  index
+}: {
+  rangeRef: Range | null;
+  values: number[];
+  index: number;
+}) {
   const [labelValue, labelStyle] = useThumbOverlap(
     rangeRef,
     values,
@@ -31,7 +39,7 @@ function ThumbLabel({ rangeRef, values, index }) {
         borderRadius: '4px',
         backgroundColor: '#548BF4',
         whiteSpace: 'nowrap',
-        ...labelStyle
+        ...(labelStyle as React.CSSProperties)
       }}
     >
       {labelValue}
