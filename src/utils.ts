@@ -360,7 +360,7 @@ export const useThumbOverlap = (
            * Then convert that to a Set and sort it whilst removing duplicates.
            */
           const labelValues: string[] = [];
-          overlaps.forEach((thumb) => {
+          overlaps.forEach(thumb => {
             labelValues.push(values[thumb].toFixed(decimalPlaces));
           });
           /**
