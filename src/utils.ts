@@ -176,7 +176,13 @@ export function assertUnreachable(x: never): never {
  * @param value - Thumb value, not label value
  * @param separator - Label separator value
  */
-const getThumbWidth = (thumbEl: Element, value: number, separator: string) => {
+const getThumbWidth = (
+  thumbEl: Element,
+  value: number,
+  separator: string,
+  decimalPlaces: number,
+  valueToLabel = (value: string): string => value
+) => {
   const width = Math.ceil(
     [thumbEl, ...Array.from(thumbEl.children)].reduce(
       (width: number, el: Element) => {
@@ -191,7 +197,7 @@ const getThumbWidth = (thumbEl: Element, value: number, separator: string) => {
           el.childElementCount === 0
         ) {
           const elClone = el.cloneNode(true) as HTMLElement;
-          elClone.innerHTML = value.toFixed(1);
+          elClone.innerHTML = valueToLabel(value.toFixed(decimalPlaces));
           elClone.style.visibility = 'hidden';
           document.body.append(elClone);
           elWidth = Math.ceil(elClone.getBoundingClientRect().width);
@@ -224,7 +230,9 @@ const getOverlaps = (
   offsets: { x: number; y: number }[],
   thumbs: Element[],
   values: number[],
-  separator: string
+  separator: string,
+  decimalPlaces: number,
+  valueToLabel = (value: string): string => value
 ) => {
   let overlaps: number[] = [];
   /**
@@ -236,7 +244,9 @@ const getOverlaps = (
     const thumbXWidth = getThumbWidth(
       thumbs[thumbIndex],
       values[thumbIndex],
-      separator
+      separator,
+      decimalPlaces,
+      valueToLabel
     );
     const thumbX = offsets[thumbIndex].x;
     /**
@@ -249,7 +259,9 @@ const getOverlaps = (
       const siblingWidth = getThumbWidth(
         thumbs[siblingIndex],
         values[siblingIndex],
-        separator
+        separator,
+        decimalPlaces,
+        valueToLabel
       );
       if (
         thumbIndex !== siblingIndex &&
@@ -285,13 +297,14 @@ export const useThumbOverlap = (
   values: number[],
   index: number,
   step = 0.1,
-  separator = ' - '
+  separator = ' - ',
+  valueToLabel = (value: string): string => value
 ) => {
   const decimalPlaces = getStepDecimals(step);
   // Create initial label style and value. Label value defaults to thumb value
   const [labelStyle, setLabelStyle] = useState<React.CSSProperties>({});
   const [labelValue, setLabelValue] = useState(
-    values[index].toFixed(decimalPlaces)
+    valueToLabel(values[index].toFixed(decimalPlaces))
   );
 
   // When the rangeRef or values change, update the Thumb label values and styling
@@ -307,9 +320,17 @@ export const useThumbOverlap = (
        * getting the overlaps for Thumb 1 and it overlaps only Thumb 2, we must get
        * 2, 3 and 4 also.
        */
-      const overlaps = getOverlaps(index, offsets, thumbs, values, separator);
+      const overlaps = getOverlaps(
+        index,
+        offsets,
+        thumbs,
+        values,
+        separator,
+        decimalPlaces,
+        valueToLabel
+      );
       // Set a default label value of the Thumb value
-      let labelValue = values[index].toFixed(decimalPlaces);
+      let labelValue = valueToLabel(values[index].toFixed(decimalPlaces));
       /**
        * If there are overlaps for the Thumb, we need to calculate the correct
        * Label value along with the relevant styling. We only want to show a Label
@@ -348,7 +369,9 @@ export const useThumbOverlap = (
            */
           labelValue = Array.from(
             new Set(labelValues.sort((a, b) => parseFloat(a) - parseFloat(b)))
-          ).join(separator);
+          )
+            .map(valueToLabel)
+            .join(separator);
           /**
            * Lastly, build the label styling. The label styling will
            * position the label and apply a transform so that it's centered.

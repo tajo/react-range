@@ -17,6 +17,7 @@ import Labeled from '../examples/Labeled';
 import LabeledTwoThumbs from '../examples/LabeledTwoThumbs';
 import LabeledMerge from '../examples/LabeledMerge';
 import LabeledMergeSkinny from '../examples/LabeledMergeSkinny';
+import LabeledMergeCustom from '../examples/LabeledMergeCustom';
 import FinalChangeEvent from '../examples/FinalChangeEvent';
 // initialize polyfill for :focus-visible pseudo-class
 import '../node_modules/focus-visible/dist/focus-visible.min.js';
@@ -39,4 +40,5 @@ storiesOf('Range', module)
   .add('Labeled two thumbs', () => <LabeledTwoThumbs/>)
   .add('Merging labels', () => <LabeledMerge />)
   .add('Merging labels skinny', () => <LabeledMergeSkinny />)
+  .add('Merging labels custom', () => <LabeledMergeCustom />)
   .add('onFinalChange event', () => <FinalChangeEvent />);

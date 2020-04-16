@@ -15,5 +15,6 @@ declare export function useThumbOverlap(
   values: number[],
   index: number,
   step?: number,
-  separator?: string
+  separator?: string,
+  valueToLabel?: (string) => string
 ): mixed[];

@@ -9,6 +9,7 @@ export enum Examples {
   DOWN_DIRECTION,
   MERGING_LABELS,
   SKINNY_MERGING_LABELS,
+  CUSTOM_MERGING_LABELS,
   RTL,
   FINAL_CHANGE_EVENT,
 }
@@ -32,6 +33,8 @@ export const getTestUrl = (example: Examples): string => {
       return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels`;
     case Examples.SKINNY_MERGING_LABELS:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels-skinny`;
+    case Examples.CUSTOM_MERGING_LABELS:
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels-custom`;
     case Examples.RTL:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--rtl`;
     case Examples.FINAL_CHANGE_EVENT:
