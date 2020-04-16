@@ -2,10 +2,11 @@ import * as React from 'react';
 import { Range, getTrackBackground } from '../src/index';
 import { useThumbOverlap } from '../src/utils';
 
+const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
-const COLORS = ['#CCC', '#276EF1', '#CCC'];
-const THUMB_SIZE = 20;
+const COLORS = ['#0C2960', '#276EF1', '#9CBCF8', '#ccc'];
+const THUMB_SIZE = 42;
 
 function ThumbLabel({
   rangeRef,
@@ -114,6 +115,9 @@ function Labeled() {
       onChange={handleChange}
       renderThumb={Thumb}
       renderTrack={Track}
+      step={STEP}
+      min={MIN}
+      max={MAX}
     />
   );
 }

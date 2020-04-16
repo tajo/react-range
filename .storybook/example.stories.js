@@ -40,5 +40,5 @@ storiesOf('Range', module)
   .add('Labeled two thumbs', () => <LabeledTwoThumbs/>)
   .add('Merging labels', () => <LabeledMerge />)
   .add('Merging labels skinny', () => <LabeledMergeSkinny />)
-  .add('Merging custom labels', () => <LabeledMergeCustom />)
+  .add('Merging labels custom', () => <LabeledMergeCustom />)
   .add('onFinalChange event', () => <FinalChangeEvent />);
