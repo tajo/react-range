@@ -193,6 +193,7 @@ const getThumbWidth = (
          * to that individual Thumb value in order to grab the true width.
          */
         if (
+          (el as HTMLElement).innerText &&
           (el as HTMLElement).innerText.includes(separator) &&
           el.childElementCount === 0
         ) {
