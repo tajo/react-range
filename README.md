@@ -110,7 +110,7 @@ renderTrack: (params: {
 - `isDragged` - `true` if any thumb is being dragged
 - `disabled` - `true` if `<Range disabled={true} />` is set
 
-The track can be a single narrow `div` as in the [Super simple example](https://github.com/tajo/react-range/blob/master/examples/SuperSimple.tsx); however, it might be better to use at least two nested `div`s where the outter `div` is much thicker and has a transparent background and the inner `div` is narrow, has visible background and is centered. `props` should be then spread over the outter bigger `div`. **Why to do this? It's nice to keep the `onMouseDown` and `onTouchStart` targets bigger** since the thumb can be moved also by clicking on the track (in a single thumb scenario).
+The track can be a single narrow `div` as in the [Super simple example](https://github.com/tajo/react-range/blob/master/examples/SuperSimple.tsx); however, it might be better to use at least two nested `div`s where the outer `div` is much thicker and has a transparent background and the inner `div` is narrow, has visible background and is centered. `props` should be then spread over the outer bigger `div`. **Why to do this? It's nice to keep the `onMouseDown` and `onTouchStart` targets bigger** since the thumb can be moved also by clicking on the track (in a single thumb scenario).
 
 ### renderThumb
 
