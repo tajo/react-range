@@ -200,7 +200,7 @@ const getThumbWidth = (
           const elClone = el.cloneNode(true) as HTMLElement;
           elClone.innerHTML = valueToLabel(value.toFixed(decimalPlaces));
           elClone.style.visibility = 'hidden';
-          document.body.append(elClone);
+          document.body.appendChild(elClone);
           elWidth = Math.ceil(elClone.getBoundingClientRect().width);
           elClone.remove();
         }
