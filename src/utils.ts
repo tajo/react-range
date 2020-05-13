@@ -202,7 +202,7 @@ const getThumbWidth = (
           elClone.style.visibility = 'hidden';
           document.body.appendChild(elClone);
           elWidth = Math.ceil(elClone.getBoundingClientRect().width);
-          elClone.remove();
+          document.body.removeChild(elClone);
         }
         return elWidth > width ? elWidth : width;
       },
