@@ -16,7 +16,6 @@ import {
   isStepDivisible
 } from './utils';
 import { IProps, Direction } from './types';
-import { ResizeObserver } from 'resize-observer';
 
 const INCREASE_KEYS = ['ArrowRight', 'ArrowUp', 'k', 'PageUp'];
 const DECREASE_KEYS = ['ArrowLeft', 'ArrowDown', 'j', 'PageDown'];
@@ -33,11 +32,11 @@ class Range extends React.Component<IProps> {
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs :React.RefObject<HTMLElement>[] = [];
-  resizeObserver: ResizeObserver;
+  resizeObserver: any;
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
-  schdOnTrackResize: () => void;
+  schdOnResize: () => void;
 
   state = {
     draggedThumbIndex: -1,
@@ -50,9 +49,14 @@ class Range extends React.Component<IProps> {
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
-    this.schdOnTrackResize = schd(this.onTrackResize);
+    this.schdOnResize = schd(this.onResize);
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
-    this.resizeObserver = new ResizeObserver(this.schdOnTrackResize);
+
+    // @ts-ignore
+    this.resizeObserver = (window.ResizeObserver)
+      // @ts-ignore
+      ? new window.ResizeObserver(this.schdOnResize)
+      : { observe: () => {}, unobserve: () => {} };
 
     if (!isStepDivisible(props.min, props.max, props.step)) {
       console.warn(
@@ -63,6 +67,7 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     const { values, min, step } = this.props;
+    window.addEventListener('resize', this.schdOnResize);
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
       passive: false
     });
@@ -93,6 +98,7 @@ class Range extends React.Component<IProps> {
     const options: AddEventListenerOptions = {
       passive: false
     };
+    window.removeEventListener('resize', this.schdOnResize);
     document.removeEventListener('mousedown', this.onMouseOrTouchStart as any, options);
     document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
     document.removeEventListener('touchend', this.schdOnEnd as any);
@@ -203,7 +209,7 @@ class Range extends React.Component<IProps> {
     );
   };
 
-  onTrackResize = () => {
+  onResize = () => {
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
   };
 
