@@ -56,7 +56,10 @@ class Range extends React.Component<IProps> {
     this.resizeObserver = (window.ResizeObserver)
       // @ts-ignore
       ? new window.ResizeObserver(this.schdOnResize)
-      : { observe: () => {}, unobserve: () => {} };
+      : {
+          observe: () => window.addEventListener('resize', this.schdOnResize),
+          unobserve: () => window.removeEventListener('resize', this.schdOnResize)
+        };
 
     if (!isStepDivisible(props.min, props.max, props.step)) {
       console.warn(
@@ -67,7 +70,6 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     const { values, min, step } = this.props;
-    window.addEventListener('resize', this.schdOnResize);
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
       passive: false
     });
@@ -98,7 +100,6 @@ class Range extends React.Component<IProps> {
     const options: AddEventListenerOptions = {
       passive: false
     };
-    window.removeEventListener('resize', this.schdOnResize);
     document.removeEventListener('mousedown', this.onMouseOrTouchStart as any, options);
     document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
     document.removeEventListener('touchend', this.schdOnEnd as any);
