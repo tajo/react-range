@@ -53,7 +53,7 @@ class Range extends React.Component<IProps> {
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
 
     // @ts-ignore
-    this.resizeObserver = (window.ResizeObserver)
+    this.resizeObserver = (window && window.ResizeObserver)
       // @ts-ignore
       ? new window.ResizeObserver(this.schdOnResize)
       : {
