@@ -52,15 +52,6 @@ class Range extends React.Component<IProps> {
     this.schdOnResize = schd(this.onResize);
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
 
-    // @ts-ignore
-    this.resizeObserver = (window.ResizeObserver)
-      // @ts-ignore
-      ? new window.ResizeObserver(this.schdOnResize)
-      : {
-          observe: () => window.addEventListener('resize', this.schdOnResize),
-          unobserve: () => window.removeEventListener('resize', this.schdOnResize)
-        };
-
     if (!isStepDivisible(props.min, props.max, props.step)) {
       console.warn(
         'The difference of `max` and `min` must be divisible by `step`'
@@ -70,6 +61,15 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     const { values, min, step } = this.props;
+    // @ts-ignore
+    this.resizeObserver = (window.ResizeObserver)
+      // @ts-ignore
+      ? new window.ResizeObserver(this.schdOnResize)
+      : {
+          observe: () => window.addEventListener('resize', this.schdOnResize),
+          unobserve: () => window.removeEventListener('resize', this.schdOnResize)
+        };
+
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
       passive: false
     });
