@@ -387,7 +387,7 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('mousemove', this.schdOnMouseMove);
     document.removeEventListener('touchmove', this.schdOnTouchMove);
     document.removeEventListener('mouseup', this.schdOnEnd);
-    document.removeEventListener('touchup', this.schdOnEnd);
+    document.removeEventListener('touchend', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
     if (this.state.draggedThumbIndex === -1) return;
     this.setState({ draggedThumbIndex: -1 }, () => {
