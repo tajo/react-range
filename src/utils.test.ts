@@ -23,6 +23,14 @@ describe('normalizeValue', () => {
     expect(normalizeValue(-51.2, 0, -100, 0, 1, false, [-50])).toBe(-51);
     expect(normalizeValue(-50.8, 0, -100, 0, 1, false, [-50])).toBe(-51);
   });
+  test('negative and positive', () => {
+    expect(normalizeValue(14.8, 0, -100, 100, 10, false, [0])).toBe(10);
+    expect(normalizeValue(15, 0, -100, 100, 10, false, [0])).toBe(20);
+    expect(normalizeValue(15.8, 0, -100, 100, 10, false, [0])).toBe(20);
+    expect(normalizeValue(-14.8, 0, -100, 100, 10, false, [0])).toBe(-10);
+    expect(normalizeValue(-15, 0, -100, 100, 10, false, [0])).toBe(-10);
+    expect(normalizeValue(-15.8, 0, -100, 100, 10, false, [0])).toBe(-20);
+  });
   test('decimal step', () => {
     expect(normalizeValue(50.009, 0, 0, 100, 0.01, false, [50])).toBe(50.01);
     expect(normalizeValue(50.004, 0, 0, 100, 0.01, false, [50])).toBe(50);
