@@ -38,16 +38,18 @@ export function normalizeValue(
   }
   if (value > max) return max;
   if (value < min) return min;
-  const inverter = min < 0 ? -1 : 1;
-  const remainder =
-    Math.round(value * BIG_NUM - inverter * min * BIG_NUM) %
-    Math.round(step * BIG_NUM);
-  const closestBigNum = Math.round(value * BIG_NUM - remainder);
-  const rounded = remainder === 0 ? value : closestBigNum / BIG_NUM;
-  const res =
-    Math.abs(remainder / BIG_NUM) < step / 2
+  // `remainder` is a difference between the given value and a full step value
+  // that is closest lower to the given value and is in the range between the min value
+  // and the given value
+  var remainder = Math.floor(value * BIG_NUM - min * BIG_NUM) %
+    Math.floor(step * BIG_NUM);
+  var closestLowerNum = Math.floor(value * BIG_NUM - Math.abs(remainder));
+  var rounded = remainder === 0 ? value : closestLowerNum / BIG_NUM;
+  // Values with a remainder `< step/2` are rounded to the closest lower value
+  // while values with a remainder `= > step/2` are rounded to the closest bigger value
+  var res = Math.abs(remainder / BIG_NUM) < step / 2
       ? rounded
-      : rounded + step * (((value > 0) ? 1 : 0 ) + ((value < 0) ? -1 : 0 ) || +value);
+      : rounded + step;
   const decimalPlaces = getStepDecimals(step);
   return parseFloat(res.toFixed(decimalPlaces));
 }
