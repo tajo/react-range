@@ -31,7 +31,7 @@ class Range extends React.Component<IProps> {
     max: 100
   };
   trackRef = React.createRef<HTMLElement>();
-  thumbRefs :React.RefObject<HTMLElement>[] = [];
+  thumbRefs: React.RefObject<HTMLElement>[] = [];
   resizeObserver: any;
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
@@ -61,13 +61,12 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     const { values, min, step } = this.props;
-    // @ts-ignore
-    this.resizeObserver = (window.ResizeObserver)
-      // @ts-ignore
-      ? new window.ResizeObserver(this.schdOnResize)
+    this.resizeObserver = (window as any).ResizeObserver
+      ? new (window as any).ResizeObserver(this.schdOnResize)
       : {
           observe: () => window.addEventListener('resize', this.schdOnResize),
-          unobserve: () => window.removeEventListener('resize', this.schdOnResize)
+          unobserve: () =>
+            window.removeEventListener('resize', this.schdOnResize)
         };
 
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
@@ -77,13 +76,13 @@ class Range extends React.Component<IProps> {
       passive: false
     });
     !this.props.allowOverlap && checkInitialOverlap(this.props.values);
-    this.props.values.forEach(value =>
+    this.props.values.forEach((value) =>
       checkBoundaries(value, this.props.min, this.props.max)
     );
-    this.resizeObserver.observe(this.trackRef.current!)
+    this.resizeObserver.observe(this.trackRef.current!);
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
 
-    values.forEach(value => {
+    values.forEach((value) => {
       if (!isStepDivisible(min, value, step)) {
         console.warn(
           'The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that are accessible using the min, max an step values'
@@ -100,10 +99,14 @@ class Range extends React.Component<IProps> {
     const options: AddEventListenerOptions = {
       passive: false
     };
-    document.removeEventListener('mousedown', this.onMouseOrTouchStart as any, options);
+    document.removeEventListener(
+      'mousedown',
+      this.onMouseOrTouchStart as any,
+      options
+    );
     document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
     document.removeEventListener('touchend', this.schdOnEnd as any);
-    this.resizeObserver.unobserve(this.trackRef.current!)
+    this.resizeObserver.unobserve(this.trackRef.current!);
   }
 
   getOffsets = () => {
@@ -174,7 +177,7 @@ class Range extends React.Component<IProps> {
 
   getTargetIndex = (e: Event) =>
     this.getThumbs().findIndex(
-      child => child === e.target || child.contains(e.target as Node)
+      (child) => child === e.target || child.contains(e.target as Node)
     );
 
   addTouchEvents = (e: TouchEvent) => {
@@ -366,7 +369,7 @@ class Range extends React.Component<IProps> {
     if (rtl) {
       newValue = max + min - newValue;
     }
-    if (Math.abs(values[draggedThumbIndex] - newValue) >= step) {
+    if (Math.abs(values[draggedThumbIndex] - newValue) >= step / 2) {
       onChange(
         replaceAt(
           values,
