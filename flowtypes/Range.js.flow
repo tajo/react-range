@@ -2,6 +2,11 @@
 
 import * as React from 'react';
 
+declare type IMarkProps = {
+  key: number,
+  style: CSSStyleDeclaration,
+  ref: React.Ref<any>
+};
 declare type IThumbProps = {
   key: number,
   style: CSSStyleDeclaration,
@@ -10,6 +15,7 @@ declare type IThumbProps = {
   'aria-valuemin': number,
   'aria-valuenow': number,
   draggable: boolean,
+  ref: React.Ref<any>,
   role: string,
   onKeyDown: (e: SyntheticEvent<*>) => mixed,
   onKeyUp: (e: SyntheticEvent<*>) => mixed
@@ -31,6 +37,10 @@ declare interface IProps {
   rtl?: boolean;
   onChange: (values: number[]) => mixed;
   onFinalChange?: (values: number[]) => mixed;
+  renderMark?: (params: {
+    props: IMarkProps,
+    index: number
+  }) => React.Node;
   renderThumb: (params: {
     props: IThumbProps,
     value: number,

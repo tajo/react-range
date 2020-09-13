@@ -32,7 +32,7 @@ class SuperSimple extends React.Component {
         min={0}
         max={100}
         values={this.state.values}
-        onChange={values => this.setState({ values })}
+        onChange={(values) => this.setState({ values })}
         renderTrack={({ props, children }) => (
           <div
             {...props}
@@ -140,6 +140,26 @@ renderThumb: (params: {
 - `value` - a number, relative value based on `min`, `max`, `step` and the thumb's position
 - `index` - the thumb index (order)
 - `isDragged` - `true` if the thumb is dragged, great for styling purposes
+
+### renderMark (optional)
+
+```ts
+renderMark?: (params: {
+  props: {
+    key: string;
+    style: React.CSSProperties;
+    ref: React.RefObject<any>;
+  };
+  index: number;
+}) => React.ReactNode;
+```
+
+`renderMark` is an optional prop so you can render an element at each step. See this [example](https://react-range.netlify.app/?path=/story/range--marks). **Your function gets 2 parameters and should return a React component**:
+
+- `props` - this needs to be spread over the root track element, it adds a ref, key and some necessary styling
+- `index` - index of the mark, might be useful if you want to use different styles for even/odd marks
+
+You can use any dimensions for your marks and react-range will automatically position them at the correct place.
 
 ### values
 

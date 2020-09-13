@@ -16,9 +16,13 @@ export interface IProps {
   direction: Direction;
   allowOverlap: boolean;
   disabled: boolean;
-  rtl: boolean,
+  rtl: boolean;
   onChange: (values: number[]) => void;
   onFinalChange?: (values: number[]) => void;
+  renderMark?: (params: {
+    props: IMarkProps;
+    index: number;
+  }) => React.ReactNode;
   renderThumb: (params: {
     props: IThumbProps;
     value: number;
@@ -45,6 +49,12 @@ export interface IThumbProps {
   role: string;
   onKeyDown: (e: React.KeyboardEvent) => void;
   onKeyUp: (e: React.KeyboardEvent) => void;
+}
+
+export interface IMarkProps {
+  key: string;
+  style: React.CSSProperties;
+  ref: React.RefObject<any>;
 }
 
 export interface ITrackProps {
