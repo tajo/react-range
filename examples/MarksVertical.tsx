@@ -33,7 +33,8 @@ class UpDirection extends React.Component {
                 ...props.style,
                 height: index % 2 ? '3px' : '4px',
                 width: index % 2 ? '11px' : '16px',
-                backgroundColor: '#548BF4'
+                backgroundColor:
+                  index * STEP > MAX - this.state.values[0] ? '#548BF4' : '#ccc'
               }}
             />
           )}

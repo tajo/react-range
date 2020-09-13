@@ -24,14 +24,15 @@ class BigSteps extends React.Component {
           min={MIN}
           max={MAX}
           onChange={(values) => this.setState({ values })}
-          renderMark={({ props }) => (
+          renderMark={({ props, index }) => (
             <div
               {...props}
               style={{
                 ...props.style,
                 height: '16px',
                 width: '5px',
-                backgroundColor: '#548BF4'
+                backgroundColor:
+                  index * STEP < this.state.values[0] ? '#548BF4' : '#ccc'
               }}
             />
           )}

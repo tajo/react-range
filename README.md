@@ -73,7 +73,7 @@ class SuperSimple extends React.Component {
 - Can handle negative and decimal values
 - Stateless and controlled single component
 - Typescript and Flow type definitions
-- **No dependencies, less than 4kB (gzipped)**
+- **No dependencies, less than 5kB (gzipped)**
 - Coverage by [e2e puppeteer tests](#end-to-end-testing)
 - RTL support
 
