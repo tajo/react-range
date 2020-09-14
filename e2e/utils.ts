@@ -12,7 +12,8 @@ export enum Examples {
   CUSTOM_MERGING_LABELS,
   RTL,
   FINAL_CHANGE_EVENT,
-  ANIMATING_CONTAINER
+  ANIMATING_CONTAINER,
+  MARKS
 }
 
 export const getTestUrl = (example: Examples): string => {
@@ -42,6 +43,8 @@ export const getTestUrl = (example: Examples): string => {
       return `http://localhost:${PORT}/iframe.html?path=/story/range--onfinalchange-event`;
     case Examples.ANIMATING_CONTAINER:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--animating-container`;
+    case Examples.MARKS:
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--marks`;
   }
 };
 

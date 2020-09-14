@@ -32,6 +32,8 @@ class Range extends React.Component<IProps> {
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
+  markRefs: React.RefObject<HTMLElement>[] = [];
+  numOfMarks: number;
   resizeObserver: any;
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
@@ -41,17 +43,21 @@ class Range extends React.Component<IProps> {
   state = {
     draggedThumbIndex: -1,
     thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i),
-    isChanged: false
+    isChanged: false,
+    markOffsets: []
   };
 
   constructor(props: IProps) {
     super(props);
+    this.numOfMarks = (props.max - props.min) / this.props.step;
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
     this.schdOnResize = schd(this.onResize);
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
-
+    for (let i = 0; i < this.numOfMarks + 1; i++) {
+      this.markRefs[i] = React.createRef<HTMLElement>();
+    }
     if (!isStepDivisible(props.min, props.max, props.step)) {
       console.warn(
         'The difference of `max` and `min` must be divisible by `step`'
@@ -81,6 +87,7 @@ class Range extends React.Component<IProps> {
     );
     this.resizeObserver.observe(this.trackRef.current!);
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
+    this.calculateMarkOffsets();
 
     values.forEach((value) => {
       if (!isStepDivisible(min, value, step)) {
@@ -167,7 +174,9 @@ class Range extends React.Component<IProps> {
 
   getThumbs = () => {
     if (this.trackRef && this.trackRef.current) {
-      return Array.from(this.trackRef.current.children);
+      return Array.from(this.trackRef.current.children).filter((el: any) =>
+        el.hasAttribute('aria-valuenow')
+      );
     }
     console.warn(
       'No thumbs found in the track container. Did you forget to pass & spread the `props` param in renderTrack?'
@@ -215,6 +224,7 @@ class Range extends React.Component<IProps> {
 
   onResize = () => {
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
+    this.calculateMarkOffsets();
   };
 
   onTouchStartTrack = (e: React.TouchEvent) => {
@@ -406,18 +416,64 @@ class Range extends React.Component<IProps> {
     }
   };
 
+  calculateMarkOffsets = () => {
+    if (
+      !this.props.renderMark ||
+      !this.trackRef ||
+      this.trackRef.current === null
+    )
+      return;
+    const elStyles = window.getComputedStyle(this.trackRef.current);
+    const trackWidth = parseInt(elStyles.width, 10);
+    const trackHeight = parseInt(elStyles.height, 10);
+    const paddingLeft = parseInt(elStyles.paddingLeft, 10);
+    const paddingTop = parseInt(elStyles.paddingTop, 10);
+
+    const res = [];
+    for (let i = 0; i < this.numOfMarks + 1; i++) {
+      let markHeight = 9999;
+      let markWidth = 9999;
+      if (this.markRefs[i].current) {
+        const markRect = (this.markRefs[
+          i
+        ] as any).current.getBoundingClientRect();
+        markHeight = markRect.height;
+        markWidth = markRect.width;
+      }
+      if (
+        this.props.direction === Direction.Left ||
+        this.props.direction === Direction.Right
+      ) {
+        res.push([
+          Math.round(
+            (trackWidth / this.numOfMarks) * i + paddingLeft - markWidth / 2
+          ),
+          -Math.round((markHeight - trackHeight) / 2)
+        ]);
+      } else {
+        res.push([
+          Math.round(
+            (trackHeight / this.numOfMarks) * i + paddingTop - markHeight / 2
+          ),
+          -Math.round((markWidth - trackWidth) / 2)
+        ]);
+      }
+    }
+    this.setState({ markOffsets: res });
+  };
+
   render() {
     const {
       renderTrack,
       renderThumb,
+      renderMark = () => null,
       values,
       min,
       max,
       allowOverlap,
       disabled
     } = this.props;
-    const { draggedThumbIndex, thumbZIndexes } = this.state;
-
+    const { draggedThumbIndex, thumbZIndexes, markOffsets } = this.state;
     return renderTrack({
       props: {
         style: {
@@ -437,37 +493,60 @@ class Range extends React.Component<IProps> {
       },
       isDragged: this.state.draggedThumbIndex > -1,
       disabled,
-      children: values.map((value, index) => {
-        const isDragged = this.state.draggedThumbIndex === index;
-
-        return renderThumb({
-          index,
-          value,
-          isDragged,
-          props: {
-            style: {
-              position: 'absolute',
-              zIndex: thumbZIndexes[index],
-              cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
-              userSelect: 'none',
-              touchAction: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              msUserSelect: 'none'
-            } as React.CSSProperties,
-            key: index,
-            tabIndex: disabled ? undefined : 0,
-            'aria-valuemax': allowOverlap ? max : values[index + 1] || max,
-            'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
-            'aria-valuenow': value,
-            draggable: false,
-            ref: this.thumbRefs[index],
-            role: 'slider',
-            onKeyDown: disabled ? voidFn : this.onKeyDown,
-            onKeyUp: disabled ? voidFn : this.onKeyUp
-          }
-        });
-      })
+      children: [
+        ...markOffsets.map((offset, index) =>
+          renderMark({
+            props: {
+              style:
+                this.props.direction === Direction.Left ||
+                this.props.direction === Direction.Right
+                  ? {
+                      position: 'absolute',
+                      left: `${offset[0]}px`,
+                      marginTop: `${offset[1]}px`
+                    }
+                  : {
+                      position: 'absolute',
+                      top: `${offset[0]}px`,
+                      marginLeft: `${offset[1]}px`
+                    },
+              key: `mark${index}`,
+              ref: this.markRefs[index]
+            },
+            index
+          })
+        ),
+        ...values.map((value, index) => {
+          const isDragged = this.state.draggedThumbIndex === index;
+          return renderThumb({
+            index,
+            value,
+            isDragged,
+            props: {
+              style: {
+                position: 'absolute',
+                zIndex: thumbZIndexes[index],
+                cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
+                userSelect: 'none',
+                touchAction: 'none',
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                msUserSelect: 'none'
+              } as React.CSSProperties,
+              key: index,
+              tabIndex: disabled ? undefined : 0,
+              'aria-valuemax': allowOverlap ? max : values[index + 1] || max,
+              'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
+              'aria-valuenow': value,
+              draggable: false,
+              ref: this.thumbRefs[index],
+              role: 'slider',
+              onKeyDown: disabled ? voidFn : this.onKeyDown,
+              onKeyUp: disabled ? voidFn : this.onKeyUp
+            }
+          });
+        })
+      ]
     });
   }
 }
