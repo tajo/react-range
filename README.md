@@ -217,6 +217,14 @@ allowOverlap: boolean;
 
 When there are multiple thumbs on a single track, should they be allowed to overlap? Default is `false`.
 
+### draggableTrack (optional)
+
+```ts
+draggableTrack: boolean;
+```
+
+When there are multiple thumbs on a single track, should it be possible to drag all thumbs at once? Default is `false`.
+
 ### direction (optional)
 
 ```ts
