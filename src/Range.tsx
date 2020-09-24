@@ -13,7 +13,8 @@ import {
   isVertical,
   assertUnreachable,
   isTouchEvent,
-  isStepDivisible
+  isStepDivisible, 
+  getClosestThumbIndex
 } from './utils';
 import { IProps, Direction } from './types';
 
@@ -209,27 +210,12 @@ class Range extends React.Component<IProps> {
   };
 
   onMouseDownTrack = (e: React.MouseEvent) => {
-    // in case there is a single thumb, we want to support
-    // moving the thumb to a place where the track is clicked
-    if (e.button !== 0 || (this.props.values.length > 1 && !this.props.draggableTrack)) return;
+    if (e.button !== 0) return;
     e.persist();
     e.preventDefault();
     this.addMouseEvents(e.nativeEvent);
-    if (this.props.values.length > 1) {
-      // in case a thumb was clicked, move the thumb
-      for (let i = 0; i < this.thumbRefs.length; i++) {
-        const thumbRef = this.thumbRefs[i];
-        if (thumbRef.current?.contains(e.target as Node)) {
-          thumbRef.current?.focus();
-          this.setState(
-            {
-              draggedThumbIndex: i
-            },
-            () => this.onMove(e.clientX, e.clientY)
-          );
-          return;
-        }
-      }
+    if (this.props.values.length > 1 && this.props.draggableTrack) {
+      if (this.thumbRefs.some(thumbRef => thumbRef.current?.contains(e.target as Node))) return;
       // handle dragging the whole track
       this.setState(
         {
@@ -238,10 +224,13 @@ class Range extends React.Component<IProps> {
         () => this.onMove(e.clientX, e.clientY)
       );
     } else {
-      this.thumbRefs[0].current?.focus();
+      // get the index of the thumb that is closest to the place where the track is clicked
+      const draggedThumbIndex = getClosestThumbIndex(this.thumbRefs.map(t => t.current!), e.clientX, e.clientY, this.props.direction)
+      // move the thumb which is closest to the place where the track is clicked
+      this.thumbRefs[draggedThumbIndex].current?.focus();
       this.setState(
         {
-          draggedThumbIndex: 0
+          draggedThumbIndex
         },
         () => this.onMove(e.clientX, e.clientY)
       );
@@ -254,24 +243,10 @@ class Range extends React.Component<IProps> {
   };
 
   onTouchStartTrack = (e: React.TouchEvent) => {
-    // in case there is a single thumb, we want to support
-    // moving the thumb to a place where the track is clicked
-    if (this.props.values.length > 1 && !this.props.draggableTrack) return;
     e.persist();
     this.addTouchEvents(e.nativeEvent);
-    if (this.props.values.length > 1) {
-      // in case a thumb was touched, move the thumb
-      for (let i = 0; i < this.thumbRefs.length; i++) {
-        if (this.thumbRefs[i].current?.contains(e.target as Node)) {
-          this.setState(
-            {
-              draggedThumbIndex: i
-            },
-            () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
-          );
-          return;
-        }
-      }
+    if (this.props.values.length > 1 && this.props.draggableTrack) {
+      if (this.thumbRefs.some(thumbRef => thumbRef.current?.contains(e.target as Node))) return;
       // handle dragging the whole track
       this.setState(
         {
@@ -279,7 +254,11 @@ class Range extends React.Component<IProps> {
         },
         () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
       );
-    } else {  
+    } else {
+      // get the index of the thumb that is closest to the place where the track is clicked
+      const draggedThumbIndex = getClosestThumbIndex(this.thumbRefs.map(t => t.current!), e.touches[0].clientX, e.touches[0].clientY, this.props.direction)
+      // move the thumb which is closest to the place where the track is clicked
+      this.thumbRefs[draggedThumbIndex].current?.focus();
       this.setState(
         {
           draggedThumbIndex: 0
@@ -392,7 +371,7 @@ class Range extends React.Component<IProps> {
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex, draggedTrackPos } = this.state;
     const { direction, min, max, onChange, values, step, rtl } = this.props;
-    if (this.props.values.length === 1 && draggedTrackPos[0] === -1 && draggedTrackPos[1] === -1) return null;
+    if (draggedThumbIndex === -1 && draggedTrackPos[0] === -1 && draggedTrackPos[1] === -1) return null;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
     const trackLength = isVertical(direction)
@@ -438,45 +417,45 @@ class Range extends React.Component<IProps> {
         });
         onChange(newValues)
       }
-      return
-    }
-    let newValue = 0;
-    switch (direction) {
-      case Direction.Right:
-        newValue =
-          ((clientX - trackRect.left) / trackLength) * (max - min) + min;
-        break;
-      case Direction.Left:
-        newValue =
-          ((trackLength - (clientX - trackRect.left)) / trackLength) *
-            (max - min) +
-          min;
-        break;
-      case Direction.Down:
-        newValue =
-          ((clientY - trackRect.top) / trackLength) * (max - min) + min;
-        break;
-      case Direction.Up:
-        newValue =
-          ((trackLength - (clientY - trackRect.top)) / trackLength) *
-            (max - min) +
-          min;
-        break;
-      default:
-        assertUnreachable(direction);
-    }
-    // invert for RTL
-    if (rtl) {
-      newValue = max + min - newValue;
-    }
-    if (Math.abs(values[draggedThumbIndex] - newValue) >= step / 2) {
-      onChange(
-        replaceAt(
-          values,
-          draggedThumbIndex,
-          this.normalizeValue(newValue, draggedThumbIndex)
-        )
-      );
+    } else {
+      let newValue = 0;
+      switch (direction) {
+        case Direction.Right:
+          newValue =
+            ((clientX - trackRect.left) / trackLength) * (max - min) + min;
+          break;
+        case Direction.Left:
+          newValue =
+            ((trackLength - (clientX - trackRect.left)) / trackLength) *
+              (max - min) +
+            min;
+          break;
+        case Direction.Down:
+          newValue =
+            ((clientY - trackRect.top) / trackLength) * (max - min) + min;
+          break;
+        case Direction.Up:
+          newValue =
+            ((trackLength - (clientY - trackRect.top)) / trackLength) *
+              (max - min) +
+            min;
+          break;
+        default:
+          assertUnreachable(direction);
+      }
+      // invert for RTL
+      if (rtl) {
+        newValue = max + min - newValue;
+      }
+      if (Math.abs(values[draggedThumbIndex] - newValue) >= step / 2) {
+        onChange(
+          replaceAt(
+            values,
+            draggedThumbIndex,
+            this.normalizeValue(newValue, draggedThumbIndex)
+          )
+        );
+      }
     }
   };
 
@@ -574,7 +553,9 @@ class Range extends React.Component<IProps> {
             draggedThumbIndex > -1
               ? 'grabbing'
               : this.props.draggableTrack
-              ? 'ew-resize'
+              ? isVertical(this.props.direction)
+              ? 'ns-resize'
+              : 'ew-resize'
               : values.length === 1 && !disabled
               ? 'pointer'
               : 'inherit'
