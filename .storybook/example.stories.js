@@ -5,14 +5,18 @@ import BasicWithBorder from '../examples/BasicWithBorder';
 import Disabled from '../examples/Disabled';
 import SuperSimple from '../examples/SuperSimple';
 import TwoThumbs from '../examples/TwoThumbs';
+import TwoThumbsDraggableTrack from '../examples/TwoThumbsDraggableTrack';
+import TwoThumbsDraggableTrackDownDirection from '../examples/TwoThumbsDraggableTrackDownDirection';
 import Marks from '../examples/Marks';
 import MarksVertical from '../examples/MarksVertical';
 import Rtl from '../examples/Rtl';
 import RtlTwoThumbs from '../examples/RtlTwoThumbs';
+import RtlTwoThumbsDraggableTrack from '../examples/RtlTwoThumbsDraggableTrack';
 import UpDirection from '../examples/UpDirection';
 import DownDirection from '../examples/DownDirection';
 import LeftDirection from '../examples/LeftDirection';
 import MultipleThumbs from '../examples/MultipleThumbs';
+import MultipleThumbsDraggableTrack from '../examples/MultipleThumbsDraggableTrack';
 import AllowOverlap from '../examples/AllowOverlap';
 import BigSteps from '../examples/BigSteps';
 import Labeled from '../examples/Labeled';
@@ -31,14 +35,24 @@ storiesOf('Range', module)
   .add('Disabled', () => <Disabled />)
   .add('Super simple', () => <SuperSimple />)
   .add('Two thumbs', () => <TwoThumbs />)
+  .add('Two thumbs with draggable track', () => <TwoThumbsDraggableTrack />)
+  .add('Two thumbs with draggable track and Down direction', () => (
+    <TwoThumbsDraggableTrackDownDirection />
+  ))
   .add('Marks', () => <Marks />)
   .add('Marks vertical', () => <MarksVertical />)
   .add('Rtl', () => <Rtl />)
   .add('Rtl Two Thumbs', () => <RtlTwoThumbs />)
+  .add('Rtl Two Thumbs with draggable track', () => (
+    <RtlTwoThumbsDraggableTrack />
+  ))
   .add('Up direction', () => <UpDirection />)
   .add('Down direction', () => <DownDirection />)
   .add('Left direction', () => <LeftDirection />)
   .add('Multiple thumbs', () => <MultipleThumbs />)
+  .add('Multiple thumbs with draggable track', () => (
+    <MultipleThumbsDraggableTrack />
+  ))
   .add('Allow overlap', () => <AllowOverlap />)
   .add('Big steps', () => <BigSteps />)
   .add('Labeled', () => <Labeled />)

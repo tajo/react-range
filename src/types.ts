@@ -15,6 +15,7 @@ export interface IProps {
   step: number;
   direction: Direction;
   allowOverlap: boolean;
+  draggableTrack: boolean;
   disabled: boolean;
   rtl: boolean;
   onChange: (values: number[]) => void;

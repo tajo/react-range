@@ -48,8 +48,8 @@ export function normalizeValue(
   // Values with a remainder `< step/2` are rounded to the closest lower value
   // while values with a remainder `= > step/2` are rounded to the closest bigger value
   var res = Math.abs(remainder / BIG_NUM) < step / 2
-      ? rounded
-      : rounded + step;
+    ? rounded
+    : rounded + step;
   const decimalPlaces = getStepDecimals(step);
   return parseFloat(res.toFixed(decimalPlaces));
 }
@@ -114,6 +114,27 @@ export function translateThumbs(
   );
 }
 
+/**
+ * Util function for calculating the index of the thumb that is closes to a given position
+ * @param thumbs - array of Thumb element to calculate the distance from
+ * @param clientX - target x position (mouse/touch)
+ * @param clientY - target y position (mouse/touch)
+ * @param direction - the direction of the track
+ */
+export function getClosestThumbIndex(thumbs: Element[], clientX: number, clientY: number, direction: Direction) {
+  let thumbIndex = 0
+  let minThumbDistance = getThumbDistance(thumbs[0], clientX, clientY, direction)
+  for (let i = 1; i < thumbs.length; i++) {
+    const thumbDistance = getThumbDistance(thumbs[i], clientX, clientY, direction)
+    if (thumbDistance < minThumbDistance) {
+      minThumbDistance = thumbDistance
+      thumbIndex = i
+    }
+  }
+  return thumbIndex
+}
+
+
 export function translate(element: Element, x: number, y: number) {
   (element as HTMLElement).style.transform = `translate(${x}px, ${y}px)`;
 }
@@ -160,12 +181,11 @@ export function getTrackBackground({
       `${acc}, ${colors[index]} ${point}%, ${colors[index + 1]} ${point}%`,
     ''
   );
-  return `linear-gradient(${direction}, ${colors[0]} 0%${middle}, ${
-    colors[colors.length - 1]
-  } 100%)`;
+  return `linear-gradient(${direction}, ${colors[0]} 0%${middle}, ${colors[colors.length - 1]
+    } 100%)`;
 }
 
-export function voidFn() {}
+export function voidFn() { }
 
 export function assertUnreachable(x: never): never {
   throw new Error("Didn't expect to get here");
@@ -401,3 +421,16 @@ export const useThumbOverlap = (
 
   return [labelValue, labelStyle];
 };
+
+/**
+ * Util function for calculating the distance of the center of a thumb
+ * form a given mouse/touch target's position
+ * @param thumbEl - Thumb element to calculate the distance from
+ * @param clientX - target x position (mouse/touch)
+ * @param clientY - target y position (mouse/touch)
+ * @param direction - the direction of the track
+ */
+function getThumbDistance(thumbEl: Element, clientX: number, clientY: number, direction: Direction) {
+  const { x, y, width, height } = thumbEl.getBoundingClientRect()
+  return isVertical(direction) ? Math.abs(clientY - (y + height / 2)) : Math.abs(clientX - (x + width / 2))
+}

@@ -13,7 +13,8 @@ import {
   isVertical,
   assertUnreachable,
   isTouchEvent,
-  isStepDivisible
+  isStepDivisible, 
+  getClosestThumbIndex
 } from './utils';
 import { IProps, Direction } from './types';
 
@@ -27,6 +28,7 @@ class Range extends React.Component<IProps> {
     rtl: false,
     disabled: false,
     allowOverlap: false,
+    draggableTrack: false,
     min: 0,
     max: 100
   };
@@ -41,6 +43,7 @@ class Range extends React.Component<IProps> {
   schdOnResize: () => void;
 
   state = {
+    draggedTrackPos: [-1, -1],
     draggedThumbIndex: -1,
     thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i),
     isChanged: false,
@@ -207,19 +210,31 @@ class Range extends React.Component<IProps> {
   };
 
   onMouseDownTrack = (e: React.MouseEvent) => {
-    // in case there is a single thumb, we want to support
-    // moving the thumb to a place where the track is clicked
-    if (e.button !== 0 || this.props.values.length > 1) return;
-    this.thumbRefs[0].current?.focus();
+    if (e.button !== 0) return;
     e.persist();
     e.preventDefault();
     this.addMouseEvents(e.nativeEvent);
-    this.setState(
-      {
-        draggedThumbIndex: 0
-      },
-      () => this.onMove(e.clientX, e.clientY)
-    );
+    if (this.props.values.length > 1 && this.props.draggableTrack) {
+      if (this.thumbRefs.some(thumbRef => thumbRef.current?.contains(e.target as Node))) return;
+      // handle dragging the whole track
+      this.setState(
+        {
+          draggedTrackPos: [e.clientX, e.clientY]
+        },
+        () => this.onMove(e.clientX, e.clientY)
+      );
+    } else {
+      // get the index of the thumb that is closest to the place where the track is clicked
+      const draggedThumbIndex = getClosestThumbIndex(this.thumbRefs.map(t => t.current!), e.clientX, e.clientY, this.props.direction)
+      // move the thumb which is closest to the place where the track is clicked
+      this.thumbRefs[draggedThumbIndex].current?.focus();
+      this.setState(
+        {
+          draggedThumbIndex
+        },
+        () => this.onMove(e.clientX, e.clientY)
+      );
+    }
   };
 
   onResize = () => {
@@ -228,17 +243,29 @@ class Range extends React.Component<IProps> {
   };
 
   onTouchStartTrack = (e: React.TouchEvent) => {
-    // in case there is a single thumb, we want to support
-    // moving the thumb to a place where the track is clicked
-    if (this.props.values.length > 1) return;
     e.persist();
     this.addTouchEvents(e.nativeEvent);
-    this.setState(
-      {
-        draggedThumbIndex: 0
-      },
-      () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
-    );
+    if (this.props.values.length > 1 && this.props.draggableTrack) {
+      if (this.thumbRefs.some(thumbRef => thumbRef.current?.contains(e.target as Node))) return;
+      // handle dragging the whole track
+      this.setState(
+        {
+          draggedTrackPos: [e.touches[0].clientX, e.touches[0].clientY]
+        },
+        () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
+      );
+    } else {
+      // get the index of the thumb that is closest to the place where the track is clicked
+      const draggedThumbIndex = getClosestThumbIndex(this.thumbRefs.map(t => t.current!), e.touches[0].clientX, e.touches[0].clientY, this.props.direction)
+      // move the thumb which is closest to the place where the track is clicked
+      this.thumbRefs[draggedThumbIndex].current?.focus();
+      this.setState(
+        {
+          draggedThumbIndex: 0
+        },
+        () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
+      );
+    }
   };
 
   onMouseOrTouchStart = (e: MouseEvent & TouchEvent) => {
@@ -342,51 +369,93 @@ class Range extends React.Component<IProps> {
   };
 
   onMove = (clientX: number, clientY: number) => {
-    const { draggedThumbIndex } = this.state;
+    const { draggedThumbIndex, draggedTrackPos } = this.state;
     const { direction, min, max, onChange, values, step, rtl } = this.props;
-    if (draggedThumbIndex === -1) return null;
+    if (draggedThumbIndex === -1 && draggedTrackPos[0] === -1 && draggedTrackPos[1] === -1) return null;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
     const trackLength = isVertical(direction)
       ? trackRect.height
       : trackRect.width;
-    let newValue = 0;
-    switch (direction) {
-      case Direction.Right:
-        newValue =
-          ((clientX - trackRect.left) / trackLength) * (max - min) + min;
-        break;
-      case Direction.Left:
-        newValue =
-          ((trackLength - (clientX - trackRect.left)) / trackLength) *
-            (max - min) +
-          min;
-        break;
-      case Direction.Down:
-        newValue =
-          ((clientY - trackRect.top) / trackLength) * (max - min) + min;
-        break;
-      case Direction.Up:
-        newValue =
-          ((trackLength - (clientY - trackRect.top)) / trackLength) *
-            (max - min) +
-          min;
-        break;
-      default:
-        assertUnreachable(direction);
-    }
-    // invert for RTL
-    if (rtl) {
-      newValue = max + min - newValue;
-    }
-    if (Math.abs(values[draggedThumbIndex] - newValue) >= step / 2) {
-      onChange(
-        replaceAt(
-          values,
-          draggedThumbIndex,
-          this.normalizeValue(newValue, draggedThumbIndex)
-        )
-      );
+    if (draggedTrackPos[0] !== -1 && draggedTrackPos[1] !== -1) {
+      // calculate how much it moved since the last update
+      let dX = clientX - draggedTrackPos[0];
+      let dY = clientY - draggedTrackPos[1];
+      // calculate the delta of the value
+      let deltaValue = 0;
+      switch (direction) {
+        case Direction.Right:
+        case Direction.Left:
+          deltaValue = (dX / trackLength) * (max - min) + min;
+          break;
+        case Direction.Down:
+        case Direction.Up:
+          deltaValue = (dY / trackLength) * (max - min) + min;
+          break;
+        default:
+          assertUnreachable(direction);
+      }
+      // invert for RTL
+      if (rtl) {
+        deltaValue *= -1;
+      }
+      if (Math.abs(deltaValue) >= step / 2) {
+        // adjust delta so it fits into the range
+        for (let i = 0; i < this.thumbRefs.length; i++) {
+          if ((values[i] === max && Math.sign(deltaValue) === 1) || (values[i] === min && Math.sign(deltaValue) === -1)) return;
+          const thumbValue = values[i] + deltaValue
+          if (thumbValue > max) deltaValue = max - values[i]
+          else if (thumbValue < min) deltaValue = min - values[i]
+        }
+        // add the delta to each thumb
+        let newValues = values.slice(0);
+        for (let i = 0; i < this.thumbRefs.length; i++) {
+          newValues = replaceAt(newValues, i, this.normalizeValue(values[i] + deltaValue, i));
+        }
+        this.setState({
+          draggedTrackPos: [clientX, clientY],
+        });
+        onChange(newValues)
+      }
+    } else {
+      let newValue = 0;
+      switch (direction) {
+        case Direction.Right:
+          newValue =
+            ((clientX - trackRect.left) / trackLength) * (max - min) + min;
+          break;
+        case Direction.Left:
+          newValue =
+            ((trackLength - (clientX - trackRect.left)) / trackLength) *
+              (max - min) +
+            min;
+          break;
+        case Direction.Down:
+          newValue =
+            ((clientY - trackRect.top) / trackLength) * (max - min) + min;
+          break;
+        case Direction.Up:
+          newValue =
+            ((trackLength - (clientY - trackRect.top)) / trackLength) *
+              (max - min) +
+            min;
+          break;
+        default:
+          assertUnreachable(direction);
+      }
+      // invert for RTL
+      if (rtl) {
+        newValue = max + min - newValue;
+      }
+      if (Math.abs(values[draggedThumbIndex] - newValue) >= step / 2) {
+        onChange(
+          replaceAt(
+            values,
+            draggedThumbIndex,
+            this.normalizeValue(newValue, draggedThumbIndex)
+          )
+        );
+      }
     }
   };
 
@@ -402,8 +471,8 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('mouseup', this.schdOnEnd);
     document.removeEventListener('touchend', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
-    if (this.state.draggedThumbIndex === -1) return;
-    this.setState({ draggedThumbIndex: -1 }, () => {
+    if (this.state.draggedThumbIndex === -1 && this.state.draggedTrackPos[0] === -1 && this.state.draggedTrackPos[1] === -1) return null;
+    this.setState({ draggedThumbIndex: -1, draggedTrackPos: [-1, -1] }, () => {
       this.fireOnFinalChange();
     });
   };
@@ -483,6 +552,10 @@ class Range extends React.Component<IProps> {
           cursor:
             draggedThumbIndex > -1
               ? 'grabbing'
+              : this.props.draggableTrack
+              ? isVertical(this.props.direction)
+              ? 'ns-resize'
+              : 'ew-resize'
               : values.length === 1 && !disabled
               ? 'pointer'
               : 'inherit'

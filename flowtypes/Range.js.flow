@@ -33,6 +33,7 @@ declare interface IProps {
   step?: number;
   direction?: string;
   allowOverlap?: boolean;
+  draggableTrack?: boolean;
   disabled?: boolean;
   rtl?: boolean;
   onChange: (values: number[]) => mixed;
