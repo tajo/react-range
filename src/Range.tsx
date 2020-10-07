@@ -261,7 +261,7 @@ class Range extends React.Component<IProps> {
       this.thumbRefs[draggedThumbIndex].current?.focus();
       this.setState(
         {
-          draggedThumbIndex: 0
+          draggedThumbIndex
         },
         () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
       );
