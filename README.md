@@ -285,6 +285,16 @@ values.length + 1 === colors.length;
 
 That's because **one thumb** (one value) splits the track into **two segments**, so you need **two colors**.
 
+## customCursor
+
+```ts
+customCursor: boolean | string;
+```
+
+By default the cursor style is dynamically updated to reflect interaction e.g. grabbing, etc. This behaviour can be overruled with the `customCursor` property.
+
+Use [a valid css cursor value](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) to consistently present a single `cursor` style. Default is `false`.
+
 ## Motivation
 
 There is a native [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range) solution:

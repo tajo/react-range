@@ -1,20 +1,20 @@
 import * as React from 'react';
 import {
+  assertUnreachable,
+  checkBoundaries,
+  checkInitialOverlap,
+  getClosestThumbIndex,
   getMargin,
   getPaddingAndBorder,
-  translateThumbs,
-  replaceAt,
-  checkBoundaries,
-  relativeValue,
-  schd,
-  normalizeValue,
-  checkInitialOverlap,
-  voidFn,
-  isVertical,
-  assertUnreachable,
-  isTouchEvent,
   isStepDivisible, 
-  getClosestThumbIndex
+  isTouchEvent,
+  isVertical,
+  normalizeValue,
+  relativeValue,
+  replaceAt,
+  schd,
+  translateThumbs,
+  voidFn,
 } from './utils';
 import { IProps, Direction } from './types';
 
@@ -23,14 +23,15 @@ const DECREASE_KEYS = ['ArrowLeft', 'ArrowDown', 'j', 'PageDown'];
 
 class Range extends React.Component<IProps> {
   static defaultProps = {
-    step: 1,
-    direction: Direction.Right,
-    rtl: false,
-    disabled: false,
     allowOverlap: false,
+    customCursor: false,
+    direction: Direction.Right,
+    disabled: false,
     draggableTrack: false,
+    max: 100,
     min: 0,
-    max: 100
+    rtl: false,
+    step: 1,
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
@@ -543,22 +544,30 @@ class Range extends React.Component<IProps> {
       disabled
     } = this.props;
     const { draggedThumbIndex, thumbZIndexes, markOffsets } = this.state;
+
+    const getCursorType = () => {
+      if (!!this.props.customCursor) {
+        return this.props.customCursor;
+      }
+
+      return draggedThumbIndex > -1
+        ? 'grabbing'
+        : this.props.draggableTrack
+        ? isVertical(this.props.direction)
+        ? 'ns-resize'
+        : 'ew-resize'
+        : values.length === 1 && !disabled
+          ? 'pointer'
+          : 'inherit'
+    }
+
     return renderTrack({
       props: {
         style: {
           // creates stacking context that prevents z-index applied to thumbs
           // interfere with other elements
           transform: 'scale(1)',
-          cursor:
-            draggedThumbIndex > -1
-              ? 'grabbing'
-              : this.props.draggableTrack
-              ? isVertical(this.props.direction)
-              ? 'ns-resize'
-              : 'ew-resize'
-              : values.length === 1 && !disabled
-              ? 'pointer'
-              : 'inherit'
+          cursor: `${getCursorType()}`,
         },
         onMouseDown: disabled ? voidFn : this.onMouseDownTrack,
         onTouchStart: disabled ? voidFn : this.onTouchStartTrack,
@@ -591,6 +600,15 @@ class Range extends React.Component<IProps> {
         ),
         ...values.map((value, index) => {
           const isDragged = this.state.draggedThumbIndex === index;
+
+          const getCursorType = () => {
+            if (!!this.props.customCursor) {
+              return this.props.customCursor;
+            }
+            
+            return disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab'
+          };
+
           return renderThumb({
             index,
             value,
@@ -599,7 +617,7 @@ class Range extends React.Component<IProps> {
               style: {
                 position: 'absolute',
                 zIndex: thumbZIndexes[index],
-                cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
+                cursor: `${getCursorType()}`,
                 userSelect: 'none',
                 touchAction: 'none',
                 WebkitUserSelect: 'none',
