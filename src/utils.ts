@@ -175,7 +175,8 @@ export function getTrackBackground({
   } else if (rtl && Direction.Left) {
     direction = Direction.Right;
   }
-  const progress = values.map(value => ((value - min) / (max - min)) * 100);
+  // sort values ascending
+  const progress = values.slice(0).sort((a, b) => a - b).map(value => ((value - min) / (max - min)) * 100);
   const middle = progress.reduce(
     (acc, point, index) =>
       `${acc}, ${colors[index]} ${point}%, ${colors[index + 1]} ${point}%`,
