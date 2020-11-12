@@ -13,7 +13,7 @@ import {
   isVertical,
   assertUnreachable,
   isTouchEvent,
-  isStepDivisible, 
+  isStepDivisible,
   getClosestThumbIndex
 } from './utils';
 import { IProps, Direction } from './types';
@@ -65,6 +65,9 @@ class Range extends React.Component<IProps> {
       console.warn(
         'The difference of `max` and `min` must be divisible by `step`'
       );
+    }
+    if (props.step === 0) {
+      throw new Error('"step" property should be a positive number');
     }
   }
 
