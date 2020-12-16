@@ -98,7 +98,7 @@ class Range extends React.Component<IProps> {
     values.forEach((value) => {
       if (!isStepDivisible(min, value, step)) {
         console.warn(
-          'The `values` property is in conflict with the current `step`, `min` and `max` properties. Please provide values that are accessible using the min, max an step values'
+          'The `values` property is in conflict with the current `step`, `min`, and `max` properties. Please provide values that are accessible using the min, max, and step values.'
         );
       }
     });
