@@ -42,6 +42,8 @@ class Range extends React.Component<IProps> {
   schdOnEnd: (e: Event) => void;
   schdOnResize: () => void;
 
+  isMounted = false;
+
   state = {
     draggedTrackPos: [-1, -1],
     draggedThumbIndex: -1,
@@ -73,6 +75,9 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     const { values, min, step } = this.props;
+
+    this.isMounted = true;
+
     this.resizeObserver = (window as any).ResizeObserver
       ? new (window as any).ResizeObserver(this.schdOnResize)
       : {
@@ -120,6 +125,8 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
     document.removeEventListener('touchend', this.schdOnEnd as any);
     this.resizeObserver.unobserve(this.trackRef.current!);
+
+    this.isMounted = false;
   }
 
   getOffsets = () => {
@@ -475,9 +482,11 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('touchend', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
     if (this.state.draggedThumbIndex === -1 && this.state.draggedTrackPos[0] === -1 && this.state.draggedTrackPos[1] === -1) return null;
-    this.setState({ draggedThumbIndex: -1, draggedTrackPos: [-1, -1] }, () => {
-      this.fireOnFinalChange();
-    });
+
+    if (this.isMounted)
+      this.setState({ draggedThumbIndex: -1, draggedTrackPos: [-1, -1] }, () => {
+        this.fireOnFinalChange();
+      });
   };
 
   fireOnFinalChange = () => {
