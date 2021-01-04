@@ -121,6 +121,7 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('mousemove', this.schdOnMouseMove as any);
     document.removeEventListener('touchmove', this.schdOnTouchMove as any);
     document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
+    document.removeEventListener('mouseup', this.schdOnEnd as any);
     document.removeEventListener('touchend', this.schdOnEnd as any);
     this.resizeObserver.unobserve(this.trackRef.current!);
   }
