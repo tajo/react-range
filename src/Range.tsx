@@ -117,6 +117,9 @@ class Range extends React.Component<IProps> {
       this.onMouseOrTouchStart as any,
       options
     );
+    // These need to be removed!!
+    document.removeEventListener('mousemove', this.schdOnMouseMove as any);
+    document.removeEventListener('touchmove', this.schdOnTouchMove as any);
     document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
     document.removeEventListener('touchend', this.schdOnEnd as any);
     this.resizeObserver.unobserve(this.trackRef.current!);
@@ -376,6 +379,8 @@ class Range extends React.Component<IProps> {
     const { direction, min, max, onChange, values, step, rtl } = this.props;
     if (draggedThumbIndex === -1 && draggedTrackPos[0] === -1 && draggedTrackPos[1] === -1) return null;
     const trackElement = this.trackRef.current!;
+    // If component was closed down prematurely, A last onMove could be triggered based on requestAnimationFrame()
+    if (!trackElement) return null;
     const trackRect = trackElement.getBoundingClientRect();
     const trackLength = isVertical(direction)
       ? trackRect.height
