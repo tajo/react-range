@@ -50,11 +50,9 @@ class Range extends React.Component<IProps> {
     markOffsets: []
   };
 
-
   constructor(props: IProps) {
     super(props);
     this.numOfMarks = (props.max - props.min) / this.props.step;
-
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
@@ -75,7 +73,6 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     const { values, min, step } = this.props;
-
     this.resizeObserver = (window as any).ResizeObserver
       ? new (window as any).ResizeObserver(this.schdOnResize)
       : {
@@ -120,7 +117,6 @@ class Range extends React.Component<IProps> {
       this.onMouseOrTouchStart as any,
       options
     );
-
     // These need to be removed!!
     document.removeEventListener('mousemove', this.schdOnMouseMove as any);
     document.removeEventListener('touchmove', this.schdOnTouchMove as any);
@@ -381,13 +377,10 @@ class Range extends React.Component<IProps> {
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex, draggedTrackPos } = this.state;
     const { direction, min, max, onChange, values, step, rtl } = this.props;
-
     if (draggedThumbIndex === -1 && draggedTrackPos[0] === -1 && draggedTrackPos[1] === -1) return null;
     const trackElement = this.trackRef.current!;
-
     // If component was closed down prematurely, A last onMove could be triggered based on requestAnimationFrame()
     if (!trackElement) return null;
-
     const trackRect = trackElement.getBoundingClientRect();
     const trackLength = isVertical(direction)
       ? trackRect.height
@@ -487,7 +480,6 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('touchend', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
     if (this.state.draggedThumbIndex === -1 && this.state.draggedTrackPos[0] === -1 && this.state.draggedTrackPos[1] === -1) return null;
-
     this.setState({ draggedThumbIndex: -1, draggedTrackPos: [-1, -1] }, () => {
       this.fireOnFinalChange();
     });
