@@ -40,7 +40,6 @@ class Range extends React.Component<IProps> {
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
-  schdOnResize: () => void;
 
   state = {
     draggedTrackPos: [-1, -1],
@@ -56,7 +55,6 @@ class Range extends React.Component<IProps> {
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
-    this.schdOnResize = schd(this.onResize);
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
@@ -74,11 +72,11 @@ class Range extends React.Component<IProps> {
   componentDidMount() {
     const { values, min, step } = this.props;
     this.resizeObserver = (window as any).ResizeObserver
-      ? new (window as any).ResizeObserver(this.schdOnResize)
+      ? new (window as any).ResizeObserver(this.onResize)
       : {
-          observe: () => window.addEventListener('resize', this.schdOnResize),
+          observe: () => window.addEventListener('resize', this.onResize),
           unobserve: () =>
-            window.removeEventListener('resize', this.schdOnResize)
+            window.removeEventListener('resize', this.onResize)
         };
 
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
