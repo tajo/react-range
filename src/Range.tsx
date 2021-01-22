@@ -44,27 +44,33 @@ class Range extends React.Component<IProps> {
   state = {
     draggedTrackPos: [-1, -1],
     draggedThumbIndex: -1,
-    thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i),
+    thumbZIndexes: new Array(this.props?.values?.length || 0).fill(0).map((t, i) => i),
     isChanged: false,
     markOffsets: []
   };
 
   constructor(props: IProps) {
     super(props);
-    this.numOfMarks = (props.max - props.min) / this.props.step;
+
+    const { min, max, step, values } = props;
+
+    this.numOfMarks = (max - min) / step;
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
-    this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
+    this.thumbRefs = Array.isArray(values) ? values.map(() => React.createRef<HTMLElement>()) : [];
+
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
     }
-    if (!isStepDivisible(props.min, props.max, props.step)) {
+
+    if (!isStepDivisible(min, max, step)) {
       console.warn(
         'The difference of `max` and `min` must be divisible by `step`'
       );
     }
-    if (props.step === 0) {
+
+    if (step === 0) {
       throw new Error('"step" property should be a positive number');
     }
   }
