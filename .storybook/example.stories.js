@@ -26,6 +26,7 @@ import LabeledMergeSkinny from '../examples/LabeledMergeSkinny';
 import LabeledMergeCustom from '../examples/LabeledMergeCustom';
 import FinalChangeEvent from '../examples/FinalChangeEvent';
 import AnimatingContainer from '../examples/AnimatingContainer';
+import EmptyValue from '../examples/EmptyValue';
 // initialize polyfill for :focus-visible pseudo-class
 import '../node_modules/focus-visible/dist/focus-visible.min.js';
 
@@ -61,4 +62,6 @@ storiesOf('Range', module)
   .add('Merging labels skinny', () => <LabeledMergeSkinny />)
   .add('Merging labels custom', () => <LabeledMergeCustom />)
   .add('onFinalChange event', () => <FinalChangeEvent />)
-  .add('Animating container', () => <AnimatingContainer />);
+  .add('Animating container', () => <AnimatingContainer />)
+  .add('Empty values', () => <EmptyValue />
+);
