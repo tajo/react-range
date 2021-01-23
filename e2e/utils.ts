@@ -51,7 +51,7 @@ export const getTestUrl = (example: Examples): string => {
     case Examples.DYNAMIC_MARKS:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--marks-dynamic-update`;
     case Examples.DRAGGABLE_TRACK:
-      return `http://localhost:${PORT}/iframe.html?path=/story/Yrange--two-thumbs-with-draggable-track`;
+      return `http://localhost:${PORT}/iframe.html?path=/story/range--two-thumbs-with-draggable-track`;
     case Examples.DRAGGABLE_TRACK_DOWN_DIRECTION:
       return `http://localhost:${PORT}/iframe.html?path=/story/range--two-thumbs-with-draggable-track-and-down-direction`;
   }

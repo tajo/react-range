@@ -10,7 +10,7 @@ jest.setTimeout(10000);
 
 beforeEach(async () => {
   await page.goto(getTestUrl(Examples.DYNAMIC_MARKS));
-  await page.setViewport({ width: 600, height: 200 });
+  await page.setViewport({ width: 600, height: 600 });
   await addFontStyles(page);
 });
 
@@ -90,15 +90,6 @@ test('updates range min from 0 to 30', async () => {
 
 
 // const [stepOptions] = useState([0.5, 1, 5, 10, 20]);
-
-test('updates step from 1 to 0.5', async () => {
-  const example = await page.$('#_0-0.5');
-  const bounding_box = await example!.boundingBox();
-  await trackMouse(page);
-  await page.mouse.click(bounding_box!.x + bounding_box!.width / 2, bounding_box!.y + bounding_box!.height / 2);
-  await untrackMouse(page);
-  expect(await page.screenshot()).toMatchImageSnapshot();
-});
 
 test('updates step from 1 to 5', async () => {
   const example = await page.$('#_2-5');
