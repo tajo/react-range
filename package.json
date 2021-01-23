@@ -22,7 +22,7 @@
     "storybook:ci": "start-storybook -p 9011 -s public --ci --quiet",
     "test": "yarn test:e2e && yarn test:unit",
     "test:e2e": "start-server-and-test storybook:ci http-get://localhost:9011 jest:e2e",
-    "test:e2e:dev": "cross-env E2E=dev yarn jest:e2e",
+    "test:e2e:dev": "E2E=dev yarn jest:e2e",
     "test:e2e:update": "start-server-and-test storybook:ci http-get://localhost:9011 jest:e2e:update",
     "test:unit": "jest src",
     "typecheck": "tsc --noEmit"
@@ -52,7 +52,6 @@
     "@types/react-dom": "^16.8.4",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
-    "cross-env": "^7.0.3",
     "focus-visible": "^5.0.2",
     "fork-ts-checker-webpack-plugin": "^3.1.1",
     "imgur": "^0.3.1",
