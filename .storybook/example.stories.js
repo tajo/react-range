@@ -9,6 +9,7 @@ import TwoThumbsDraggableTrack from '../examples/TwoThumbsDraggableTrack';
 import TwoThumbsDraggableTrackDownDirection from '../examples/TwoThumbsDraggableTrackDownDirection';
 import Marks from '../examples/Marks';
 import MarksVertical from '../examples/MarksVertical';
+import DynamicMarks from '../examples/MarksDynamicUpdate'
 import Rtl from '../examples/Rtl';
 import RtlTwoThumbs from '../examples/RtlTwoThumbs';
 import RtlTwoThumbsDraggableTrack from '../examples/RtlTwoThumbsDraggableTrack';
@@ -41,6 +42,7 @@ storiesOf('Range', module)
   ))
   .add('Marks', () => <Marks />)
   .add('Marks vertical', () => <MarksVertical />)
+  .add('Marks Dynamic Update', () => <DynamicMarks />)
   .add('Rtl', () => <Rtl />)
   .add('Rtl Two Thumbs', () => <RtlTwoThumbs />)
   .add('Rtl Two Thumbs with draggable track', () => (

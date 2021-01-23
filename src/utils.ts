@@ -74,6 +74,19 @@ export function checkBoundaries(value: number, min: number, max: number) {
   }
 }
 
+export function checkValueAgainstBoundaries(value: number, min: number, max: number) {
+  if (value < min) {
+    // set selectedValue to min
+    return min
+  }
+  if (value > max) {
+    // set selectedValue to max
+    return max
+  } else {
+    return value
+  }
+}
+
 export function checkInitialOverlap(values: number[]) {
   if (values.length < 2) return;
   if (!values.slice(1).every((item, i) => values[i] <= item)) {

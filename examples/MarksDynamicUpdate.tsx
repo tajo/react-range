@@ -1,0 +1,188 @@
+import React, { useState } from 'react';
+import { Range, getTrackBackground } from '../src/index';
+
+const STEP = 1;
+const MIN = 0;
+
+const UpdatingMarks = () => {
+  const [values, setValues] = React.useState([50])
+  const [selectedMax, setSelectedMax] = useState((100))
+  const [maxOptions] = useState([100, 150, 200, 250, 300]) 
+
+  const [selectedMin, setSelectedMin] = useState((0))
+  const [minOptions] = useState([0, 15, 20, 25, 30]) 
+
+
+      return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexWrap: 'wrap'
+        }}
+      >
+        <Range
+          values={values}
+          setValues={setValues}
+          step={STEP}
+          min={selectedMin}
+          max={selectedMax}
+          onChange={(values) => setValues(values)}
+          renderMark={({ props, index }) => (
+            <div
+              {...props}
+              style={{
+                ...props.style,
+                height: '16px',
+                width: '2px',
+                backgroundColor:
+                  ((index * STEP) + selectedMin) < values[0] ? '#548BF4' : '#ccc'
+              }}
+            />
+          )}
+          renderTrack={({ props, children }) => (
+            <div
+              onMouseDown={props.onMouseDown}
+              onTouchStart={props.onTouchStart}
+              style={{
+                ...props.style,
+                height: '36px',
+                display: 'flex',
+                width: '100%'
+              }}
+            >
+              <div
+                ref={props.ref}
+                style={{
+                  height: '3px',
+                  width: '100%',
+                  borderRadius: '4px',
+                  background: getTrackBackground({
+                    values,
+                    colors: ['#548BF4', '#ccc'],
+                    min: selectedMin,
+                    max: selectedMax
+                  }),
+                  alignSelf: 'center'
+                }}
+              >
+                {children}
+              </div>
+            </div>
+          )}
+          renderThumb={({ props, isDragged }) => (
+            <div
+              {...props}
+              style={{
+                ...props.style,
+                height: '52px',
+                width: '22px',
+                borderRadius: '4px',
+                backgroundColor: '#FFF',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                boxShadow: '0px 2px 6px #AAA'
+              }}
+            >
+              <div
+                style={{
+                  height: '16px',
+                  width: '3px',
+                  backgroundColor: isDragged ? '#548BF4' : '#CCC'
+                }}
+              />
+            </div>
+          )}
+        />
+        <div>
+          <output style={{
+            display: 'flex',
+            justifyContent: 'center',
+            top: '30px',
+            position: 'relative'
+          }} >
+            {values[0].toFixed(1)}
+          </output>
+          <div style={{
+            top: '30px',
+            position: 'relative',
+          }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}>
+              <p>Select range max:</p>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(5, minmax(10px, 1fr))',
+                gridGap: '10px'
+              }}>
+                {maxOptions.map((val, idx) => (
+                  <button 
+                    key={`${idx}=${val}`} 
+                    data-max={val} 
+                    style={{
+                      backgroundColor: val === selectedMax ? '#548bf4' : '#fff',
+                      color: val === selectedMax ? '#fff' : '#000',
+                      padding: '5px 10px',
+                      border: val === selectedMax ? '1px solid #548bf4' : '1px solid #000',
+                      fontSize: '15px',
+                      fontWeight: val === selectedMax ? 600 : 400,
+                      boxShadow: '0px 2px 8px -3px #4f4f4f'
+
+                    }}
+                    onClick={(e: React.MouseEvent) => {
+                      const el = e.target as HTMLElement
+                      const newMax = el.dataset
+                      setSelectedMax((prev: number) => newMax !== undefined && newMax.max !== undefined ? +newMax.max : prev)
+                    }}
+                  >
+                    {val}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}>
+              <p>Select range min:</p>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(5, minmax(10px, 1fr))',
+                gridGap: '10px'
+              }}>
+                {minOptions.map((val, idx) => (
+                  <button 
+                    key={`${idx}=${val}`} 
+                    data-max={val} 
+                    style={{
+                      backgroundColor: val === selectedMin ? '#548bf4' : '#fff',
+                      color: val === selectedMin ? '#fff' : '#000',
+                      padding: '5px 10px',
+                      border: val === selectedMin ? '1px solid #548bf4' : '1px solid #000',
+                      fontSize: '15px',
+                      fontWeight: val === selectedMin ? 600 : 400,
+                      boxShadow: '0px 2px 8px -3px #4f4f4f'
+
+                    }}
+                    onClick={(e: React.MouseEvent) => {
+                      const el = e.target as HTMLElement
+                      const newMax = el.dataset
+                      setSelectedMin((prev: number) => newMax !== undefined && newMax.max !== undefined ? +newMax.max : prev)
+                    }}
+                  >
+                    {val}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  
+}
+
+export default UpdatingMarks;

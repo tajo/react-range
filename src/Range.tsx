@@ -5,6 +5,7 @@ import {
   translateThumbs,
   replaceAt,
   checkBoundaries,
+  checkValueAgainstBoundaries,
   relativeValue,
   schd,
   normalizeValue,
@@ -30,17 +31,18 @@ class Range extends React.Component<IProps> {
     allowOverlap: false,
     draggableTrack: false,
     min: 0,
-    max: 100
+    max: 100,
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
   markRefs: React.RefObject<HTMLElement>[] = [];
+  values: number[] = [];
   numOfMarks: number;
   resizeObserver: any;
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
-
+  
   state = {
     draggedTrackPos: [-1, -1],
     draggedThumbIndex: -1,
@@ -55,6 +57,7 @@ class Range extends React.Component<IProps> {
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
+    this.values = props.values
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
@@ -102,8 +105,37 @@ class Range extends React.Component<IProps> {
     });
   }
 
-  componentDidUpdate(prevProps: IProps) {
+  componentDidUpdate(prevProps: IProps, prevState: any) {
+    if(prevProps.max !== this.props.max || prevProps.min !== this.props.min) {
+      // invoke and update selectedValues if selectedValue falls outside dynamically
+      // changing max or min
+      this.values = [...this.props.values]
+      console.log(this.values)
+      this.values = this.values.map((value) =>
+        checkValueAgainstBoundaries(value, this.props.min, this.props.max)
+      );
+      console.log(this.values)
+
+      // update setValues callback with adjusted values
+      if(this.props.setValues && typeof this.props.setValues === 'function') {
+        this.props.setValues(this.values)
+      }
+
+      this.markRefs = []
+      this.numOfMarks = (this.props.max - this.props.min) / this.props.step;
+      for (let i = 0; i < this.numOfMarks + 1; i++) {
+        this.markRefs[i] = React.createRef<HTMLElement>();
+      }
+    }
+
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
+    // ensure offsets are calculated when the refs for the marks have been created
+    // and those refs have been mounted to the dom
+    // on the state update in calculateOffsets with new markOffsets are calculated
+    if(prevProps.max !== this.props.max || prevProps.min !== this.props.min || prevState.markOffsets.length !== this.state.markOffsets.length) {
+     this.calculateMarkOffsets()
+    }
+
   }
 
   componentWillUnmount() {
@@ -550,6 +582,7 @@ class Range extends React.Component<IProps> {
       disabled
     } = this.props;
     const { draggedThumbIndex, thumbZIndexes, markOffsets } = this.state;
+
     return renderTrack({
       props: {
         style: {
@@ -574,7 +607,7 @@ class Range extends React.Component<IProps> {
       isDragged: this.state.draggedThumbIndex > -1,
       disabled,
       children: [
-        ...markOffsets.map((offset, index) =>
+        ...markOffsets.map((offset, index, arr) =>
           renderMark({
             props: {
               style:
