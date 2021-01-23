@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Range, getTrackBackground, checkValuesAgainstBoundaries } from '../src/index';
 
-const STEP = 1;
-const MIN = 0;
-
 const UpdatingMarks = () => {
   const [values, setValues] = React.useState([50])
-  const [selectedMax, setSelectedMax] = useState((100))
+  const [selectedMax, setSelectedMax] = useState(100)
   const [maxOptions] = useState([100, 150, 200, 250, 300]) 
 
-  const [selectedMin, setSelectedMin] = useState((0))
+  const [selectedMin, setSelectedMin] = useState(0)
   const [minOptions] = useState([0, 15, 20, 25, 30]) 
+
+  const [selectedStep, setSelectedStep] = useState(1)
+  const [stepOptions] = useState([0.5, 1, 5, 10, 20]) 
 
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const UpdatingMarks = () => {
         checkValuesAgainstBoundaries(value, selectedMin,selectedMax)
       );
        setValues(valuesCopy)
-  }, [selectedMin, selectedMax])
+  }, [selectedMin, selectedMax, selectedStep])
 
 
       return (
@@ -31,7 +31,7 @@ const UpdatingMarks = () => {
       >
         <Range
           values={values}
-          step={STEP}
+          step={selectedStep}
           min={selectedMin}
           max={selectedMax}
           onChange={(values) => setValues(values)}
@@ -43,7 +43,7 @@ const UpdatingMarks = () => {
                 height: '16px',
                 width: '2px',
                 backgroundColor:
-                  ((index * STEP) + selectedMin) < values[0] ? '#548BF4' : '#ccc'
+                  ((index * selectedStep) + selectedMin) < values[0] ? '#548BF4' : '#ccc'
               }}
             />
           )}
@@ -163,7 +163,7 @@ const UpdatingMarks = () => {
                 {minOptions.map((val, idx) => (
                   <button 
                     key={`${idx}=${val}`} 
-                    data-max={val} 
+                    data-min={val} 
                     style={{
                       backgroundColor: val === selectedMin ? '#548bf4' : '#fff',
                       color: val === selectedMin ? '#fff' : '#000',
@@ -176,8 +176,43 @@ const UpdatingMarks = () => {
                     }}
                     onClick={(e: React.MouseEvent) => {
                       const el = e.target as HTMLElement
-                      const newMax = el.dataset
-                      setSelectedMin((prev: number) => newMax !== undefined && newMax.max !== undefined ? +newMax.max : prev)
+                      const newMin = el.dataset
+                      setSelectedMin((prev: number) => newMin !== undefined && newMin.min !== undefined ? +newMin.min : prev)
+                    }}
+                  >
+                    {val}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}>
+              <p>Select step:</p>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(5, minmax(10px, 1fr))',
+                gridGap: '10px'
+              }}>
+                {stepOptions.map((val, idx) => (
+                  <button 
+                    key={`${idx}=${val}`} 
+                    data-step={val} 
+                    style={{
+                      backgroundColor: val === selectedStep ? '#548bf4' : '#fff',
+                      color: val === selectedStep ? '#fff' : '#000',
+                      padding: '5px 10px',
+                      border: val === selectedStep ? '1px solid #548bf4' : '1px solid #000',
+                      fontSize: '15px',
+                      fontWeight: val === selectedStep ? 600 : 400,
+                      boxShadow: '0px 2px 8px -3px #4f4f4f'
+
+                    }}
+                    onClick={(e: React.MouseEvent) => {
+                      const el = e.target as HTMLElement
+                      const newStep = el.dataset
+                      setSelectedStep((prev: number) => newStep !== undefined && newStep.step !== undefined ? +newStep.step : prev)
                     }}
                   >
                     {val}
