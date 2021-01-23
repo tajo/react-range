@@ -139,7 +139,8 @@ const UpdatingMarks = () => {
             >
               {maxOptions.map((val, idx) => (
                 <button
-                  key={`${idx}=${val}`}
+                  key={`${idx}-${val}`}
+                  id={`_${idx}-${val}`}
                   data-max={val}
                   style={{
                     backgroundColor: val === selectedMax ? '#548bf4' : '#fff',
@@ -184,7 +185,8 @@ const UpdatingMarks = () => {
             >
               {minOptions.map((val, idx) => (
                 <button
-                  key={`${idx}=${val}`}
+                  key={`${idx}-${val}`}
+                  id={`_${idx}-${val}`}
                   data-min={val}
                   style={{
                     backgroundColor: val === selectedMin ? '#548bf4' : '#fff',
@@ -229,7 +231,8 @@ const UpdatingMarks = () => {
             >
               {stepOptions.map((val, idx) => (
                 <button
-                  key={`${idx}=${val}`}
+                  key={`${idx}-${val}`}
+                  id={`_${idx}-${val}`}
                   data-step={val}
                   style={{
                     backgroundColor: val === selectedStep ? '#548bf4' : '#fff',
