@@ -10,7 +10,6 @@ export interface ITrackBackground {
 }
 export interface IProps {
   values: number[];
-  setValues?: React.Dispatch<React.SetStateAction<number[]>>;
   min: number;
   max: number;
   step: number;

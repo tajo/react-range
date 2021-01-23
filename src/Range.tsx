@@ -36,7 +36,6 @@ class Range extends React.Component<IProps> {
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
   markRefs: React.RefObject<HTMLElement>[] = [];
-  values: number[] = [];
   numOfMarks: number;
   resizeObserver: any;
   schdOnMouseMove: (e: MouseEvent) => void;
@@ -57,7 +56,6 @@ class Range extends React.Component<IProps> {
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
-    this.values = props.values
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
@@ -109,16 +107,13 @@ class Range extends React.Component<IProps> {
     if(prevProps.max !== this.props.max || prevProps.min !== this.props.min) {
       // invoke and update selectedValues if selectedValue falls outside dynamically
       // changing max or min
-      this.values = [...this.props.values]
-      console.log(this.values)
-      this.values = this.values.map((value) =>
+      const valuesCopy = [...this.props.values].map((value) =>
         checkValueAgainstBoundaries(value, this.props.min, this.props.max)
       );
-      console.log(this.values)
 
       // update setValues callback with adjusted values
-      if(this.props.setValues && typeof this.props.setValues === 'function') {
-        this.props.setValues(this.values)
+      if(this.props.onChange && typeof this.props.onChange === 'function') {
+        this.props.onChange(valuesCopy)
       }
 
       this.markRefs = []

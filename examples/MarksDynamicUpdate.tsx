@@ -23,7 +23,6 @@ const UpdatingMarks = () => {
       >
         <Range
           values={values}
-          setValues={setValues}
           step={STEP}
           min={selectedMin}
           max={selectedMax}
