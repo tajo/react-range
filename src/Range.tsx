@@ -101,28 +101,36 @@ class Range extends React.Component<IProps> {
   }
 
   componentDidUpdate(prevProps: IProps, prevState: any) {
+    const { max, min, step, values, rtl } = this.props;
     if (
-      prevProps.max !== this.props.max ||
-      prevProps.min !== this.props.min ||
-      prevProps.step !== this.props.step
+      prevProps.max !== max ||
+      prevProps.min !== min ||
+      prevProps.step !== step
     ) {
       this.markRefs = [];
-      this.numOfMarks = (this.props.max - this.props.min) / this.props.step;
+      this.numOfMarks = (max - min) / step;
       for (let i = 0; i < this.numOfMarks + 1; i++) {
         this.markRefs[i] = React.createRef<HTMLElement>();
       }
     }
-    translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
+    translateThumbs(this.getThumbs(), this.getOffsets(), rtl);
     // ensure offsets are calculated when the refs for the marks have been created
     // and those refs have been mounted to the dom
     // on the state update in calculateOffsets with new markOffsets are calculated
     if (
-      prevProps.max !== this.props.max ||
-      prevProps.min !== this.props.min ||
-      prevProps.step !== this.props.step ||
+      prevProps.max !== max ||
+      prevProps.min !== min ||
+      prevProps.step !== step ||
       prevState.markOffsets.length !== this.state.markOffsets.length
     ) {
       this.calculateMarkOffsets();
+      values.forEach((value) => {
+        if (!isStepDivisible(min, value, step)) {
+          console.warn(
+            'The `values` property is in conflict with the current `step`, `min`, and `max` properties. Please provide values that are accessible using the min, max, and step values.'
+          );
+        }
+      });
     }
   }
 
