@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Range, getTrackBackground } from '../src/index';
+import React, { useState, useEffect } from 'react';
+import { Range, getTrackBackground, checkValuesAgainstBoundaries } from '../src/index';
 
 const STEP = 1;
 const MIN = 0;
@@ -11,6 +11,14 @@ const UpdatingMarks = () => {
 
   const [selectedMin, setSelectedMin] = useState((0))
   const [minOptions] = useState([0, 15, 20, 25, 30]) 
+
+
+  useEffect(() => {
+    const valuesCopy = [...values].map((value) =>
+        checkValuesAgainstBoundaries(value, selectedMin,selectedMax)
+      );
+       setValues(valuesCopy)
+  }, [selectedMin, selectedMax])
 
 
       return (

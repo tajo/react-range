@@ -74,7 +74,7 @@ export function checkBoundaries(value: number, min: number, max: number) {
   }
 }
 
-export function checkValueAgainstBoundaries(value: number, min: number, max: number) {
+export function checkValuesAgainstBoundaries(value: number, min: number, max: number) {
   if (value < min) {
     // set selectedValue to min
     return min

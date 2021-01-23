@@ -5,7 +5,6 @@ import {
   translateThumbs,
   replaceAt,
   checkBoundaries,
-  checkValueAgainstBoundaries,
   relativeValue,
   schd,
   normalizeValue,
@@ -31,7 +30,7 @@ class Range extends React.Component<IProps> {
     allowOverlap: false,
     draggableTrack: false,
     min: 0,
-    max: 100,
+    max: 100
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
@@ -41,7 +40,6 @@ class Range extends React.Component<IProps> {
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
-  
   state = {
     draggedTrackPos: [-1, -1],
     draggedThumbIndex: -1,
@@ -76,8 +74,7 @@ class Range extends React.Component<IProps> {
       ? new (window as any).ResizeObserver(this.onResize)
       : {
           observe: () => window.addEventListener('resize', this.onResize),
-          unobserve: () =>
-            window.removeEventListener('resize', this.onResize)
+          unobserve: () => window.removeEventListener('resize', this.onResize)
         };
 
     document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
@@ -104,33 +101,29 @@ class Range extends React.Component<IProps> {
   }
 
   componentDidUpdate(prevProps: IProps, prevState: any) {
-    if(prevProps.max !== this.props.max || prevProps.min !== this.props.min) {
-      // invoke and update selectedValues if selectedValue falls outside dynamically
-      // changing max or min
-      const valuesCopy = [...this.props.values].map((value) =>
-        checkValueAgainstBoundaries(value, this.props.min, this.props.max)
-      );
-
-      // update setValues callback with adjusted values
-      if(this.props.onChange && typeof this.props.onChange === 'function') {
-        this.props.onChange(valuesCopy)
-      }
-
-      this.markRefs = []
+    if (
+      prevProps.max !== this.props.max ||
+      prevProps.min !== this.props.min ||
+      prevProps.step !== this.props.step
+    ) {
+      this.markRefs = [];
       this.numOfMarks = (this.props.max - this.props.min) / this.props.step;
       for (let i = 0; i < this.numOfMarks + 1; i++) {
         this.markRefs[i] = React.createRef<HTMLElement>();
       }
     }
-
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
     // ensure offsets are calculated when the refs for the marks have been created
     // and those refs have been mounted to the dom
     // on the state update in calculateOffsets with new markOffsets are calculated
-    if(prevProps.max !== this.props.max || prevProps.min !== this.props.min || prevState.markOffsets.length !== this.state.markOffsets.length) {
-     this.calculateMarkOffsets()
+    if (
+      prevProps.max !== this.props.max ||
+      prevProps.min !== this.props.min ||
+      prevProps.step !== this.props.step ||
+      prevState.markOffsets.length !== this.state.markOffsets.length
+    ) {
+      this.calculateMarkOffsets();
     }
-
   }
 
   componentWillUnmount() {
@@ -247,7 +240,12 @@ class Range extends React.Component<IProps> {
     e.preventDefault();
     this.addMouseEvents(e.nativeEvent);
     if (this.props.values.length > 1 && this.props.draggableTrack) {
-      if (this.thumbRefs.some(thumbRef => thumbRef.current?.contains(e.target as Node))) return;
+      if (
+        this.thumbRefs.some((thumbRef) =>
+          thumbRef.current?.contains(e.target as Node)
+        )
+      )
+        return;
       // handle dragging the whole track
       this.setState(
         {
@@ -257,7 +255,12 @@ class Range extends React.Component<IProps> {
       );
     } else {
       // get the index of the thumb that is closest to the place where the track is clicked
-      const draggedThumbIndex = getClosestThumbIndex(this.thumbRefs.map(t => t.current!), e.clientX, e.clientY, this.props.direction)
+      const draggedThumbIndex = getClosestThumbIndex(
+        this.thumbRefs.map((t) => t.current!),
+        e.clientX,
+        e.clientY,
+        this.props.direction
+      );
       // move the thumb which is closest to the place where the track is clicked
       this.thumbRefs[draggedThumbIndex].current?.focus();
       this.setState(
@@ -278,7 +281,12 @@ class Range extends React.Component<IProps> {
     e.persist();
     this.addTouchEvents(e.nativeEvent);
     if (this.props.values.length > 1 && this.props.draggableTrack) {
-      if (this.thumbRefs.some(thumbRef => thumbRef.current?.contains(e.target as Node))) return;
+      if (
+        this.thumbRefs.some((thumbRef) =>
+          thumbRef.current?.contains(e.target as Node)
+        )
+      )
+        return;
       // handle dragging the whole track
       this.setState(
         {
@@ -288,7 +296,12 @@ class Range extends React.Component<IProps> {
       );
     } else {
       // get the index of the thumb that is closest to the place where the track is clicked
-      const draggedThumbIndex = getClosestThumbIndex(this.thumbRefs.map(t => t.current!), e.touches[0].clientX, e.touches[0].clientY, this.props.direction)
+      const draggedThumbIndex = getClosestThumbIndex(
+        this.thumbRefs.map((t) => t.current!),
+        e.touches[0].clientX,
+        e.touches[0].clientY,
+        this.props.direction
+      );
       // move the thumb which is closest to the place where the track is clicked
       this.thumbRefs[draggedThumbIndex].current?.focus();
       this.setState(
@@ -403,7 +416,12 @@ class Range extends React.Component<IProps> {
   onMove = (clientX: number, clientY: number) => {
     const { draggedThumbIndex, draggedTrackPos } = this.state;
     const { direction, min, max, onChange, values, step, rtl } = this.props;
-    if (draggedThumbIndex === -1 && draggedTrackPos[0] === -1 && draggedTrackPos[1] === -1) return null;
+    if (
+      draggedThumbIndex === -1 &&
+      draggedTrackPos[0] === -1 &&
+      draggedTrackPos[1] === -1
+    )
+      return null;
     const trackElement = this.trackRef.current!;
     // If component was closed down prematurely, A last onMove could be triggered based on requestAnimationFrame()
     if (!trackElement) return null;
@@ -436,20 +454,28 @@ class Range extends React.Component<IProps> {
       if (Math.abs(deltaValue) >= step / 2) {
         // adjust delta so it fits into the range
         for (let i = 0; i < this.thumbRefs.length; i++) {
-          if ((values[i] === max && Math.sign(deltaValue) === 1) || (values[i] === min && Math.sign(deltaValue) === -1)) return;
-          const thumbValue = values[i] + deltaValue
-          if (thumbValue > max) deltaValue = max - values[i]
-          else if (thumbValue < min) deltaValue = min - values[i]
+          if (
+            (values[i] === max && Math.sign(deltaValue) === 1) ||
+            (values[i] === min && Math.sign(deltaValue) === -1)
+          )
+            return;
+          const thumbValue = values[i] + deltaValue;
+          if (thumbValue > max) deltaValue = max - values[i];
+          else if (thumbValue < min) deltaValue = min - values[i];
         }
         // add the delta to each thumb
         let newValues = values.slice(0);
         for (let i = 0; i < this.thumbRefs.length; i++) {
-          newValues = replaceAt(newValues, i, this.normalizeValue(values[i] + deltaValue, i));
+          newValues = replaceAt(
+            newValues,
+            i,
+            this.normalizeValue(values[i] + deltaValue, i)
+          );
         }
         this.setState({
-          draggedTrackPos: [clientX, clientY],
+          draggedTrackPos: [clientX, clientY]
         });
-        onChange(newValues)
+        onChange(newValues);
       }
     } else {
       let newValue = 0;
@@ -505,7 +531,12 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('mouseup', this.schdOnEnd);
     document.removeEventListener('touchend', this.schdOnEnd);
     document.removeEventListener('touchcancel', this.schdOnEnd);
-    if (this.state.draggedThumbIndex === -1 && this.state.draggedTrackPos[0] === -1 && this.state.draggedTrackPos[1] === -1) return null;
+    if (
+      this.state.draggedThumbIndex === -1 &&
+      this.state.draggedTrackPos[0] === -1 &&
+      this.state.draggedTrackPos[1] === -1
+    )
+      return null;
     this.setState({ draggedThumbIndex: -1, draggedTrackPos: [-1, -1] }, () => {
       this.fireOnFinalChange();
     });
@@ -589,8 +620,8 @@ class Range extends React.Component<IProps> {
               ? 'grabbing'
               : this.props.draggableTrack
               ? isVertical(this.props.direction)
-              ? 'ns-resize'
-              : 'ew-resize'
+                ? 'ns-resize'
+                : 'ew-resize'
               : values.length === 1 && !disabled
               ? 'pointer'
               : 'inherit'
