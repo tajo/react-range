@@ -1,3 +1,5 @@
+// These tests don't work in CI right now
+
 import {
   Examples,
   getTestUrl,
