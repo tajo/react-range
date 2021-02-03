@@ -48,11 +48,9 @@ function ThumbLabel({
   );
 }
 
-function Labeled() {
-  const rangeRef: any = React.useRef();
-  const trackRef: any = React.useRef();
+const LabeledMergeCustom: React.FC<{ rtl: boolean }> = ({ rtl }) => {
   const [values, setValues] = React.useState([25, 75]);
-  const handleChange = (values: number[]) => setValues(values);
+  const rangeRef: any = React.useRef<Range>();
   const Thumb = ({ props, index, isDragged }: any) => (
     <div
       {...props}
@@ -99,7 +97,8 @@ function Labeled() {
             values: values,
             colors: COLORS,
             min: MIN,
-            max: MAX
+            max: MAX,
+            rtl
           }),
           alignSelf: 'center'
         }}
@@ -112,14 +111,15 @@ function Labeled() {
     <Range
       ref={rangeRef}
       values={values}
-      onChange={handleChange}
+      onChange={(values) => setValues(values)}
       renderThumb={Thumb}
       renderTrack={Track}
       step={STEP}
       min={MIN}
       max={MAX}
+      rtl={rtl}
     />
   );
-}
+};
 
-export default Labeled;
+export default LabeledMergeCustom;

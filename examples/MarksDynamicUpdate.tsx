@@ -5,7 +5,7 @@ import {
   checkValuesAgainstBoundaries
 } from '../src/index';
 
-const UpdatingMarks = () => {
+const UpdatingMarks: React.FC<{ rtl: boolean }> = ({ rtl }) => {
   const [values, setValues] = React.useState([50]);
   const [selectedMax, setSelectedMax] = useState(100);
   const [maxOptions] = useState([100, 150, 200, 250, 300]);
@@ -36,6 +36,7 @@ const UpdatingMarks = () => {
         step={selectedStep}
         min={selectedMin}
         max={selectedMax}
+        rtl={rtl}
         onChange={(values) => setValues(values)}
         renderMark={({ props, index }) => (
           <div
@@ -72,7 +73,8 @@ const UpdatingMarks = () => {
                   values,
                   colors: ['#548BF4', '#ccc'],
                   min: selectedMin,
-                  max: selectedMax
+                  max: selectedMax,
+                  rtl
                 }),
                 alignSelf: 'center'
               }}
