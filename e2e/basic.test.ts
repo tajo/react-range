@@ -12,6 +12,7 @@ beforeEach(async () => {
   await page.goto(getTestUrl(Examples.BASIC));
   await page.setViewport({ width: 600, height: 200 });
   await addFontStyles(page);
+  await page.waitForSelector('div[role="slider"]');
 });
 
 test('dnd the thumb to right', async () => {
@@ -22,7 +23,7 @@ test('dnd the thumb to right', async () => {
   await page.mouse.up();
   await untrackMouse(page);
   const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('79.6');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe('79.6');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -34,6 +35,6 @@ test('dnd the thumb to left', async () => {
   await page.mouse.up();
   await untrackMouse(page);
   const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('20.4');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe('20.4');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });

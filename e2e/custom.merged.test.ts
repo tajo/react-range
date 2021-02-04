@@ -12,6 +12,7 @@ beforeEach(async () => {
   await page.goto(getTestUrl(Examples.CUSTOM_MERGING_LABELS));
   await page.setViewport({ width: 600, height: 200 });
   await addFontStyles(page);
+  await page.waitForSelector('div[role="slider"]');
 });
 
 test('merge custom labels', async () => {
