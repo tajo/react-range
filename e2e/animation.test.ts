@@ -1,8 +1,4 @@
-import {
-  Examples,
-  getTestUrl,
-  addFontStyles
-} from './utils';
+import { Examples, getTestUrl, addFontStyles } from './utils';
 
 jest.setTimeout(10000);
 
@@ -13,7 +9,6 @@ beforeEach(async () => {
 });
 
 test('update thumb when animating container', async () => {
-  expect(await page.screenshot()).toMatchImageSnapshot();
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
