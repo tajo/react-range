@@ -16,44 +16,44 @@ export enum Examples {
   MARKS,
   DYNAMIC_MARKS,
   DRAGGABLE_TRACK,
-  DRAGGABLE_TRACK_DOWN_DIRECTION,
+  DRAGGABLE_TRACK_DOWN_DIRECTION
 }
 
 export const getTestUrl = (example: Examples): string => {
-  const PORT = process.env.E2E === 'dev' ? 9010 : 9011;
+  const PORT = 61000;
   switch (example) {
     case Examples.BASIC:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--basic`;
+      return `http://localhost:${PORT}/?story=range--basic&mode=preview`;
     case Examples.BASIC_WITH_BORDER:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--basic-with-border`;
+      return `http://localhost:${PORT}/?story=range--basic-with-border&mode=preview`;
     case Examples.TWO_THUMBS:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--two-thumbs`;
+      return `http://localhost:${PORT}/?story=range--two-thumbs&mode=preview`;
     case Examples.UP_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--up-direction`;
+      return `http://localhost:${PORT}/?story=range--up-direction&mode=preview`;
     case Examples.LEFT_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--left-direction`;
+      return `http://localhost:${PORT}/?story=range--left-direction&mode=preview`;
     case Examples.DOWN_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--down-direction`;
+      return `http://localhost:${PORT}/?story=range--down-direction&mode=preview`;
     case Examples.MERGING_LABELS:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels`;
+      return `http://localhost:${PORT}/?story=range--merging-labels&mode=preview`;
     case Examples.SKINNY_MERGING_LABELS:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels-skinny`;
+      return `http://localhost:${PORT}/?story=range--merging-labels-skinny&mode=preview`;
     case Examples.CUSTOM_MERGING_LABELS:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--merging-labels-custom`;
+      return `http://localhost:${PORT}/?story=range--merging-labels-custom&mode=preview`;
     case Examples.RTL:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--rtl`;
+      return `http://localhost:${PORT}/?story=range--basic&mode=preview&rtl=true`;
     case Examples.FINAL_CHANGE_EVENT:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--onfinalchange-event`;
+      return `http://localhost:${PORT}/?story=range--on-final-change-event&mode=preview`;
     case Examples.ANIMATING_CONTAINER:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--animating-container`;
+      return `http://localhost:${PORT}/?story=range--animating-container&mode=preview`;
     case Examples.MARKS:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--marks`;
+      return `http://localhost:${PORT}/?story=range--marks&mode=preview`;
     case Examples.DYNAMIC_MARKS:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--marks-dynamic-update`;
+      return `http://localhost:${PORT}/?story=range--marks-dynamic&mode=preview`;
     case Examples.DRAGGABLE_TRACK:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--two-thumbs-with-draggable-track`;
+      return `http://localhost:${PORT}/?story=range--two-thumbs-with-draggable-track&mode=preview`;
     case Examples.DRAGGABLE_TRACK_DOWN_DIRECTION:
-      return `http://localhost:${PORT}/iframe.html?path=/story/range--two-thumbs-with-draggable-track-and-down-direction`;
+      return `http://localhost:${PORT}/?story=range--two-thumbs-with-draggable-track-and-down-direction&mode=preview`;
   }
 };
 
@@ -164,7 +164,14 @@ const fontStyles = () => {
     font-style: normal;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    margin: 8px;
+    margin-top: 60px;
+    margin-left: 30px;
+    margin-right: 30px;
   }
+  div[role='slider']:focus {
+    outline: none;
+  }  
   `;
   document.head.appendChild(styleElement);
 };

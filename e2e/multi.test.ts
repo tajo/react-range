@@ -12,6 +12,7 @@ beforeEach(async () => {
   await page.goto(getTestUrl(Examples.TWO_THUMBS));
   await page.setViewport({ width: 600, height: 200 });
   await addFontStyles(page);
+  await page.waitForSelector('div[role="slider"]');
 });
 
 test('dnd the first thumb to right', async () => {
@@ -22,7 +23,7 @@ test('dnd the first thumb to right', async () => {
   await page.mouse.up();
   await untrackMouse(page);
   const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('44.4 - 75.0');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe('44.4 - 75.0');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -34,7 +35,7 @@ test('dnd the first thumb to far right (overlap)', async () => {
   await page.mouse.up();
   await untrackMouse(page);
   const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('75.0 - 75.0');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe('75.0 - 75.0');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -46,7 +47,7 @@ test('dnd the second thumb to left', async () => {
   await page.mouse.up();
   await untrackMouse(page);
   const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('25.0 - 58.7');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe('25.0 - 58.7');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -58,7 +59,7 @@ test('dnd the second thumb to far left (overlap)', async () => {
   await page.mouse.up();
   await untrackMouse(page);
   const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('25.0 - 25.0');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe('25.0 - 25.0');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -76,12 +77,14 @@ test('dnd both thumbs to max value (overlap at right)', async () => {
   await page.mouse.up();
   await untrackMouse(page);
 
-   // First, ensure both thumbs are overlapping at max value
+  // First, ensure both thumbs are overlapping at max value
   const overlapOutput = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, overlapOutput)).toBe('100.0 - 100.0');
+  expect(await page.evaluate((e) => e.textContent, overlapOutput)).toBe(
+    '100.0 - 100.0'
+  );
   expect(await page.screenshot()).toMatchImageSnapshot();
 
-   // Now click around max value and "drag" left
+  // Now click around max value and "drag" left
   await trackMouse(page);
   await page.mouse.move(555, 80);
   await page.mouse.down();
@@ -90,6 +93,8 @@ test('dnd both thumbs to max value (overlap at right)', async () => {
   await untrackMouse(page);
   // Finally, ensure the left slider was moved
   const output = await page.$('#output');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('75.0 - 100.0');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe(
+    '75.0 - 100.0'
+  );
   expect(await page.screenshot()).toMatchImageSnapshot();
-})
+});

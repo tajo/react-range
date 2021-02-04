@@ -12,6 +12,7 @@ beforeEach(async () => {
   await page.goto(getTestUrl(Examples.MERGING_LABELS));
   await page.setViewport({ width: 600, height: 200 });
   await addFontStyles(page);
+  await page.waitForSelector('div[role="slider"]');
 });
 
 test('Overlap thumbs 1 and 2', async () => {
@@ -25,7 +26,7 @@ test('Overlap thumbs 1 and 2', async () => {
     hidden: true
   });
   const output = await page.$('[data-label="0"]');
-  expect(await page.evaluate(e => e.textContent, output)).toBe('44.4 - 50.0');
+  expect(await page.evaluate((e) => e.textContent, output)).toBe('44.4 - 50.0');
   expect(await page.screenshot()).toMatchImageSnapshot();
 });
 
@@ -47,7 +48,7 @@ test('Overlap thumbs 1, 2 and 3', async () => {
     hidden: true
   });
   const output = await page.$('[data-label="0"]');
-  expect(await page.evaluate(e => e.textContent, output)).toBe(
+  expect(await page.evaluate((e) => e.textContent, output)).toBe(
     '44.4 - 50.0 - 55.6'
   );
   expect(await page.screenshot()).toMatchImageSnapshot();
@@ -71,7 +72,7 @@ test('Overlap thumbs 1, 2 and 3 in a different order', async () => {
     hidden: true
   });
   const output = await page.$('[data-label="2"]');
-  expect(await page.evaluate(e => e.textContent, output)).toBe(
+  expect(await page.evaluate((e) => e.textContent, output)).toBe(
     '44.4 - 50.0 - 55.6'
   );
   expect(await page.screenshot()).toMatchImageSnapshot();

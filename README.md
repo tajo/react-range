@@ -154,7 +154,7 @@ renderMark?: (params: {
 }) => React.ReactNode;
 ```
 
-`renderMark` is an optional prop so you can render an element at each step. See this [example](https://react-range.netlify.app/?path=/story/range--marks). **Your function gets 2 parameters and should return a React component**:
+`renderMark` is an optional prop so you can render an element at each step. See this [example](https://react-range.netlify.app/?story=range--marks). **Your function gets 2 parameters and should return a React component**:
 
 - `props` - this needs to be spread over the root track element, it adds a ref, key and some necessary styling
 - `index` - index of the mark, might be useful if you want to use different styles for even/odd marks
@@ -318,19 +318,15 @@ All tests are automatically ran in Travis CI with headless chromium. This way, t
 Do you want to run them in the `dev` mode (slows down operations, opens the browser)?
 
 ```bash
-yarn storybook #start the storybook server
+yarn ladle serve #start the ladle server
 yarn test:e2e:dev #run the e2e tests
 ```
 
-`CI` mode (storybook started on the background, quick, headless)
+`CI` mode (ladle started on the background, quick, headless)
 
 ```bash
 yarn test:e2e
 ```
-
-### Focus-visible style
-
-For the Storybook purposes and E2E tests, the example [stories](https://github.com/tajo/react-range/blob/master/.storybook/example.stories.js#L20) use `focus-visible` polyfill package, which applies focus ring only when input is initiated by keyboard. In the future, all browsers will support this CSS pseudo-class. The polyfill is not part of the library and you can use your own solution or setup the polyfill in a different manner (this mostly concerns you when using css class generating frameworks like Styled-components, Emotion and so on).
 
 ## Browser support
 
@@ -338,7 +334,6 @@ For the Storybook purposes and E2E tests, the example [stories](https://github.c
 - **Firefox** (latest, mac, windows)
 - **Safari** (latest, mac, iOS)
 - **Edge** (latest, windows)
-- **MSIE 11** (windows)
 
 ## Contributing
 
@@ -348,7 +343,7 @@ This is how you can spin up the dev environment:
 git clone https://github.com/tajo/react-range
 cd react-range
 yarn
-yarn storybook
+yarn ladle serve
 ```
 
 ## Shoutouts 🙏
