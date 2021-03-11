@@ -58,11 +58,6 @@ class Range extends React.Component<IProps> {
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
     }
-    if (!isStepDivisible(props.min, props.max, props.step)) {
-      console.warn(
-        'The difference of `max` and `min` must be divisible by `step`'
-      );
-    }
     if (props.step === 0) {
       throw new Error('"step" property should be a positive number');
     }
