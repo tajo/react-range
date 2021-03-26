@@ -112,6 +112,7 @@ renderTrack: (params: {
 
 The track can be a single narrow `div` as in the [Super simple example](https://github.com/tajo/react-range/blob/master/examples/SuperSimple.tsx); however, it might be better to use at least two nested `div`s where the outer `div` is much thicker and has a transparent background and the inner `div` is narrow, has visible background and is centered. `props` should be then spread over the outer bigger `div`. **Why to do this? It's nice to keep the `onMouseDown` and `onTouchStart` targets bigger** since the thumb can be moved also by clicking on the track (in a single thumb scenario).
 
+
 ### renderThumb
 
 ```ts
@@ -261,6 +262,14 @@ rtl: boolean;
 ```
 
 If `true`, the slider will be optimized for RTL layouts. Default is `false`.
+
+### getThumbOffset (optional)
+```ts
+getThumbOffset(thumbOffset: IThumbOffset) => IThumbOffset
+```
+If defined, the thumb offset can be over written from the result of the function. One example
+is if you wanted the thumb to not go past the bounds of the track.
+
 
 ## getTrackBackground
 
