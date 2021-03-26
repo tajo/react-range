@@ -1,0 +1,59 @@
+// @flow
+
+import * as React from 'react';
+
+declare type IMarkProps = {
+  key: number,
+  style: CSSStyleDeclaration,
+  ref: React.Ref<any>
+};
+declare type IThumbProps = {
+  key: number,
+  style: CSSStyleDeclaration,
+  tabIndex?: number,
+  'aria-valuemax': number,
+  'aria-valuemin': number,
+  'aria-valuenow': number,
+  draggable: boolean,
+  ref: React.Ref<any>,
+  role: string,
+  onKeyDown: (e: SyntheticEvent<*>) => mixed,
+  onKeyUp: (e: SyntheticEvent<*>) => mixed
+};
+declare interface ITrackProps {
+  style: CSSStyleDeclaration;
+  ref: React.Ref<any>;
+  onMouseDown: (e: SyntheticEvent<*>) => mixed;
+  onTouchStart: (e: SyntheticEvent<*>) => mixed;
+}
+declare interface IProps {
+  values: number[];
+  min?: number;
+  max?: number;
+  step?: number;
+  direction?: string;
+  allowOverlap?: boolean;
+  draggableTrack?: boolean;
+  disabled?: boolean;
+  rtl?: boolean;
+  onChange: (values: number[]) => mixed;
+  onFinalChange?: (values: number[]) => mixed;
+  renderMark?: (params: {
+    props: IMarkProps,
+    index: number
+  }) => React.Node;
+  renderThumb: (params: {
+    props: IThumbProps,
+    value: number,
+    index: number,
+    isDragged: boolean
+  }) => React.Node;
+  renderTrack: (params: {
+    props: ITrackProps,
+    children: React.Node,
+    isDragged: boolean,
+    disabled: boolean
+  }) => React.Node;
+}
+
+declare export default class Range extends React$Component<IProps> {}
