@@ -30,7 +30,8 @@ class Range extends React.Component<IProps> {
     allowOverlap: false,
     draggableTrack: false,
     min: 0,
-    max: 100
+    max: 100,
+    minDistance: 0,
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
@@ -523,8 +524,8 @@ class Range extends React.Component<IProps> {
   };
 
   normalizeValue = (value: number, index: number) => {
-    const { min, max, step, allowOverlap, values } = this.props;
-    return normalizeValue(value, index, min, max, step, allowOverlap, values);
+    const { min, max, step, allowOverlap, values, minDistance } = this.props;
+    return normalizeValue(value, index, min, max, step, allowOverlap, values, minDistance);
   };
 
   onEnd = (e: Event) => {
