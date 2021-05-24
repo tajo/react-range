@@ -441,11 +441,11 @@ class Range extends React.Component<IProps> {
       switch (direction) {
         case Direction.Right:
         case Direction.Left:
-          deltaValue = (dX / trackLength) * (max - min) + min;
+          deltaValue = (dX / trackLength) * (max - min);
           break;
         case Direction.Down:
         case Direction.Up:
-          deltaValue = (dY / trackLength) * (max - min) + min;
+          deltaValue = (dY / trackLength) * (max - min);
           break;
         default:
           assertUnreachable(direction);
