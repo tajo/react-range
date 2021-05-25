@@ -65,7 +65,7 @@ export interface ITrackProps {
   onTouchStart: (e: React.TouchEvent) => void;
 }
 
-export type TThumbOffsets = { x: number; y: number }[];
+export type IThumbOffset = { x: number; y: number }
 
 export enum Direction {
   Right = 'to right',

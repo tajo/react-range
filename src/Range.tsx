@@ -16,7 +16,7 @@ import {
   isStepDivisible,
   getClosestThumbIndex
 } from './utils';
-import { IProps, Direction } from './types';
+import {IProps, Direction, IThumbOffset} from './types';
 
 const INCREASE_KEYS = ['ArrowRight', 'ArrowUp', 'k', 'PageUp'];
 const DECREASE_KEYS = ['ArrowLeft', 'ArrowDown', 'j', 'PageDown'];
@@ -37,6 +37,7 @@ class Range extends React.Component<IProps> {
   markRefs: React.RefObject<HTMLElement>[] = [];
   numOfMarks: number;
   resizeObserver: any;
+  getThumbOffset?: (thumbOffset: IThumbOffset) => IThumbOffset
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
@@ -153,7 +154,7 @@ class Range extends React.Component<IProps> {
     const trackRect = trackElement.getBoundingClientRect();
     const trackPadding = getPaddingAndBorder(trackElement);
     return this.getThumbs().map((thumb, index) => {
-      const thumbOffsets = { x: 0, y: 0 };
+      let thumbOffsets: IThumbOffset = { x: 0, y: 0 };
       const thumbRect = thumb.getBoundingClientRect();
       const thumbMargins = getMargin(thumb);
       switch (direction) {
@@ -196,6 +197,11 @@ class Range extends React.Component<IProps> {
           thumbOffsets.y +=
             trackRect.height * relativeValue(values[index], min, max) -
             thumbRect.height / 2;
+
+          if ( this.getThumbOffset ) {
+            thumbOffsets = this.getThumbOffset(thumbOffsets)
+          }
+
           return thumbOffsets;
         default:
           return assertUnreachable(direction);

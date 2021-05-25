@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Range from './Range';
-import { TThumbOffsets, ITrackBackground, Direction } from './types';
+import { IThumbOffset, ITrackBackground, Direction } from './types';
 
 export const getStepDecimals = (step: number): number => {
   const decimals = step.toString().split('.')[1];
@@ -118,7 +118,7 @@ export function getPaddingAndBorder(element: Element) {
 
 export function translateThumbs(
   elements: Element[],
-  offsets: TThumbOffsets,
+  offsets: IThumbOffset[],
   rtl: boolean
 ) {
   const inverter = rtl ? -1 : 1;

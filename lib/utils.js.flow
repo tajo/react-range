@@ -1,0 +1,20 @@
+// @flow
+import Range from './Range';
+
+declare export function getTrackBackground(params: {
+  min: number,
+  max: number,
+  values: number[],
+  colors: string[],
+  direction?: string,
+  rtl?: boolean
+}): string;
+
+declare export function useThumbOverlap(
+  rangeRef: Range | null,
+  values: number[],
+  index: number,
+  step?: number,
+  separator?: string,
+  valueToLabel?: (string) => string
+): mixed[];
