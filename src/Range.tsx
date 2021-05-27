@@ -50,6 +50,10 @@ class Range extends React.Component<IProps> {
 
   constructor(props: IProps) {
     super(props);
+    if (props.step === 0) {
+      throw new Error('"step" property should be a positive number');
+    }
+
     this.numOfMarks = (props.max - props.min) / this.props.step;
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
@@ -58,9 +62,7 @@ class Range extends React.Component<IProps> {
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
     }
-    if (props.step === 0) {
-      throw new Error('"step" property should be a positive number');
-    }
+
   }
 
   componentDidMount() {
