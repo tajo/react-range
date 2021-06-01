@@ -445,6 +445,6 @@ export const useThumbOverlap = (
  * @param direction - the direction of the track
  */
 function getThumbDistance(thumbEl: Element, clientX: number, clientY: number, direction: Direction) {
-  const { x, y, width, height } = thumbEl.getBoundingClientRect()
-  return isVertical(direction) ? Math.abs(clientY - (y + height / 2)) : Math.abs(clientX - (x + width / 2))
+  const { left, top, width, height } = thumbEl.getBoundingClientRect()
+  return isVertical(direction) ? Math.abs(clientY - (top + height / 2)) : Math.abs(clientX - (left + width / 2))
 }
