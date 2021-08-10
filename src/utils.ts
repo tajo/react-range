@@ -16,7 +16,9 @@ export function isTouchEvent(event: TouchEvent & MouseEvent) {
 
 export function isStepDivisible(min: number, max: number, step: number): boolean {
   const res = (max - min) / step;
-  return parseInt(res.toString(), 10) === res;
+  const precision = 8;
+  const roundedRes = Number(res.toFixed(precision));
+  return parseInt(roundedRes.toString(), 10) === roundedRes;
 }
 
 export function normalizeValue(

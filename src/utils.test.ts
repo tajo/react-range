@@ -67,6 +67,7 @@ test('isVertical', () => {
 
 test('isStepDivisible', () => {
   expect(isStepDivisible(0, 1, 0.1)).toEqual(true);
+  expect(isStepDivisible(0.4, 1, 0.1)).toEqual(true);
   expect(isStepDivisible(0, 100, 0.1)).toEqual(true);
   expect(isStepDivisible(0, 10, 1)).toEqual(true);
   expect(isStepDivisible(0, 10, 10)).toEqual(true);
