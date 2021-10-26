@@ -20,22 +20,28 @@ export interface IProps {
   rtl: boolean;
   onChange: (values: number[]) => void;
   onFinalChange?: (values: number[]) => void;
-  renderMark?: (params: {
-    props: IMarkProps;
-    index: number;
-  }) => React.ReactNode;
-  renderThumb: (params: {
-    props: IThumbProps;
-    value: number;
-    index: number;
-    isDragged: boolean;
-  }) => React.ReactNode;
-  renderTrack: (params: {
-    props: ITrackProps;
-    children: React.ReactNode;
-    isDragged: boolean;
-    disabled: boolean;
-  }) => React.ReactNode;
+  renderMark?: (params: IRenderMarkParams) => React.ReactNode;
+  renderThumb: (params: IRenderThumbParams) => React.ReactNode;
+  renderTrack: (params: IRenderTrackParams) => React.ReactNode;
+}
+
+export interface IRenderMarkParams {
+  props: IMarkProps;
+  index: number;
+}
+
+export interface IRenderThumbParams {
+  props: IThumbProps;
+  value: number;
+  index: number;
+  isDragged: boolean;
+}
+
+export interface IRenderTrackParams {
+  props: ITrackProps;
+  children: React.ReactNode;
+  isDragged: boolean;
+  disabled: boolean;
 }
 
 export interface IThumbProps {
