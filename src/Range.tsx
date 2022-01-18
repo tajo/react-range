@@ -62,7 +62,6 @@ class Range extends React.Component<IProps> {
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
     }
-
   }
 
   componentDidMount() {
@@ -354,7 +353,10 @@ class Range extends React.Component<IProps> {
     const { values, onChange, step, rtl, direction } = this.props;
     const { isChanged } = this.state;
     const index = this.getTargetIndex(e.nativeEvent);
-    const inverter = rtl || direction === Direction.Left || direction === Direction.Bottom ? -1 : 1;
+    const inverter =
+      rtl || direction === Direction.Left || direction === Direction.Down
+        ? -1
+        : 1;
     if (index === -1) return;
 
     if (INCREASE_KEYS.includes(e.key)) {
@@ -573,9 +575,9 @@ class Range extends React.Component<IProps> {
       let markHeight = 9999;
       let markWidth = 9999;
       if (this.markRefs[i].current) {
-        const markRect = (this.markRefs[
-          i
-        ] as any).current.getBoundingClientRect();
+        const markRect = (
+          this.markRefs[i] as any
+        ).current.getBoundingClientRect();
         markHeight = markRect.height;
         markWidth = markRect.width;
       }
