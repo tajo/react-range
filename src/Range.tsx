@@ -351,10 +351,10 @@ class Range extends React.Component<IProps> {
   };
 
   onKeyDown = (e: React.KeyboardEvent) => {
-    const { values, onChange, step, rtl } = this.props;
+    const { values, onChange, step, rtl, direction } = this.props;
     const { isChanged } = this.state;
     const index = this.getTargetIndex(e.nativeEvent);
-    const inverter = rtl ? -1 : 1;
+    const inverter = rtl || direction === Direction.Left || direction === Direction.Bottom ? -1 : 1;
     if (index === -1) return;
 
     if (INCREASE_KEYS.includes(e.key)) {
