@@ -34,8 +34,8 @@ class Range extends React.Component<IProps> {
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
-  markRefs: React.RefObject<HTMLElement>[] = [];
-  numOfMarks: number;
+  markRefs?: React.RefObject<HTMLElement>[];
+  numOfMarks?: number;
   resizeObserver: any;
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
@@ -54,14 +54,11 @@ class Range extends React.Component<IProps> {
       throw new Error('"step" property should be a positive number');
     }
 
-    this.numOfMarks = (props.max - props.min) / this.props.step;
     this.schdOnMouseMove = schd(this.onMouseMove);
     this.schdOnTouchMove = schd(this.onTouchMove);
     this.schdOnEnd = schd(this.onEnd);
     this.thumbRefs = props.values.map(() => React.createRef<HTMLElement>());
-    for (let i = 0; i < this.numOfMarks + 1; i++) {
-      this.markRefs[i] = React.createRef<HTMLElement>();
-    }
+    this.updateMarkRefs(props);
   }
 
   componentDidMount() {
@@ -103,11 +100,7 @@ class Range extends React.Component<IProps> {
       prevProps.min !== min ||
       prevProps.step !== step
     ) {
-      this.markRefs = [];
-      this.numOfMarks = (max - min) / step;
-      for (let i = 0; i < this.numOfMarks + 1; i++) {
-        this.markRefs[i] = React.createRef<HTMLElement>();
-      }
+      this.updateMarkRefs(this.props);
     }
     translateThumbs(this.getThumbs(), this.getOffsets(), rtl);
     // ensure offsets are calculated when the refs for the marks have been created
@@ -557,10 +550,25 @@ class Range extends React.Component<IProps> {
     }
   };
 
+  updateMarkRefs = (props: IProps) => {
+    if (!props.renderMark) { // don't create mark refs unless we are rendering marks
+      this.numOfMarks = undefined;
+      this.markRefs = undefined;
+      return;
+    }
+    this.numOfMarks = (props.max - props.min) / this.props.step;
+    this.markRefs = [];
+    for (let i = 0; i < this.numOfMarks + 1; i++) {
+      this.markRefs[i] = React.createRef<HTMLElement>();
+    }
+  }
+
   calculateMarkOffsets = () => {
     if (
       !this.props.renderMark ||
       !this.trackRef ||
+      !this.numOfMarks ||
+      !this.markRefs ||
       this.trackRef.current === null
     )
       return;
@@ -657,7 +665,7 @@ class Range extends React.Component<IProps> {
                       marginLeft: `${offset[1]}px`
                     },
               key: `mark${index}`,
-              ref: this.markRefs[index]
+              ref: this.markRefs![index]
             },
             index
           })
