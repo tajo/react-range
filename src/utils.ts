@@ -28,15 +28,19 @@ export function normalizeValue(
   max: number,
   step: number,
   allowOverlap: boolean,
-  values: number[]
+  values: number[],
+  minDistance: number = 0
 ) {
   const BIG_NUM = 10e10;
   value = Math.round(value * BIG_NUM) / BIG_NUM;
   if (!allowOverlap) {
     const prev = values[index - 1];
     const next = values[index + 1];
-    if (prev && prev > value) return prev;
-    if (next && next < value) return next;
+    const roundedValue = Math.round(value/step)*step;
+    if (prev + (step * minDistance) >= roundedValue ) return prev + (step * minDistance);
+    if (next - (step * minDistance) <= roundedValue ) return next - (step * minDistance);
+    if (prev && prev >= value) return prev;
+    if (next && next <= value) return next;
   }
   if (value > max) return max;
   if (value < min) return min;

@@ -18,6 +18,7 @@ export interface IProps {
   draggableTrack: boolean;
   disabled: boolean;
   rtl: boolean;
+  minDistance: number;
   onChange: (values: number[]) => void;
   onFinalChange?: (values: number[]) => void;
   renderMark?: (params: IRenderMarkParams) => React.ReactNode;
