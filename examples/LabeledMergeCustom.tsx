@@ -40,7 +40,7 @@ function ThumbLabel({
         borderRadius: '4px',
         backgroundColor: '#548BF4',
         whiteSpace: 'nowrap',
-        ...(labelStyle as React.CSSProperties)
+        ...labelStyle
       }}
     >
       {labelValue}

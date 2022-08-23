@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Range from './Range';
 import { TThumbOffsets, ITrackBackground, Direction } from './types';
 
@@ -338,7 +338,7 @@ export const useThumbOverlap = (
   step = 0.1,
   separator = ' - ',
   valueToLabel = (value: string): string => value
-) => {
+): [string, React.CSSProperties] => {
   const decimalPlaces = getStepDecimals(step);
   // Create initial label style and value. Label value defaults to thumb value
   const [labelStyle, setLabelStyle] = useState<React.CSSProperties>({});

@@ -17,4 +17,4 @@ declare export function useThumbOverlap(
   step?: number,
   separator?: string,
   valueToLabel?: (string) => string
-): mixed[];
+): [string, React.CSSProperties];

@@ -33,7 +33,7 @@ const ThumbLabel = ({
         borderRadius: '4px',
         backgroundColor: '#548BF4',
         whiteSpace: 'nowrap',
-        ...(style as React.CSSProperties)
+        ...style
       }}
     >
       {labelValue}
