@@ -66,7 +66,7 @@ export const untrackMouse = async (page: Page) => {
 };
 
 export const addFontStyles = async (page: Page) => {
-  await page.evaluate(fontStyles);
+  //await page.evaluate(fontStyles);
 };
 
 // This injects a box into the page that moves with the mouse;
