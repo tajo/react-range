@@ -8,7 +8,7 @@
 
 [![Edit react-range](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rlp1j1183n)
 
-[See all the other examples](https://react-range.netlify.app) and [their source code](https://github.com/tajo/react-range/tree/main/examples)!
+[See all the other examples](https://react-range.pages.dev) and [their source code](https://github.com/tajo/react-range/tree/main/examples)!
 
 ## Installation
 
@@ -22,44 +22,42 @@ pnpm add react-range
 import * as React from "react";
 import { Range } from "react-range";
 
-class SuperSimple extends React.Component {
-  state = { values: [50] };
-  render() {
-    return (
-      <Range
-        step={0.1}
-        min={0}
-        max={100}
-        values={this.state.values}
-        onChange={(values) => this.setState({ values })}
-        renderTrack={({ props, children }) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: "6px",
-              width: "100%",
-              backgroundColor: "#ccc",
-            }}
-          >
-            {children}
-          </div>
-        )}
-        renderThumb={({ props }) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: "42px",
-              width: "42px",
-              backgroundColor: "#999",
-            }}
-          />
-        )}
-      />
-    );
-  }
-}
+const SuperSimple: React.FC = () => {
+  const [values, setValues] = React.useState([50]);
+  return (
+    <Range
+      step={0.1}
+      min={0}
+      max={100}
+      values={values}
+      onChange={(values) => setValues(values)}
+      renderTrack={({ props, children }) => (
+        <div
+          {...props}
+          style={{
+            ...props.style,
+            height: "6px",
+            width: "100%",
+            backgroundColor: "#ccc",
+          }}
+        >
+          {children}
+        </div>
+      )}
+      renderThumb={({ props }) => (
+        <div
+          {...props}
+          style={{
+            ...props.style,
+            height: "42px",
+            width: "42px",
+            backgroundColor: "#999",
+          }}
+        />
+      )}
+    />
+  );
+};
 ```
 
 ## Features
@@ -153,7 +151,7 @@ renderMark?: (params: {
 }) => React.ReactNode;
 ```
 
-`renderMark` is an optional prop so you can render an element at each step. See this [example](https://react-range.netlify.app/?story=range--marks). **Your function gets 2 parameters and should return a React component**:
+`renderMark` is an optional prop so you can render an element at each step. See this [example](https://react-range.pages.dev/?story=range--marks). **Your function gets 2 parameters and should return a React component**:
 
 - `props` - this needs to be spread over the root track element, it adds a ref, key and some necessary styling
 - `index` - index of the mark, might be useful if you want to use different styles for even/odd marks
