@@ -1,28 +1,28 @@
-import * as React from 'react';
-import AllowOverlapExample from '../examples/AllowOverlap';
-import AnimatingContainerExample from '../examples/AnimatingContainer';
-import BasicExample from '../examples/Basic';
-import BasicWithBorderExample from '../examples/BasicWithBorder';
-import BigStepsExample from '../examples/BigSteps';
-import DisabledExample from '../examples/Disabled';
-import DownDirectionExample from '../examples/DownDirection';
-import FinalChangeEventExample from '../examples/FinalChangeEvent';
-import LabeledExample from '../examples/Labeled';
-import LabeledMergeExample from '../examples/LabeledMerge';
-import LabeledMergeSkinnyExample from '../examples/LabeledMergeSkinny';
-import LabeledMergeCustomExample from '../examples/LabeledMergeCustom';
-import LabeledTwoThumbsExample from '../examples/LabeledTwoThumbs';
-import LeftDirectionExample from '../examples/LeftDirection';
-import MarksDynamicExample from '../examples/MarksDynamicUpdate';
-import MarksExample from '../examples/Marks';
-import MarksVerticalExample from '../examples/MarksVertical';
-import MultipleThumbsDraggableTrackExample from '../examples/MultipleThumbsDraggableTrack';
-import MultipleThumbsExample from '../examples/MultipleThumbs';
-import SuperSimpleExample from '../examples/SuperSimple';
-import TwoThumbsExample from '../examples/TwoThumbs';
-import TwoThumbsDraggableTrackExample from '../examples/TwoThumbsDraggableTrack';
-import TwoThumbsDraggableTrackDownDirectionExample from '../examples/TwoThumbsDraggableTrackDownDirection';
-import UpDirectionExample from '../examples/UpDirection';
+import * as React from "react";
+import AllowOverlapExample from "../examples/AllowOverlap";
+import AnimatingContainerExample from "../examples/AnimatingContainer";
+import BasicExample from "../examples/Basic";
+import BasicWithBorderExample from "../examples/BasicWithBorder";
+import BigStepsExample from "../examples/BigSteps";
+import DisabledExample from "../examples/Disabled";
+import DownDirectionExample from "../examples/DownDirection";
+import FinalChangeEventExample from "../examples/FinalChangeEvent";
+import LabeledExample from "../examples/Labeled";
+import LabeledMergeExample from "../examples/LabeledMerge";
+import LabeledMergeSkinnyExample from "../examples/LabeledMergeSkinny";
+import LabeledMergeCustomExample from "../examples/LabeledMergeCustom";
+import LabeledTwoThumbsExample from "../examples/LabeledTwoThumbs";
+import LeftDirectionExample from "../examples/LeftDirection";
+import MarksDynamicExample from "../examples/MarksDynamicUpdate";
+import MarksExample from "../examples/Marks";
+import MarksVerticalExample from "../examples/MarksVertical";
+import MultipleThumbsDraggableTrackExample from "../examples/MultipleThumbsDraggableTrack";
+import MultipleThumbsExample from "../examples/MultipleThumbs";
+import SuperSimpleExample from "../examples/SuperSimple";
+import TwoThumbsExample from "../examples/TwoThumbs";
+import TwoThumbsDraggableTrackExample from "../examples/TwoThumbsDraggableTrack";
+import TwoThumbsDraggableTrackDownDirectionExample from "../examples/TwoThumbsDraggableTrackDownDirection";
+import UpDirectionExample from "../examples/UpDirection";
 
 export const AllowOverlap: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <AllowOverlapExample rtl={rtl} />
@@ -76,7 +76,7 @@ export const MultipleThumbs: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <MultipleThumbsExample rtl={rtl} />
 );
 export const MultipleThumbsWithDraggableTrack: React.FC<{ rtl: boolean }> = ({
-  rtl
+  rtl,
 }) => <MultipleThumbsDraggableTrackExample rtl={rtl} />;
 export const OnFinalChangeEvent: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <FinalChangeEventExample rtl={rtl} />
@@ -88,7 +88,7 @@ export const TwoThumbs: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <TwoThumbsExample rtl={rtl} />
 );
 export const TwoThumbsWithDraggableTrack: React.FC<{ rtl: boolean }> = ({
-  rtl
+  rtl,
 }) => <TwoThumbsDraggableTrackExample rtl={rtl} />;
 export const TwoThumbsWithDraggableTrackAndDownDirection: React.FC<{
   rtl: boolean;

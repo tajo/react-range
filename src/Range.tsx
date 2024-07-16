@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   getMargin,
   getPaddingAndBorder,
@@ -14,12 +14,12 @@ import {
   assertUnreachable,
   isTouchEvent,
   isStepDivisible,
-  getClosestThumbIndex
-} from './utils';
-import { IProps, Direction } from './types';
+  getClosestThumbIndex,
+} from "./utils";
+import { IProps, Direction } from "./types";
 
-const INCREASE_KEYS = ['ArrowRight', 'ArrowUp', 'k', 'PageUp'];
-const DECREASE_KEYS = ['ArrowLeft', 'ArrowDown', 'j', 'PageDown'];
+const INCREASE_KEYS = ["ArrowRight", "ArrowUp", "k", "PageUp"];
+const DECREASE_KEYS = ["ArrowLeft", "ArrowDown", "j", "PageDown"];
 
 class Range extends React.Component<IProps> {
   static defaultProps = {
@@ -30,7 +30,7 @@ class Range extends React.Component<IProps> {
     allowOverlap: false,
     draggableTrack: false,
     min: 0,
-    max: 100
+    max: 100,
   };
   trackRef = React.createRef<HTMLElement>();
   thumbRefs: React.RefObject<HTMLElement>[] = [];
@@ -45,7 +45,7 @@ class Range extends React.Component<IProps> {
     draggedThumbIndex: -1,
     thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i),
     isChanged: false,
-    markOffsets: []
+    markOffsets: [],
   };
 
   constructor(props: IProps) {
@@ -66,19 +66,19 @@ class Range extends React.Component<IProps> {
     this.resizeObserver = (window as any).ResizeObserver
       ? new (window as any).ResizeObserver(this.onResize)
       : {
-          observe: () => window.addEventListener('resize', this.onResize),
-          unobserve: () => window.removeEventListener('resize', this.onResize)
+          observe: () => window.addEventListener("resize", this.onResize),
+          unobserve: () => window.removeEventListener("resize", this.onResize),
         };
 
-    document.addEventListener('touchstart', this.onMouseOrTouchStart as any, {
-      passive: false
+    document.addEventListener("touchstart", this.onMouseOrTouchStart as any, {
+      passive: false,
     });
-    document.addEventListener('mousedown', this.onMouseOrTouchStart as any, {
-      passive: false
+    document.addEventListener("mousedown", this.onMouseOrTouchStart as any, {
+      passive: false,
     });
     !this.props.allowOverlap && checkInitialOverlap(this.props.values);
     this.props.values.forEach((value) =>
-      checkBoundaries(value, this.props.min, this.props.max)
+      checkBoundaries(value, this.props.min, this.props.max),
     );
     this.resizeObserver.observe(this.trackRef.current!);
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
@@ -87,7 +87,7 @@ class Range extends React.Component<IProps> {
     values.forEach((value) => {
       if (!isStepDivisible(min, value, step)) {
         console.warn(
-          'The `values` property is in conflict with the current `step`, `min`, and `max` properties. Please provide values that are accessible using the min, max, and step values.'
+          "The `values` property is in conflict with the current `step`, `min`, and `max` properties. Please provide values that are accessible using the min, max, and step values.",
         );
       }
     });
@@ -116,7 +116,7 @@ class Range extends React.Component<IProps> {
       values.forEach((value) => {
         if (!isStepDivisible(min, value, step)) {
           console.warn(
-            'The `values` property is in conflict with the current `step`, `min`, and `max` properties. Please provide values that are accessible using the min, max, and step values.'
+            "The `values` property is in conflict with the current `step`, `min`, and `max` properties. Please provide values that are accessible using the min, max, and step values.",
           );
         }
       });
@@ -125,19 +125,19 @@ class Range extends React.Component<IProps> {
 
   componentWillUnmount() {
     const options: AddEventListenerOptions = {
-      passive: false
+      passive: false,
     };
     document.removeEventListener(
-      'mousedown',
+      "mousedown",
       this.onMouseOrTouchStart as any,
-      options
+      options,
     );
     // These need to be removed!!
-    document.removeEventListener('mousemove', this.schdOnMouseMove as any);
-    document.removeEventListener('touchmove', this.schdOnTouchMove as any);
-    document.removeEventListener('touchstart', this.onMouseOrTouchStart as any);
-    document.removeEventListener('mouseup', this.schdOnEnd as any);
-    document.removeEventListener('touchend', this.schdOnEnd as any);
+    document.removeEventListener("mousemove", this.schdOnMouseMove as any);
+    document.removeEventListener("touchmove", this.schdOnTouchMove as any);
+    document.removeEventListener("touchstart", this.onMouseOrTouchStart as any);
+    document.removeEventListener("mouseup", this.schdOnEnd as any);
+    document.removeEventListener("touchend", this.schdOnEnd as any);
     this.resizeObserver.unobserve(this.trackRef.current!);
   }
 
@@ -200,35 +200,35 @@ class Range extends React.Component<IProps> {
   getThumbs = () => {
     if (this.trackRef && this.trackRef.current) {
       return Array.from(this.trackRef.current.children).filter((el: any) =>
-        el.hasAttribute('aria-valuenow')
+        el.hasAttribute("aria-valuenow"),
       );
     }
     console.warn(
-      'No thumbs found in the track container. Did you forget to pass & spread the `props` param in renderTrack?'
+      "No thumbs found in the track container. Did you forget to pass & spread the `props` param in renderTrack?",
     );
     return [];
   };
 
   getTargetIndex = (e: Event) =>
     this.getThumbs().findIndex(
-      (child) => child === e.target || child.contains(e.target as Node)
+      (child) => child === e.target || child.contains(e.target as Node),
     );
 
   addTouchEvents = (e: TouchEvent) => {
-    document.addEventListener('touchmove', this.schdOnTouchMove, {
-      passive: false
+    document.addEventListener("touchmove", this.schdOnTouchMove, {
+      passive: false,
     });
-    document.addEventListener('touchend', this.schdOnEnd, {
-      passive: false
+    document.addEventListener("touchend", this.schdOnEnd, {
+      passive: false,
     });
-    document.addEventListener('touchcancel', this.schdOnEnd, {
-      passive: false
+    document.addEventListener("touchcancel", this.schdOnEnd, {
+      passive: false,
     });
   };
 
   addMouseEvents = (e: MouseEvent) => {
-    document.addEventListener('mousemove', this.schdOnMouseMove);
-    document.addEventListener('mouseup', this.schdOnEnd);
+    document.addEventListener("mousemove", this.schdOnMouseMove);
+    document.addEventListener("mouseup", this.schdOnEnd);
   };
 
   onMouseDownTrack = (e: React.MouseEvent) => {
@@ -239,16 +239,16 @@ class Range extends React.Component<IProps> {
     if (this.props.values.length > 1 && this.props.draggableTrack) {
       if (
         this.thumbRefs.some((thumbRef) =>
-          thumbRef.current?.contains(e.target as Node)
+          thumbRef.current?.contains(e.target as Node),
         )
       )
         return;
       // handle dragging the whole track
       this.setState(
         {
-          draggedTrackPos: [e.clientX, e.clientY]
+          draggedTrackPos: [e.clientX, e.clientY],
         },
-        () => this.onMove(e.clientX, e.clientY)
+        () => this.onMove(e.clientX, e.clientY),
       );
     } else {
       // get the index of the thumb that is closest to the place where the track is clicked
@@ -256,15 +256,15 @@ class Range extends React.Component<IProps> {
         this.thumbRefs.map((t) => t.current!),
         e.clientX,
         e.clientY,
-        this.props.direction
+        this.props.direction,
       );
       // move the thumb which is closest to the place where the track is clicked
       this.thumbRefs[draggedThumbIndex].current?.focus();
       this.setState(
         {
-          draggedThumbIndex
+          draggedThumbIndex,
         },
-        () => this.onMove(e.clientX, e.clientY)
+        () => this.onMove(e.clientX, e.clientY),
       );
     }
   };
@@ -280,16 +280,16 @@ class Range extends React.Component<IProps> {
     if (this.props.values.length > 1 && this.props.draggableTrack) {
       if (
         this.thumbRefs.some((thumbRef) =>
-          thumbRef.current?.contains(e.target as Node)
+          thumbRef.current?.contains(e.target as Node),
         )
       )
         return;
       // handle dragging the whole track
       this.setState(
         {
-          draggedTrackPos: [e.touches[0].clientX, e.touches[0].clientY]
+          draggedTrackPos: [e.touches[0].clientX, e.touches[0].clientY],
         },
-        () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
+        () => this.onMove(e.touches[0].clientX, e.touches[0].clientY),
       );
     } else {
       // get the index of the thumb that is closest to the place where the track is clicked
@@ -297,15 +297,15 @@ class Range extends React.Component<IProps> {
         this.thumbRefs.map((t) => t.current!),
         e.touches[0].clientX,
         e.touches[0].clientY,
-        this.props.direction
+        this.props.direction,
       );
       // move the thumb which is closest to the place where the track is clicked
       this.thumbRefs[draggedThumbIndex].current?.focus();
       this.setState(
         {
-          draggedThumbIndex
+          draggedThumbIndex,
         },
-        () => this.onMove(e.touches[0].clientX, e.touches[0].clientY)
+        () => this.onMove(e.touches[0].clientX, e.touches[0].clientY),
       );
     }
   };
@@ -328,7 +328,7 @@ class Range extends React.Component<IProps> {
           return Math.max(...this.state.thumbZIndexes);
         }
         return t <= this.state.thumbZIndexes[index] ? t : t - 1;
-      })
+      }),
     });
   };
 
@@ -356,23 +356,23 @@ class Range extends React.Component<IProps> {
       e.preventDefault();
       this.setState({
         draggedThumbIndex: index,
-        isChanged: true
+        isChanged: true,
       });
       onChange(
         replaceAt(
           values,
           index,
           this.normalizeValue(
-            values[index] + inverter * (e.key === 'PageUp' ? step * 10 : step),
-            index
-          )
-        )
+            values[index] + inverter * (e.key === "PageUp" ? step * 10 : step),
+            index,
+          ),
+        ),
       );
     } else if (DECREASE_KEYS.includes(e.key)) {
       e.preventDefault();
       this.setState({
         draggedThumbIndex: index,
-        isChanged: true
+        isChanged: true,
       });
       onChange(
         replaceAt(
@@ -380,12 +380,12 @@ class Range extends React.Component<IProps> {
           index,
           this.normalizeValue(
             values[index] -
-              inverter * (e.key === 'PageDown' ? step * 10 : step),
-            index
-          )
-        )
+              inverter * (e.key === "PageDown" ? step * 10 : step),
+            index,
+          ),
+        ),
       );
-    } else if (e.key === 'Tab') {
+    } else if (e.key === "Tab") {
       this.setState({ draggedThumbIndex: -1 }, () => {
         // If key pressed when thumb was moving, fire onFinalChange
         if (isChanged) {
@@ -403,13 +403,13 @@ class Range extends React.Component<IProps> {
     const { isChanged } = this.state;
     this.setState(
       {
-        draggedThumbIndex: -1
+        draggedThumbIndex: -1,
       },
       () => {
         if (isChanged) {
           this.fireOnFinalChange();
         }
-      }
+      },
     );
   };
 
@@ -469,11 +469,11 @@ class Range extends React.Component<IProps> {
           newValues = replaceAt(
             newValues,
             i,
-            this.normalizeValue(values[i] + deltaValue, i)
+            this.normalizeValue(values[i] + deltaValue, i),
           );
         }
         this.setState({
-          draggedTrackPos: [clientX, clientY]
+          draggedTrackPos: [clientX, clientY],
         });
         onChange(newValues);
       }
@@ -512,8 +512,8 @@ class Range extends React.Component<IProps> {
           replaceAt(
             values,
             draggedThumbIndex,
-            this.normalizeValue(newValue, draggedThumbIndex)
-          )
+            this.normalizeValue(newValue, draggedThumbIndex),
+          ),
         );
       }
     }
@@ -526,11 +526,11 @@ class Range extends React.Component<IProps> {
 
   onEnd = (e: Event) => {
     e.preventDefault();
-    document.removeEventListener('mousemove', this.schdOnMouseMove);
-    document.removeEventListener('touchmove', this.schdOnTouchMove);
-    document.removeEventListener('mouseup', this.schdOnEnd);
-    document.removeEventListener('touchend', this.schdOnEnd);
-    document.removeEventListener('touchcancel', this.schdOnEnd);
+    document.removeEventListener("mousemove", this.schdOnMouseMove);
+    document.removeEventListener("touchmove", this.schdOnTouchMove);
+    document.removeEventListener("mouseup", this.schdOnEnd);
+    document.removeEventListener("touchend", this.schdOnEnd);
+    document.removeEventListener("touchcancel", this.schdOnEnd);
     if (
       this.state.draggedThumbIndex === -1 &&
       this.state.draggedTrackPos[0] === -1 &&
@@ -551,7 +551,8 @@ class Range extends React.Component<IProps> {
   };
 
   updateMarkRefs = (props: IProps) => {
-    if (!props.renderMark) { // don't create mark refs unless we are rendering marks
+    if (!props.renderMark) {
+      // don't create mark refs unless we are rendering marks
       this.numOfMarks = undefined;
       this.markRefs = undefined;
       return;
@@ -561,7 +562,7 @@ class Range extends React.Component<IProps> {
     for (let i = 0; i < this.numOfMarks + 1; i++) {
       this.markRefs[i] = React.createRef<HTMLElement>();
     }
-  }
+  };
 
   calculateMarkOffsets = () => {
     if (
@@ -595,16 +596,16 @@ class Range extends React.Component<IProps> {
       ) {
         res.push([
           Math.round(
-            (trackWidth / this.numOfMarks) * i + paddingLeft - markWidth / 2
+            (trackWidth / this.numOfMarks) * i + paddingLeft - markWidth / 2,
           ),
-          -Math.round((markHeight - trackHeight) / 2)
+          -Math.round((markHeight - trackHeight) / 2),
         ]);
       } else {
         res.push([
           Math.round(
-            (trackHeight / this.numOfMarks) * i + paddingTop - markHeight / 2
+            (trackHeight / this.numOfMarks) * i + paddingTop - markHeight / 2,
           ),
-          -Math.round((markWidth - trackWidth) / 2)
+          -Math.round((markWidth - trackWidth) / 2),
         ]);
       }
     }
@@ -620,7 +621,7 @@ class Range extends React.Component<IProps> {
       min,
       max,
       allowOverlap,
-      disabled
+      disabled,
     } = this.props;
     const { draggedThumbIndex, thumbZIndexes, markOffsets } = this.state;
 
@@ -629,21 +630,21 @@ class Range extends React.Component<IProps> {
         style: {
           // creates stacking context that prevents z-index applied to thumbs
           // interfere with other elements
-          transform: 'scale(1)',
+          transform: "scale(1)",
           cursor:
             draggedThumbIndex > -1
-              ? 'grabbing'
+              ? "grabbing"
               : this.props.draggableTrack
               ? isVertical(this.props.direction)
-                ? 'ns-resize'
-                : 'ew-resize'
+                ? "ns-resize"
+                : "ew-resize"
               : values.length === 1 && !disabled
-              ? 'pointer'
-              : 'inherit'
+              ? "pointer"
+              : "inherit",
         },
         onMouseDown: disabled ? voidFn : this.onMouseDownTrack,
         onTouchStart: disabled ? voidFn : this.onTouchStartTrack,
-        ref: this.trackRef
+        ref: this.trackRef,
       },
       isDragged: this.state.draggedThumbIndex > -1,
       disabled,
@@ -655,20 +656,20 @@ class Range extends React.Component<IProps> {
                 this.props.direction === Direction.Left ||
                 this.props.direction === Direction.Right
                   ? {
-                      position: 'absolute',
+                      position: "absolute",
                       left: `${offset[0]}px`,
-                      marginTop: `${offset[1]}px`
+                      marginTop: `${offset[1]}px`,
                     }
                   : {
-                      position: 'absolute',
+                      position: "absolute",
                       top: `${offset[0]}px`,
-                      marginLeft: `${offset[1]}px`
+                      marginLeft: `${offset[1]}px`,
                     },
               key: `mark${index}`,
-              ref: this.markRefs![index]
+              ref: this.markRefs![index],
             },
-            index
-          })
+            index,
+          }),
         ),
         ...values.map((value, index) => {
           const isDragged = this.state.draggedThumbIndex === index;
@@ -678,29 +679,29 @@ class Range extends React.Component<IProps> {
             isDragged,
             props: {
               style: {
-                position: 'absolute',
+                position: "absolute",
                 zIndex: thumbZIndexes[index],
-                cursor: disabled ? 'inherit' : isDragged ? 'grabbing' : 'grab',
-                userSelect: 'none',
-                touchAction: 'none',
-                WebkitUserSelect: 'none',
-                MozUserSelect: 'none',
-                msUserSelect: 'none'
+                cursor: disabled ? "inherit" : isDragged ? "grabbing" : "grab",
+                userSelect: "none",
+                touchAction: "none",
+                WebkitUserSelect: "none",
+                MozUserSelect: "none",
+                msUserSelect: "none",
               } as React.CSSProperties,
               key: index,
               tabIndex: disabled ? undefined : 0,
-              'aria-valuemax': allowOverlap ? max : values[index + 1] || max,
-              'aria-valuemin': allowOverlap ? min : values[index - 1] || min,
-              'aria-valuenow': value,
+              "aria-valuemax": allowOverlap ? max : values[index + 1] || max,
+              "aria-valuemin": allowOverlap ? min : values[index - 1] || min,
+              "aria-valuenow": value,
               draggable: false,
               ref: this.thumbRefs[index],
-              role: 'slider',
+              role: "slider",
               onKeyDown: disabled ? voidFn : this.onKeyDown,
-              onKeyUp: disabled ? voidFn : this.onKeyUp
-            }
+              onKeyUp: disabled ? voidFn : this.onKeyUp,
+            },
           });
-        })
-      ]
+        }),
+      ],
     });
   }
 }

@@ -2,26 +2,25 @@
 
 [![npm version](https://img.shields.io/npm/v/react-range.svg?style=flat-square)](https://www.npmjs.com/package/react-range)
 [![npm downloads](https://img.shields.io/npm/dm/react-range.svg?style=flat-square)](https://www.npmjs.com/package/react-range)
-[![Build Status](https://travis-ci.org/tajo/react-range.svg?branch=master)](https://travis-ci.org/tajo/react-range)
 [![size](https://img.shields.io/bundlephobia/minzip/react-range.svg?style=flat)](https://bundlephobia.com/result?p=react-range)
 
-![Labeled Range](https://raw.githubusercontent.com/tajo/react-range/master/assets/react-range.gif?raw=true)
+![Labeled Range](https://raw.githubusercontent.com/tajo/react-range/main/assets/react-range.gif?raw=true)
 
 [![Edit react-range](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rlp1j1183n)
 
-[See all the other examples](https://react-range.netlify.com) and [their source code](https://github.com/tajo/react-range/tree/master/examples)!
+[See all the other examples](https://react-range.netlify.app) and [their source code](https://github.com/tajo/react-range/tree/main/examples)!
 
 ## Installation
 
 ```
-yarn add react-range
+pnpm add react-range
 ```
 
 ## Usage
 
 ```jsx
-import * as React from 'react';
-import { Range } from 'react-range';
+import * as React from "react";
+import { Range } from "react-range";
 
 class SuperSimple extends React.Component {
   state = { values: [50] };
@@ -38,9 +37,9 @@ class SuperSimple extends React.Component {
             {...props}
             style={{
               ...props.style,
-              height: '6px',
-              width: '100%',
-              backgroundColor: '#ccc'
+              height: "6px",
+              width: "100%",
+              backgroundColor: "#ccc",
             }}
           >
             {children}
@@ -51,9 +50,9 @@ class SuperSimple extends React.Component {
             {...props}
             style={{
               ...props.style,
-              height: '42px',
-              width: '42px',
-              backgroundColor: '#999'
+              height: "42px",
+              width: "42px",
+              backgroundColor: "#999",
             }}
           />
         )}
@@ -74,7 +73,7 @@ class SuperSimple extends React.Component {
 - Stateless and controlled single component
 - Typescript and Flow type definitions
 - **No dependencies, less than 5kB (gzipped)**
-- Coverage by [e2e puppeteer tests](#end-to-end-testing)
+- Coverage by [e2e playwright tests](#end-to-end-testing)
 - RTL support
 
 ## Keyboard support
@@ -110,7 +109,7 @@ renderTrack: (params: {
 - `isDragged` - `true` if any thumb is being dragged
 - `disabled` - `true` if `<Range disabled={true} />` is set
 
-The track can be a single narrow `div` as in the [Super simple example](https://github.com/tajo/react-range/blob/master/examples/SuperSimple.tsx); however, it might be better to use at least two nested `div`s where the outer `div` is much thicker and has a transparent background and the inner `div` is narrow, has visible background and is centered. `props` should be then spread over the outer bigger `div`. **Why to do this? It's nice to keep the `onMouseDown` and `onTouchStart` targets bigger** since the thumb can be moved also by clicking on the track (in a single thumb scenario).
+The track can be a single narrow `div` as in the [Super simple example](https://github.com/tajo/react-range/blob/main/examples/SuperSimple.tsx); however, it might be better to use at least two nested `div`s where the outer `div` is much thicker and has a transparent background and the inner `div` is narrow, has visible background and is centered. `props` should be then spread over the outer bigger `div`. **Why to do this? It's nice to keep the `onMouseDown` and `onTouchStart` targets bigger** since the thumb can be moved also by clicking on the track (in a single thumb scenario).
 
 ### renderThumb
 
@@ -120,9 +119,9 @@ renderThumb: (params: {
     key: number;
     style: React.CSSProperties;
     tabIndex?: number;
-    'aria-valuemax': number;
-    'aria-valuemin': number;
-    'aria-valuenow': number;
+    "aria-valuemax": number;
+    "aria-valuemin": number;
+    "aria-valuenow": number;
     draggable: boolean;
     role: string;
     onKeyDown: (e: React.KeyboardEvent) => void;
@@ -231,17 +230,17 @@ When there are multiple thumbs on a single track, should it be possible to drag 
 direction: Direction;
 
 enum Direction {
-  Right = 'to right',
-  Left = 'to left',
-  Down = 'to bottom',
-  Up = 'to top'
+  Right = "to right",
+  Left = "to left",
+  Down = "to bottom",
+  Up = "to top",
 }
 ```
 
 It sets the orientation (vertical vs horizontal) and the direction in which the value increases. You can get this enum by:
 
 ```js
-import { Direction } from 'react-range';
+import { Direction } from "react-range";
 ```
 
 Default value is `Direction.Right`.
@@ -311,21 +310,21 @@ There are also many `React` based solutions but most of them are too bloated, do
 
 **This library is tightly coupled to many DOM APIs**. It would be very hard to ensure 100% test coverage just with unit tests that would not involve a lot of mocking. Or we could re-architect the library to better abstract all DOM interfaces but that would mean more code and bigger footprint.
 
-Instead of that, `react-range` adds thorough end to end tests powered by [puppeteer](https://github.com/GoogleChrome/puppeteer).
+Instead of that, `react-range` adds thorough end to end tests powered by [playwright](https://playwright.dev/).
 
 All tests are automatically ran in Travis CI with headless chromium. This way, the public API is well tested, including pixel-perfect positioning. Also, the tests are pretty fast, reliable and very descriptive.
 
 Do you want to run them in the `dev` mode (slows down operations, opens the browser)?
 
 ```bash
-yarn ladle serve #start the ladle server
-yarn test:e2e:dev #run the e2e tests
+pnpm ladle serve #start the ladle server
+pnpm test:e2e:dev #run the e2e tests
 ```
 
 `CI` mode (ladle started on the background, quick, headless)
 
 ```bash
-yarn test:e2e
+pnpm test:e2e
 ```
 
 ## Browser support
@@ -342,20 +341,14 @@ This is how you can spin up the dev environment:
 ```
 git clone https://github.com/tajo/react-range
 cd react-range
-yarn
-yarn ladle serve
+pnpm install
+pnpm ladle serve
 ```
 
 ## Shoutouts 🙏
 
 Big big shoutout to **[Tom MacWright](https://macwright.org/)** for donating the `react-range` npm handle! ❤️
 
-<img src="https://raw.githubusercontent.com/tajo/react-range/master/assets/browserstack-logo.png?raw=true" height="80" title="BrowserStack Logo" alt="BrowserStack Logo" />
-
-Big thanks to [BrowserStack](https://www.browserstack.com) for letting the maintainers use their service to debug browser issues.
-
-And [Netlify](https://www.netlify.com/) for free hosting.
-
 ## Author
 
-Vojtech Miksu 2019, [miksu.cz](https://miksu.cz), [@vmiksu](https://twitter.com/vmiksu)
+Vojtech Miksu 2024, [miksu.cz](https://miksu.cz), [@vmiksu](https://twitter.com/vmiksu)

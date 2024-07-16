@@ -1,15 +1,14 @@
-import { Examples, getTestUrl, addFontStyles } from './utils';
+import { test, expect } from "@playwright/test";
+import { Examples, getTestUrl, addFontStyles } from "./utils";
 
-jest.setTimeout(10000);
-
-beforeEach(async () => {
+test.beforeEach(async ({ page }) => {
   await page.goto(getTestUrl(Examples.ANIMATING_CONTAINER));
-  await page.setViewport({ width: 600, height: 200 });
+  await page.waitForSelector("[data-storyloaded]");
   await addFontStyles(page);
   await page.waitForSelector('div[role="slider"]');
 });
 
-test('update thumb when animating container', async () => {
+test("update thumb when animating container", async ({ page }) => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  await expect(page).toHaveScreenshot();
 });

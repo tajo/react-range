@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import Range from './Range';
-import { TThumbOffsets, ITrackBackground, Direction } from './types';
+import { useEffect, useState } from "react";
+import Range from "./Range";
+import { TThumbOffsets, ITrackBackground, Direction } from "./types";
 
 export const getStepDecimals = (step: number): number => {
-  const decimals = step.toString().split('.')[1];
+  const decimals = step.toString().split(".")[1];
   return decimals ? decimals.length : 0;
 };
 
@@ -14,7 +14,11 @@ export function isTouchEvent(event: TouchEvent & MouseEvent) {
   );
 }
 
-export function isStepDivisible(min: number, max: number, step: number): boolean {
+export function isStepDivisible(
+  min: number,
+  max: number,
+  step: number,
+): boolean {
   const res = (max - min) / step;
   const precision = 8;
   const roundedRes = Number(res.toFixed(precision));
@@ -28,7 +32,7 @@ export function normalizeValue(
   max: number,
   step: number,
   allowOverlap: boolean,
-  values: number[]
+  values: number[],
 ) {
   const BIG_NUM = 10e10;
   value = Math.round(value * BIG_NUM) / BIG_NUM;
@@ -43,15 +47,13 @@ export function normalizeValue(
   // `remainder` is a difference between the given value and a full step value
   // that is closest lower to the given value and is in the range between the min value
   // and the given value
-  var remainder = Math.floor(value * BIG_NUM - min * BIG_NUM) %
-    Math.floor(step * BIG_NUM);
+  var remainder =
+    Math.floor(value * BIG_NUM - min * BIG_NUM) % Math.floor(step * BIG_NUM);
   var closestLowerNum = Math.floor(value * BIG_NUM - Math.abs(remainder));
   var rounded = remainder === 0 ? value : closestLowerNum / BIG_NUM;
   // Values with a remainder `< step/2` are rounded to the closest lower value
   // while values with a remainder `= > step/2` are rounded to the closest bigger value
-  var res = Math.abs(remainder / BIG_NUM) < step / 2
-    ? rounded
-    : rounded + step;
+  var res = Math.abs(remainder / BIG_NUM) < step / 2 ? rounded : rounded + step;
   const decimalPlaces = getStepDecimals(step);
   return parseFloat(res.toFixed(decimalPlaces));
 }
@@ -76,16 +78,20 @@ export function checkBoundaries(value: number, min: number, max: number) {
   }
 }
 
-export function checkValuesAgainstBoundaries(value: number, min: number, max: number) {
+export function checkValuesAgainstBoundaries(
+  value: number,
+  min: number,
+  max: number,
+) {
   if (value < min) {
     // set selectedValue to min
-    return min
+    return min;
   }
   if (value > max) {
     // set selectedValue to max
-    return max
+    return max;
   } else {
-    return value
+    return value;
   }
 }
 
@@ -93,7 +99,7 @@ export function checkInitialOverlap(values: number[]) {
   if (values.length < 2) return;
   if (!values.slice(1).every((item, i) => values[i] <= item)) {
     throw new RangeError(
-      `values={[${values}]} needs to be sorted when allowOverlap={false}`
+      `values={[${values}]} needs to be sorted when allowOverlap={false}`,
     );
   }
 }
@@ -101,31 +107,39 @@ export function checkInitialOverlap(values: number[]) {
 export function getMargin(element: Element) {
   const style = window.getComputedStyle(element);
   return {
-    top: parseInt(style['margin-top' as any], 10),
-    bottom: parseInt(style['margin-bottom' as any], 10),
-    left: parseInt(style['margin-left' as any], 10),
-    right: parseInt(style['margin-right' as any], 10)
+    top: parseInt(style["margin-top" as any], 10),
+    bottom: parseInt(style["margin-bottom" as any], 10),
+    left: parseInt(style["margin-left" as any], 10),
+    right: parseInt(style["margin-right" as any], 10),
   };
 }
 
 export function getPaddingAndBorder(element: Element) {
   const style = window.getComputedStyle(element);
   return {
-    top: parseInt(style['padding-top' as any], 10) + parseInt(style['border-top-width' as any], 10),
-    bottom: parseInt(style['padding-bottom' as any], 10) + parseInt(style['border-bottom-width' as any], 10),
-    left: parseInt(style['padding-left' as any], 10) + parseInt(style['border-left-width' as any], 10),
-    right: parseInt(style['padding-right' as any], 10) + parseInt(style['border-right-width' as any], 10),
+    top:
+      parseInt(style["padding-top" as any], 10) +
+      parseInt(style["border-top-width" as any], 10),
+    bottom:
+      parseInt(style["padding-bottom" as any], 10) +
+      parseInt(style["border-bottom-width" as any], 10),
+    left:
+      parseInt(style["padding-left" as any], 10) +
+      parseInt(style["border-left-width" as any], 10),
+    right:
+      parseInt(style["padding-right" as any], 10) +
+      parseInt(style["border-right-width" as any], 10),
   };
 }
 
 export function translateThumbs(
   elements: Element[],
   offsets: TThumbOffsets,
-  rtl: boolean
+  rtl: boolean,
 ) {
   const inverter = rtl ? -1 : 1;
   elements.forEach((element, index) =>
-    translate(element, inverter * offsets[index].x, offsets[index].y)
+    translate(element, inverter * offsets[index].x, offsets[index].y),
   );
 }
 
@@ -136,19 +150,33 @@ export function translateThumbs(
  * @param clientY - target y position (mouse/touch)
  * @param direction - the direction of the track
  */
-export function getClosestThumbIndex(thumbs: Element[], clientX: number, clientY: number, direction: Direction) {
-  let thumbIndex = 0
-  let minThumbDistance = getThumbDistance(thumbs[0], clientX, clientY, direction)
+export function getClosestThumbIndex(
+  thumbs: Element[],
+  clientX: number,
+  clientY: number,
+  direction: Direction,
+) {
+  let thumbIndex = 0;
+  let minThumbDistance = getThumbDistance(
+    thumbs[0],
+    clientX,
+    clientY,
+    direction,
+  );
   for (let i = 1; i < thumbs.length; i++) {
-    const thumbDistance = getThumbDistance(thumbs[i], clientX, clientY, direction)
+    const thumbDistance = getThumbDistance(
+      thumbs[i],
+      clientX,
+      clientY,
+      direction,
+    );
     if (thumbDistance < minThumbDistance) {
-      minThumbDistance = thumbDistance
-      thumbIndex = i
+      minThumbDistance = thumbDistance;
+      thumbIndex = i;
     }
   }
-  return thumbIndex
+  return thumbIndex;
 }
-
 
 export function translate(element: Element, x: number, y: number) {
   (element as HTMLElement).style.transform = `translate(${x}px, ${y}px)`;
@@ -183,7 +211,7 @@ export function getTrackBackground({
   min,
   max,
   direction = Direction.Right,
-  rtl = false
+  rtl = false,
 }: ITrackBackground) {
   if (rtl && direction === Direction.Right) {
     direction = Direction.Left;
@@ -191,17 +219,21 @@ export function getTrackBackground({
     direction = Direction.Right;
   }
   // sort values ascending
-  const progress = values.slice(0).sort((a, b) => a - b).map(value => ((value - min) / (max - min)) * 100);
+  const progress = values
+    .slice(0)
+    .sort((a, b) => a - b)
+    .map((value) => ((value - min) / (max - min)) * 100);
   const middle = progress.reduce(
     (acc, point, index) =>
       `${acc}, ${colors[index]} ${point}%, ${colors[index + 1]} ${point}%`,
-    ''
+    "",
   );
-  return `linear-gradient(${direction}, ${colors[0]} 0%${middle}, ${colors[colors.length - 1]
-    } 100%)`;
+  return `linear-gradient(${direction}, ${colors[0]} 0%${middle}, ${
+    colors[colors.length - 1]
+  } 100%)`;
 }
 
-export function voidFn() { }
+export function voidFn() {}
 
 export function assertUnreachable(x: never): never {
   throw new Error("Didn't expect to get here");
@@ -219,7 +251,7 @@ const getThumbWidth = (
   value: number,
   separator: string,
   decimalPlaces: number,
-  valueToLabel = (value: string): string => value
+  valueToLabel = (value: string): string => value,
 ) => {
   const width = Math.ceil(
     [thumbEl, ...Array.from(thumbEl.children)].reduce(
@@ -237,15 +269,15 @@ const getThumbWidth = (
         ) {
           const elClone = el.cloneNode(true) as HTMLElement;
           elClone.innerHTML = valueToLabel(value.toFixed(decimalPlaces));
-          elClone.style.visibility = 'hidden';
+          elClone.style.visibility = "hidden";
           document.body.appendChild(elClone);
           elWidth = Math.ceil(elClone.getBoundingClientRect().width);
           document.body.removeChild(elClone);
         }
         return elWidth > width ? elWidth : width;
       },
-      thumbEl.getBoundingClientRect().width
-    )
+      thumbEl.getBoundingClientRect().width,
+    ),
   );
   return width;
 };
@@ -271,7 +303,7 @@ const getOverlaps = (
   values: number[],
   separator: string,
   decimalPlaces: number,
-  valueToLabel = (value: string): string => value
+  valueToLabel = (value: string): string => value,
 ) => {
   let overlaps: number[] = [];
   /**
@@ -285,7 +317,7 @@ const getOverlaps = (
       values[thumbIndex],
       separator,
       decimalPlaces,
-      valueToLabel
+      valueToLabel,
     );
     const thumbX = offsets[thumbIndex].x;
     /**
@@ -300,7 +332,7 @@ const getOverlaps = (
         values[siblingIndex],
         separator,
         decimalPlaces,
-        valueToLabel
+        valueToLabel,
       );
       if (
         thumbIndex !== siblingIndex &&
@@ -336,14 +368,14 @@ export const useThumbOverlap = (
   values: number[],
   index: number,
   step = 0.1,
-  separator = ' - ',
-  valueToLabel = (value: string): string => value
+  separator = " - ",
+  valueToLabel = (value: string): string => value,
 ) => {
   const decimalPlaces = getStepDecimals(step);
   // Create initial label style and value. Label value defaults to thumb value
   const [labelStyle, setLabelStyle] = useState<React.CSSProperties>({});
   const [labelValue, setLabelValue] = useState(
-    valueToLabel(values[index].toFixed(decimalPlaces))
+    valueToLabel(values[index].toFixed(decimalPlaces)),
   );
 
   // When the rangeRef or values change, update the Thumb label values and styling
@@ -366,7 +398,7 @@ export const useThumbOverlap = (
         values,
         separator,
         decimalPlaces,
-        valueToLabel
+        valueToLabel,
       );
       // Set a default label value of the Thumb value
       let labelValue = valueToLabel(values[index].toFixed(decimalPlaces));
@@ -386,7 +418,7 @@ export const useThumbOverlap = (
           (a: number[], c: number, i: number, s: number[]) => {
             return a.length ? [...a, offsets[s[i]].x] : [offsets[s[i]].x];
           },
-          []
+          [],
         );
         /**
          * If our Thumb is the left most Thumb, we can build a Label value
@@ -399,7 +431,7 @@ export const useThumbOverlap = (
            * Then convert that to a Set and sort it whilst removing duplicates.
            */
           const labelValues: string[] = [];
-          overlaps.forEach(thumb => {
+          overlaps.forEach((thumb) => {
             labelValues.push(values[thumb].toFixed(decimalPlaces));
           });
           /**
@@ -407,7 +439,7 @@ export const useThumbOverlap = (
            *  joined by our defined separator
            */
           labelValue = Array.from(
-            new Set(labelValues.sort((a, b) => parseFloat(a) - parseFloat(b)))
+            new Set(labelValues.sort((a, b) => parseFloat(a) - parseFloat(b))),
           )
             .map(valueToLabel)
             .join(separator);
@@ -419,14 +451,14 @@ export const useThumbOverlap = (
            */
           const first = Math.min(...offsetsX);
           const last = Math.max(...offsetsX);
-          const lastWidth = thumbs[
-            overlaps[offsetsX.indexOf(last)]
-          ].getBoundingClientRect().width;
+          const lastWidth =
+            thumbs[overlaps[offsetsX.indexOf(last)]].getBoundingClientRect()
+              .width;
           newStyle.left = `${Math.abs(first - (last + lastWidth)) / 2}px`;
-          newStyle.transform = 'translate(-50%, 0)';
+          newStyle.transform = "translate(-50%, 0)";
         } else {
           // If the Thumb isn't the left most Thumb, hide the Label!
-          newStyle.visibility = 'hidden';
+          newStyle.visibility = "hidden";
         }
       }
       // Update the label value and style
@@ -446,7 +478,14 @@ export const useThumbOverlap = (
  * @param clientY - target y position (mouse/touch)
  * @param direction - the direction of the track
  */
-function getThumbDistance(thumbEl: Element, clientX: number, clientY: number, direction: Direction) {
-  const { left, top, width, height } = thumbEl.getBoundingClientRect()
-  return isVertical(direction) ? Math.abs(clientY - (top + height / 2)) : Math.abs(clientX - (left + width / 2))
+function getThumbDistance(
+  thumbEl: Element,
+  clientX: number,
+  clientY: number,
+  direction: Direction,
+) {
+  const { left, top, width, height } = thumbEl.getBoundingClientRect();
+  return isVertical(direction)
+    ? Math.abs(clientY - (top + height / 2))
+    : Math.abs(clientX - (left + width / 2));
 }

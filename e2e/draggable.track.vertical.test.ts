@@ -1,90 +1,95 @@
+import { test, expect } from "@playwright/test";
 import {
   Examples,
   getTestUrl,
   trackMouse,
   untrackMouse,
-  addFontStyles
-} from './utils';
+  addFontStyles,
+} from "./utils";
 
-jest.setTimeout(10000);
-
-beforeEach(async () => {
+test.beforeEach(async ({ page }) => {
   await page.goto(getTestUrl(Examples.DRAGGABLE_TRACK_DOWN_DIRECTION));
-  await page.setViewport({ width: 600, height: 460 });
+  await page.waitForSelector("[data-storyloaded]");
   await addFontStyles(page);
   await page.waitForSelector('div[role="slider"]');
 });
 
-test('dnd the top thumb down', async () => {
+test("dnd the top thumb down", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(283, 140);
   await page.mouse.down();
   await page.mouse.move(283, 165);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe('35.0 - 75.0');
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  const output = await page.$("#output");
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe(
+    "35.0 - 75.0",
+  );
+  await expect(page).toHaveScreenshot();
 });
 
-test('dnd the bottom thumb up', async () => {
+test("dnd the bottom thumb up", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(283, 280);
   await page.mouse.down();
   await page.mouse.move(283, 255);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe('25.0 - 65.0');
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  const output = await page.$("#output");
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe(
+    "25.0 - 65.0",
+  );
+  await expect(page).toHaveScreenshot();
 });
 
-test('dnd the track down', async () => {
+test("dnd the track down", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(283, 240);
   await page.mouse.down();
   await page.mouse.move(283, 300);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe('45.0 - 95.0');
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  const output = await page.$("#output");
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe(
+    "45.0 - 95.0",
+  );
+  await expect(page).toHaveScreenshot();
 });
 
-test('dnd the track up', async () => {
+test("dnd the track up", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(283, 240);
   await page.mouse.down();
   await page.mouse.move(283, 180);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe('5.0 - 55.0');
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  const output = await page.$("#output");
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe("5.0 - 55.0");
+  await expect(page).toHaveScreenshot();
 });
 
-test('dnd the track to the max value', async () => {
+test("dnd the track to the max value", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(283, 240);
   await page.mouse.down();
   await page.mouse.move(283, 340);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe(
-    '50.0 - 100.0'
+  const output = await page.$("#output");
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe(
+    "50.0 - 100.0",
   );
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  await expect(page).toHaveScreenshot();
 });
 
-test('dnd the track to the min value', async () => {
+test("dnd the track to the min value", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(283, 240);
   await page.mouse.down();
   await page.mouse.move(283, 140);
   await page.mouse.up();
   await untrackMouse(page);
-  const output = await page.$('#output');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe('0.0 - 50.0');
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  const output = await page.$("#output");
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe("0.0 - 50.0");
+  await expect(page).toHaveScreenshot();
 });

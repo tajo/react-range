@@ -1,79 +1,73 @@
+import { test, expect } from "@playwright/test";
 import {
   Examples,
   getTestUrl,
   trackMouse,
   untrackMouse,
-  addFontStyles
-} from './utils';
+  addFontStyles,
+  waitDropFinished,
+} from "./utils";
 
-jest.setTimeout(10000);
-
-beforeEach(async () => {
+test.beforeEach(async ({ page }) => {
   await page.goto(getTestUrl(Examples.SKINNY_MERGING_LABELS));
-  await page.setViewport({ width: 600, height: 200 });
+  await page.waitForSelector("[data-storyloaded]");
   await addFontStyles(page);
   await page.waitForSelector('div[role="slider"]');
 });
 
-test('Overlap thumbs 1 and 2', async () => {
+test("Overlap thumbs 1 and 2", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(165, 80);
   await page.mouse.down();
   await page.mouse.move(265, 80);
   await page.mouse.up();
   await untrackMouse(page);
-  await page.waitForSelector('[data-label="1"]', {
-    hidden: true
-  });
+  await page.waitForSelector('[data-label="1"]', { state: "hidden" });
   const output = await page.$('[data-label="0"]');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe('43.5 - 50.0');
-  expect(await page.screenshot()).toMatchImageSnapshot();
-});
-
-test('Overlap thumbs 1, 2 and 3', async () => {
-  await trackMouse(page);
-  await page.mouse.move(165, 80);
-  await page.mouse.down();
-  await page.mouse.move(265, 80);
-  await page.mouse.up();
-  await page.mouse.move(435, 80);
-  await page.mouse.down();
-  await page.mouse.move(327, 80);
-  await page.mouse.up();
-  await untrackMouse(page);
-  await page.waitForSelector('[data-label="1"]', {
-    hidden: true
-  });
-  await page.waitForSelector('[data-label="2"]', {
-    hidden: true
-  });
-  const output = await page.$('[data-label="0"]');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe(
-    '43.5 - 50.0 - 55.0'
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe(
+    "43.5 - 50.0",
   );
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  await expect(page).toHaveScreenshot();
 });
 
-test('Overlap thumbs 1, 2 and 3 in a different order', async () => {
+test("Overlap thumbs 1, 2 and 3", async ({ page }) => {
+  await trackMouse(page);
+  await page.mouse.move(165, 80);
+  await page.mouse.down();
+  await page.mouse.move(265, 80);
+  await page.mouse.up();
+  await waitDropFinished(page);
+  await page.mouse.move(435, 80);
+  await page.mouse.down();
+  await page.mouse.move(327, 80);
+  await page.mouse.up();
+  await untrackMouse(page);
+  await page.waitForSelector('[data-label="1"]', { state: "hidden" });
+  await page.waitForSelector('[data-label="2"]', { state: "hidden" });
+  const output = await page.$('[data-label="0"]');
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe(
+    "43.5 - 50.0 - 55.0",
+  );
+  await expect(page).toHaveScreenshot();
+});
+
+test("Overlap thumbs 1, 2 and 3 in a different order", async ({ page }) => {
   await trackMouse(page);
   await page.mouse.move(435, 80);
   await page.mouse.down();
   await page.mouse.move(265, 80);
   await page.mouse.up();
+  await waitDropFinished(page);
   await page.mouse.move(165, 80);
   await page.mouse.down();
   await page.mouse.move(327, 80);
   await page.mouse.up();
   await untrackMouse(page);
-  await page.waitForSelector('[data-label="0"]', {
-    hidden: true
-  });
-  await page.waitForSelector('[data-label="1"]', {
-    hidden: true
-  });
+  await page.waitForSelector('[data-label="0"]', { state: "hidden" });
+  await page.waitForSelector('[data-label="1"]', { state: "hidden" });
   const output = await page.$('[data-label="2"]');
-  expect(await page.evaluate((e) => e.textContent, output)).toBe(
-    '43.5 - 50.0 - 55.0'
+  expect(await page.evaluate((e) => e!.textContent, output)).toBe(
+    "43.5 - 50.0 - 55.0",
   );
-  expect(await page.screenshot()).toMatchImageSnapshot();
+  await expect(page).toHaveScreenshot();
 });

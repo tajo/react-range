@@ -1,4 +1,4 @@
-import * as puppeteer from 'puppeteer';
+import type { Page } from "@playwright/test";
 
 export enum Examples {
   BASIC,
@@ -16,66 +16,65 @@ export enum Examples {
   MARKS,
   DYNAMIC_MARKS,
   DRAGGABLE_TRACK,
-  DRAGGABLE_TRACK_DOWN_DIRECTION
+  DRAGGABLE_TRACK_DOWN_DIRECTION,
 }
 
 export const getTestUrl = (example: Examples): string => {
-  const PORT = 61000;
   switch (example) {
     case Examples.BASIC:
-      return `http://localhost:${PORT}/?story=range--basic&mode=preview`;
+      return `/?story=range--basic&mode=preview`;
     case Examples.BASIC_WITH_BORDER:
-      return `http://localhost:${PORT}/?story=range--basic-with-border&mode=preview`;
+      return `/?story=range--basic-with-border&mode=preview`;
     case Examples.TWO_THUMBS:
-      return `http://localhost:${PORT}/?story=range--two-thumbs&mode=preview`;
+      return `/?story=range--two-thumbs&mode=preview`;
     case Examples.UP_DIRECTION:
-      return `http://localhost:${PORT}/?story=range--up-direction&mode=preview`;
+      return `/?story=range--up-direction&mode=preview`;
     case Examples.LEFT_DIRECTION:
-      return `http://localhost:${PORT}/?story=range--left-direction&mode=preview`;
+      return `/?story=range--left-direction&mode=preview`;
     case Examples.DOWN_DIRECTION:
-      return `http://localhost:${PORT}/?story=range--down-direction&mode=preview`;
+      return `/?story=range--down-direction&mode=preview`;
     case Examples.MERGING_LABELS:
-      return `http://localhost:${PORT}/?story=range--merging-labels&mode=preview`;
+      return `/?story=range--merging-labels&mode=preview`;
     case Examples.SKINNY_MERGING_LABELS:
-      return `http://localhost:${PORT}/?story=range--merging-labels-skinny&mode=preview`;
+      return `/?story=range--merging-labels-skinny&mode=preview`;
     case Examples.CUSTOM_MERGING_LABELS:
-      return `http://localhost:${PORT}/?story=range--merging-labels-custom&mode=preview`;
+      return `/?story=range--merging-labels-custom&mode=preview`;
     case Examples.RTL:
-      return `http://localhost:${PORT}/?story=range--basic&mode=preview&rtl=true`;
+      return `/?story=range--basic&mode=preview&arg-rtl=true`;
     case Examples.FINAL_CHANGE_EVENT:
-      return `http://localhost:${PORT}/?story=range--on-final-change-event&mode=preview`;
+      return `/?story=range--on-final-change-event&mode=preview`;
     case Examples.ANIMATING_CONTAINER:
-      return `http://localhost:${PORT}/?story=range--animating-container&mode=preview`;
+      return `/?story=range--animating-container&mode=preview`;
     case Examples.MARKS:
-      return `http://localhost:${PORT}/?story=range--marks&mode=preview`;
+      return `/?story=range--marks&mode=preview`;
     case Examples.DYNAMIC_MARKS:
-      return `http://localhost:${PORT}/?story=range--marks-dynamic&mode=preview`;
+      return `/?story=range--marks-dynamic&mode=preview`;
     case Examples.DRAGGABLE_TRACK:
-      return `http://localhost:${PORT}/?story=range--two-thumbs-with-draggable-track&mode=preview`;
+      return `/?story=range--two-thumbs-with-draggable-track&mode=preview`;
     case Examples.DRAGGABLE_TRACK_DOWN_DIRECTION:
-      return `http://localhost:${PORT}/?story=range--two-thumbs-with-draggable-track-and-down-direction&mode=preview`;
+      return `/?story=range--two-thumbs-with-draggable-track-and-down-direction&mode=preview`;
   }
 };
 
-export const trackMouse = async (page: puppeteer.Page) => {
+export const trackMouse = async (page: Page) => {
   await page.evaluate(showCursor);
 };
 
-export const untrackMouse = async (page: puppeteer.Page) => {
+export const untrackMouse = async (page: Page) => {
   await page.evaluate(hideCursor);
-  await page.waitForSelector('.mouse-helper', { hidden: true });
+  await page.waitForSelector(".mouse-helper", { state: "hidden" });
 };
 
-export const addFontStyles = async (page: puppeteer.Page) => {
+export const addFontStyles = async (page: Page) => {
   await page.evaluate(fontStyles);
 };
 
 // This injects a box into the page that moves with the mouse;
 // Useful for debugging
 const showCursor = () => {
-  const box = document.createElement('div');
-  box.classList.add('mouse-helper');
-  const styleElement = document.createElement('style');
+  const box = document.createElement("div");
+  box.classList.add("mouse-helper");
+  const styleElement = document.createElement("style");
   styleElement.innerHTML = `
   .mouse-helper {
     pointer-events: none;
@@ -115,36 +114,36 @@ const showCursor = () => {
   `;
 
   const onMouseMove = (event: MouseEvent) => {
-    box.style.left = event.pageX + 'px';
-    box.style.top = event.pageY + 'px';
+    box.style.left = event.pageX + "px";
+    box.style.top = event.pageY + "px";
     updateButtons(event.buttons);
   };
 
   const onMouseDown = (event: MouseEvent) => {
     updateButtons(event.buttons);
-    box.classList.add('button-' + event.which);
+    box.classList.add("button-" + event.which);
   };
 
   const onMouseUp = (event: MouseEvent) => {
     updateButtons(event.buttons);
-    box.classList.remove('button-' + event.which);
+    box.classList.remove("button-" + event.which);
   };
 
   document.head.appendChild(styleElement);
   document.body.appendChild(box);
-  document.addEventListener('mousemove', onMouseMove, true);
-  document.addEventListener('mousedown', onMouseDown, true);
-  document.addEventListener('mouseup', onMouseUp, true);
+  document.addEventListener("mousemove", onMouseMove, true);
+  document.addEventListener("mousedown", onMouseDown, true);
+  document.addEventListener("mouseup", onMouseUp, true);
   function updateButtons(buttons: any) {
     for (let i = 0; i < 5; i++)
       // @ts-ignore
-      box.classList.toggle('button-' + i, buttons & (1 << i));
+      box.classList.toggle("button-" + i, buttons & (1 << i));
   }
 };
 
 // make the cursor invisble, good for visual snaps
 const hideCursor = () => {
-  const styleElement = document.createElement('style');
+  const styleElement = document.createElement("style");
   styleElement.innerHTML = `
   .mouse-helper {
     display: none;
@@ -156,7 +155,7 @@ const hideCursor = () => {
 // This injects a box into the page that moves with the mouse;
 // Useful for debugging
 const fontStyles = () => {
-  const styleElement = document.createElement('style');
+  const styleElement = document.createElement("style");
   styleElement.innerHTML = `
   body {
     color: #fff;
@@ -171,7 +170,16 @@ const fontStyles = () => {
   }
   div[role='slider']:focus {
     outline: none;
-  }  
+  }
   `;
   document.head.appendChild(styleElement);
+};
+
+export const waitDropFinished = async (page: Page) => {
+  await page.waitForFunction(() => {
+    const sliders = document.querySelectorAll('[role="slider"]');
+    return Array.from(sliders).every(
+      (slider) => window.getComputedStyle(slider).cursor !== "grabbing",
+    );
+  });
 };

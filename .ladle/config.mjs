@@ -1,8 +1,11 @@
 export default {
-  defaultStory: 'range--basic',
+  defaultStory: "range--basic",
   addons: {
+    rtl: {
+      enabled: false,
+    },
     theme: {
-      enabled: false
-    }
-  }
+      enabled: false,
+    },
+  },
 };

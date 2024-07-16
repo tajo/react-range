@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 export interface ITrackBackground {
   min: number;
@@ -48,9 +48,9 @@ export interface IThumbProps {
   key: number;
   style: React.CSSProperties;
   tabIndex?: number;
-  'aria-valuemax': number;
-  'aria-valuemin': number;
-  'aria-valuenow': number;
+  "aria-valuemax": number;
+  "aria-valuemin": number;
+  "aria-valuenow": number;
   draggable: boolean;
   ref: React.RefObject<any>;
   role: string;
@@ -74,8 +74,8 @@ export interface ITrackProps {
 export type TThumbOffsets = { x: number; y: number }[];
 
 export enum Direction {
-  Right = 'to right',
-  Left = 'to left',
-  Down = 'to bottom',
-  Up = 'to top'
+  Right = "to right",
+  Left = "to left",
+  Down = "to bottom",
+  Up = "to top",
 }

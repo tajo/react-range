@@ -1,14 +1,13 @@
-import { Examples, getTestUrl, addFontStyles } from './utils';
+import { test, expect } from "@playwright/test";
+import { Examples, getTestUrl, addFontStyles } from "./utils";
 
-jest.setTimeout(10000);
-
-beforeEach(async () => {
+test.beforeEach(async ({ page }) => {
   await page.goto(getTestUrl(Examples.BASIC_WITH_BORDER));
-  await page.setViewport({ width: 600, height: 200 });
+  await page.waitForSelector("[data-storyloaded]");
   await addFontStyles(page);
   await page.waitForSelector('div[role="slider"]');
 });
 
-test('aligns thumb as expected with borders', async () => {
-  expect(await page.screenshot()).toMatchImageSnapshot();
+test("aligns thumb as expected with borders", async ({ page }) => {
+  await expect(page).toHaveScreenshot();
 });

@@ -1,6 +1,0 @@
-// @flow
-import Range from './Range';
-import { getTrackBackground, useThumbOverlap } from './utils';
-import { Direction } from './types';
-
-export { Range, getTrackBackground, useThumbOverlap, Direction };
