@@ -47,6 +47,7 @@ const SuperSimple: React.FC = () => {
       renderThumb={({ props }) => (
         <div
           {...props}
+          key={props.key}
           style={{
             ...props.style,
             height: "42px",

@@ -97,6 +97,7 @@ const LabeledMergeSkinny: React.FC<{ rtl: boolean }> = ({ rtl }) => {
           return (
             <div
               {...props}
+              key={props.key}
               style={{
                 ...props.style,
                 height: `${THUMB_SIZE}px`,
