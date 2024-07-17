@@ -144,6 +144,10 @@ class Range extends React.Component<IProps> {
   getOffsets = () => {
     const { direction, values, min, max } = this.props;
     const trackElement = this.trackRef.current!;
+    if (!trackElement) {
+      console.warn('No track element found.');
+      return [];
+    }
     const trackRect = trackElement.getBoundingClientRect();
     const trackPadding = getPaddingAndBorder(trackElement);
     return this.getThumbs().map((thumb, index) => {
