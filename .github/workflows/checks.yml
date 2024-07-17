@@ -1,4 +1,4 @@
-name: Vitest Tests
+name: Checks
 on:
   push:
     branches: [main]
@@ -17,3 +17,7 @@ jobs:
         run: npm install -g pnpm && pnpm install
       - name: Run Unit tests
         run: pnpm test:unit
+      - name: Run Typecheck
+        run: pnpm typecheck
+      - name: Run Build
+        run: pnpm build
