@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Range, Direction, getTrackBackground } from '../src/index';
+import * as React from "react";
+import { Range, Direction, getTrackBackground } from "../src/index";
 
 const STEP = 0.1;
 const MIN = 0;
@@ -10,10 +10,10 @@ const LeftDirection: React.FC<{ rtl: boolean }> = ({ rtl }) => {
   return (
     <div
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        height: '100%',
-        flexDirection: 'column'
+        display: "flex",
+        alignItems: "center",
+        height: "100%",
+        flexDirection: "column",
       }}
     >
       <Range
@@ -31,26 +31,26 @@ const LeftDirection: React.FC<{ rtl: boolean }> = ({ rtl }) => {
             style={{
               ...props.style,
               flexGrow: 1,
-              width: '100%',
-              display: 'flex',
-              height: '36px'
+              width: "100%",
+              display: "flex",
+              height: "36px",
             }}
           >
             <div
               ref={props.ref}
               style={{
-                width: '100%',
-                height: '5px',
-                borderRadius: '4px',
+                width: "100%",
+                height: "5px",
+                borderRadius: "4px",
                 background: getTrackBackground({
                   values,
-                  colors: ['#548BF4', '#ccc'],
+                  colors: ["#548BF4", "#ccc"],
                   min: MIN,
                   max: MAX,
                   direction: Direction.Left,
-                  rtl
+                  rtl,
                 }),
-                alignSelf: 'center'
+                alignSelf: "center",
               }}
             >
               {children}
@@ -60,30 +60,31 @@ const LeftDirection: React.FC<{ rtl: boolean }> = ({ rtl }) => {
         renderThumb={({ props, isDragged }) => (
           <div
             {...props}
+            key={props.key}
             style={{
               ...props.style,
-              height: '42px',
-              width: '42px',
-              borderRadius: '4px',
-              backgroundColor: '#FFF',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              boxShadow: '0px 2px 6px #AAA'
+              height: "42px",
+              width: "42px",
+              borderRadius: "4px",
+              backgroundColor: "#FFF",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              boxShadow: "0px 2px 6px #AAA",
             }}
           >
             <div
               style={{
-                width: '5px',
-                height: '16px',
-                backgroundColor: isDragged ? '#548BF4' : '#CCC'
+                width: "5px",
+                height: "16px",
+                backgroundColor: isDragged ? "#548BF4" : "#CCC",
               }}
             />
           </div>
         )}
       />
       {
-        <output style={{ marginTop: '30px' }} id="output">
+        <output style={{ marginTop: "30px" }} id="output">
           {values[0].toFixed(1)}
         </output>
       }

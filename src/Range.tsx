@@ -15,6 +15,7 @@ import {
   isTouchEvent,
   isStepDivisible,
   getClosestThumbIndex,
+  isIOS,
 } from "./utils";
 import { IProps, Direction } from "./types";
 
@@ -236,7 +237,7 @@ class Range extends React.Component<IProps> {
   };
 
   onMouseDownTrack = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || isIOS()) return;
     e.persist();
     e.preventDefault();
     this.addMouseEvents(e.nativeEvent);

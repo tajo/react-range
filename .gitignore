@@ -2,7 +2,6 @@ node_modules
 build
 npm-debug.log
 lib
-es
 __diff_output__
 /test-results/
 /playwright-report/

@@ -54,6 +54,7 @@ const LabeledMergeCustom: React.FC<{ rtl: boolean }> = ({ rtl }) => {
   const Thumb = ({ props, index, isDragged }: any) => (
     <div
       {...props}
+      key={props.key}
       style={{
         ...props.style,
         height: `${THUMB_SIZE}px`,

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Range } from '../src/index';
+import * as React from "react";
+import { Range } from "../src/index";
 
 const SuperSimple: React.FC<{ rtl: boolean }> = ({ rtl }) => {
   const [values, setValues] = React.useState([50]);
@@ -16,9 +16,9 @@ const SuperSimple: React.FC<{ rtl: boolean }> = ({ rtl }) => {
           {...props}
           style={{
             ...props.style,
-            height: '6px',
-            width: '100%',
-            backgroundColor: '#ccc'
+            height: "6px",
+            width: "100%",
+            backgroundColor: "#ccc",
           }}
         >
           {children}
@@ -27,11 +27,12 @@ const SuperSimple: React.FC<{ rtl: boolean }> = ({ rtl }) => {
       renderThumb={({ props }) => (
         <div
           {...props}
+          key={props.key}
           style={{
             ...props.style,
-            height: '42px',
-            width: '42px',
-            backgroundColor: '#999'
+            height: "42px",
+            width: "42px",
+            backgroundColor: "#999",
           }}
         />
       )}
