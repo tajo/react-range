@@ -1,11 +1,5 @@
 import { test, expect } from "@playwright/test";
-import {
-  Examples,
-  getTestUrl,
-  trackMouse,
-  untrackMouse,
-  addFontStyles,
-} from "./utils";
+import { Examples, getTestUrl, addFontStyles } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.goto(getTestUrl(Examples.MARKS));

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Range, getTrackBackground } from "../src/index";
+import { Range } from "../src/index";
 
 const STEP = 0.1;
 const MIN = 0;
