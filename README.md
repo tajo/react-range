@@ -69,8 +69,7 @@ const SuperSimple: React.FC = () => {
 - **Touchable**, works on mobile devices
 - Can handle negative and decimal values
 - Stateless and controlled single component
-- Typescript and Flow type definitions
-- **No dependencies, less than 5kB (gzipped)**
+- **No dependencies, 6kB (gzipped)**
 - Coverage by [e2e playwright tests](#end-to-end-testing)
 - RTL support
 
