@@ -3,12 +3,11 @@
 [![npm version](https://img.shields.io/npm/v/react-range.svg?style=flat-square)](https://www.npmjs.com/package/react-range)
 [![npm downloads](https://img.shields.io/npm/dm/react-range.svg?style=flat-square)](https://www.npmjs.com/package/react-range)
 [![size](https://img.shields.io/bundlephobia/minzip/react-range.svg?style=flat)](https://bundlephobia.com/result?p=react-range)
+<a href="https://stackblitz.com/edit/react-range-edit?file=src%2FApp.tsx"><img src="https://img.shields.io/badge/stackblitz-sandbox-orange" alt="stackblitz"></a>
 
 ![Labeled Range](https://raw.githubusercontent.com/tajo/react-range/main/assets/react-range.gif?raw=true)
 
-[![Edit react-range](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rlp1j1183n)
-
-[See all the other examples](https://react-range.pages.dev) and [their source code](https://github.com/tajo/react-range/tree/main/examples)!
+[See all the other examples](https://react-range.pages.dev) and [their source code](https://github.com/tajo/react-range/tree/main/examples)! Try it out in the [Stackblitz sandbox](https://stackblitz.com/edit/react-range-edit?file=src%2FApp.tsx)!
 
 ## Installation
 

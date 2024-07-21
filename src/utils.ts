@@ -47,13 +47,14 @@ export function normalizeValue(
   // `remainder` is a difference between the given value and a full step value
   // that is closest lower to the given value and is in the range between the min value
   // and the given value
-  var remainder =
+  const remainder =
     Math.floor(value * BIG_NUM - min * BIG_NUM) % Math.floor(step * BIG_NUM);
-  var closestLowerNum = Math.floor(value * BIG_NUM - Math.abs(remainder));
-  var rounded = remainder === 0 ? value : closestLowerNum / BIG_NUM;
+  const closestLowerNum = Math.floor(value * BIG_NUM - Math.abs(remainder));
+  const rounded = remainder === 0 ? value : closestLowerNum / BIG_NUM;
   // Values with a remainder `< step/2` are rounded to the closest lower value
   // while values with a remainder `= > step/2` are rounded to the closest bigger value
-  var res = Math.abs(remainder / BIG_NUM) < step / 2 ? rounded : rounded + step;
+  const res =
+    Math.abs(remainder / BIG_NUM) < step / 2 ? rounded : rounded + step;
   const decimalPlaces = getStepDecimals(step);
   return parseFloat(res.toFixed(decimalPlaces));
 }

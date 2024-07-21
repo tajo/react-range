@@ -146,7 +146,7 @@ class Range extends React.Component<IProps> {
     const { direction, values, min, max } = this.props;
     const trackElement = this.trackRef.current!;
     if (!trackElement) {
-      console.warn('No track element found.');
+      console.warn("No track element found.");
       return [];
     }
     const trackRect = trackElement.getBoundingClientRect();
@@ -436,8 +436,8 @@ class Range extends React.Component<IProps> {
       : trackRect.width;
     if (draggedTrackPos[0] !== -1 && draggedTrackPos[1] !== -1) {
       // calculate how much it moved since the last update
-      let dX = clientX - draggedTrackPos[0];
-      let dY = clientY - draggedTrackPos[1];
+      const dX = clientX - draggedTrackPos[0];
+      const dY = clientY - draggedTrackPos[1];
       // calculate the delta of the value
       let deltaValue = 0;
       switch (direction) {
@@ -640,12 +640,12 @@ class Range extends React.Component<IProps> {
             draggedThumbIndex > -1
               ? "grabbing"
               : this.props.draggableTrack
-              ? isVertical(this.props.direction)
-                ? "ns-resize"
-                : "ew-resize"
-              : values.length === 1 && !disabled
-              ? "pointer"
-              : "inherit",
+                ? isVertical(this.props.direction)
+                  ? "ns-resize"
+                  : "ew-resize"
+                : values.length === 1 && !disabled
+                  ? "pointer"
+                  : "inherit",
         },
         onMouseDown: disabled ? voidFn : this.onMouseDownTrack,
         onTouchStart: disabled ? voidFn : this.onTouchStartTrack,

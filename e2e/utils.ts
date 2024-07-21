@@ -65,7 +65,7 @@ export const untrackMouse = async (page: Page) => {
   await page.waitForSelector(".mouse-helper", { state: "hidden" });
 };
 
-export const addFontStyles = async (page: Page) => {
+export const addFontStyles = async () => {
   //await page.evaluate(fontStyles);
 };
 
@@ -147,29 +147,6 @@ const hideCursor = () => {
   styleElement.innerHTML = `
   .mouse-helper {
     display: none;
-  }
-  `;
-  document.head.appendChild(styleElement);
-};
-
-// This injects a box into the page that moves with the mouse;
-// Useful for debugging
-const fontStyles = () => {
-  const styleElement = document.createElement("style");
-  styleElement.innerHTML = `
-  body {
-    color: #fff;
-    font-weight: normal;
-    font-style: normal;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    margin: 8px;
-    margin-top: 60px;
-    margin-left: 30px;
-    margin-right: 30px;
-  }
-  div[role='slider']:focus {
-    outline: none;
   }
   `;
   document.head.appendChild(styleElement);
