@@ -25,6 +25,7 @@ const SuperSimple: React.FC = () => {
   const [values, setValues] = React.useState([50]);
   return (
     <Range
+      label="Select your value"
       step={0.1}
       min={0}
       max={100}
@@ -65,7 +66,7 @@ const SuperSimple: React.FC = () => {
 - Range input supporting **vertical and horizontal sliding**
 - Unopinionated styling, great for **CSS in JS** too
 - No wrapping divs or additional markup, bring your own!
-- **Accessible**, made for keyboards and screen readers
+- Works with keyboard, uses `aria` patterns for assistive technologies, check a11y part for accessibility info
 - **Touchable**, works on mobile devices
 - Can handle negative and decimal values
 - Stateless and controlled single component
@@ -73,13 +74,42 @@ const SuperSimple: React.FC = () => {
 - Coverage by [e2e playwright tests](#end-to-end-testing)
 - RTL support
 
-## Keyboard support
+
+
+## A11y (accessibility)
+
+### Keyboard support
 
 - `tab` and `shift+tab` to focus thumbs
 - `arrow up` or `arrow right` or `k` to increase the thumb value by one step
 - `arrow down` or `arrow left` or `j` to decrease the thumb value by one step
 - `page up` to increase the thumb value by ten steps
 - `page down` to decrease the thumb value by ten steps
+
+### Assistive technologies (for example screen readers)
+
+*You are responsible for the accessibility name!*
+
+Default accessibility name is Accessibility label, set with code: `aria-label="Accessibility label"`, but is not visible (only for screen-readers and other assistive tech), 
+so make sure to use correct name by passing it to the prop called `label`.
+
+If you want to have a visible label (best practice), then use `labelledBy`.
+
+You naming options are:
+
+- you can name it by using `label` prop (translates to `aria-label` in the code)
+- you can name it by adding a visual element with a unique ID that can be used with `labelledBy` prop (translates to `aria-labellebdy` in the code)
+
+Please check `Basic` and `Basic visible label` examples for more info.
+
+Aria used on the component is following [Accessible Rich Internet Applications (WAI-ARIA) 1.2 `slider` role](https://www.w3.org/TR/wai-aria-1.2/#slider), but please be aware that different assistive technologies provide different support (especially in combination with operating systems and browsers).
+
+Therefore please make sure to test it yourself and with people with disabilities.
+We can not provide prompt information about support, but are happy to add your findings to this Readme.
+
+### Conformance to WCAG and other accessibility standards
+
+We need to do more testing to claim any conformance. We did make sure the component is operable with keyboard, that it is respecting ARIA patterns for `slider` role and having possibility to name the component (accessible name). You are welcome to report any accessibility related findings, we look forward to add information about user tests and support for assistive technologies.
 
 ## `<Range />` props
 
