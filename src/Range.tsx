@@ -24,6 +24,8 @@ const DECREASE_KEYS = ["ArrowLeft", "ArrowDown", "j", "PageDown"];
 
 class Range extends React.Component<IProps> {
   static defaultProps = {
+    label: "Accessibility label",
+    labelledBy: null,
     step: 1,
     direction: Direction.Right,
     rtl: false,
@@ -619,6 +621,8 @@ class Range extends React.Component<IProps> {
 
   render() {
     const {
+      label,
+      labelledBy,
       renderTrack,
       renderThumb,
       renderMark = () => null,
@@ -700,6 +704,8 @@ class Range extends React.Component<IProps> {
               "aria-valuenow": value,
               draggable: false,
               ref: this.thumbRefs[index],
+              "aria-label" : label,
+              "aria-labelledby" : labelledBy,           
               role: "slider",
               onKeyDown: disabled ? voidFn : this.onKeyDown,
               onKeyUp: disabled ? voidFn : this.onKeyUp,
