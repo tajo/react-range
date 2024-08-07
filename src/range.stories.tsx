@@ -2,6 +2,7 @@ import * as React from "react";
 import AllowOverlapExample from "../examples/AllowOverlap";
 import AnimatingContainerExample from "../examples/AnimatingContainer";
 import BasicExample from "../examples/Basic";
+import BasicVisibleLabelExample from "../examples/BasicVisibleLabel";
 import BasicWithBorderExample from "../examples/BasicWithBorder";
 import BigStepsExample from "../examples/BigSteps";
 import DisabledExample from "../examples/Disabled";
@@ -32,6 +33,9 @@ export const AnimatingContainer: React.FC<{ rtl: boolean }> = ({ rtl }) => (
 );
 export const Basic: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <BasicExample rtl={rtl} />
+);
+export const BasicVisibleLabel: React.FC<{ rtl: boolean }> = ({ rtl }) => (
+  <BasicVisibleLabelExample rtl={rtl} />
 );
 export const BasicWithBorder: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <BasicWithBorderExample rtl={rtl} />
