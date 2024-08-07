@@ -34,7 +34,7 @@ export const AnimatingContainer: React.FC<{ rtl: boolean }> = ({ rtl }) => (
 export const Basic: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <BasicExample rtl={rtl} />
 );
-export const BasicVisibleLabel : React.FC<{ rtl: boolean }> = ({ rtl }) => (
+export const BasicVisibleLabel: React.FC<{ rtl: boolean }> = ({ rtl }) => (
   <BasicVisibleLabelExample rtl={rtl} />
 );
 export const BasicWithBorder: React.FC<{ rtl: boolean }> = ({ rtl }) => (

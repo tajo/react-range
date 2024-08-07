@@ -9,8 +9,8 @@ export interface ITrackBackground {
   rtl?: boolean;
 }
 export interface IProps {
-  label: string,
-  labelledBy: string,
+  label: string;
+  labelledBy: string;
   values: number[];
   min: number;
   max: number;
@@ -50,8 +50,8 @@ export interface IThumbProps {
   key: number;
   style: React.CSSProperties;
   tabIndex?: number;
-  "aria-label": string,
-  "aria-labelledby": string,
+  "aria-label": string;
+  "aria-labelledby": string;
   "aria-valuemax": number;
   "aria-valuemin": number;
   "aria-valuenow": number;

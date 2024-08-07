@@ -17,17 +17,18 @@ const BasicVisibleLabelExample: React.FC<{ rtl: boolean }> = ({ rtl }) => {
         flexWrap: "wrap",
       }}
     >
-      <label 
-      onClick={ (e) => {
-        rangeRef.current.thumbRefs[0].current.focus()
-      }}
-      id="unique_id"
-      style={{
-        flex:"auto",
-        fontFamily:"sans-serif"
-      }}
-      
-      >Visible accessibility label:</label>
+      <label
+        onClick={(e) => {
+          rangeRef.current.thumbRefs[0].current.focus();
+        }}
+        id="unique_id"
+        style={{
+          flex: "auto",
+          fontFamily: "sans-serif",
+        }}
+      >
+        Visible accessibility label:
+      </label>
 
       <Range
         labelledBy="unique_id"
@@ -40,7 +41,6 @@ const BasicVisibleLabelExample: React.FC<{ rtl: boolean }> = ({ rtl }) => {
         onChange={(values) => setValues(values)}
         renderTrack={({ props, children }) => (
           <div
-            
             onMouseDown={props.onMouseDown}
             onTouchStart={props.onTouchStart}
             style={{
