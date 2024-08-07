@@ -1,5 +1,11 @@
 # react-range
 
+## 1.10.0
+
+### Minor Changes
+
+- [`92cd0ff`](https://github.com/tajo/react-range/commit/92cd0ffc5163c9433ee8ba88b772e2bf6f9c4b44) Thanks [@tajo](https://github.com/tajo)! - Improving a11y of the slider by adding new label properties.
+
 ## 1.9.2
 
 ### Patch Changes
