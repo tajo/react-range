@@ -66,6 +66,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-dom": "*"
+    "react-dom": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*"
   }
 }
