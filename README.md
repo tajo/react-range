@@ -288,6 +288,14 @@ rtl: boolean;
 
 If `true`, the slider will be optimized for RTL layouts. Default is `false`.
 
+### ownerDocument (optional)
+
+```ts
+ownerDocument: Document;
+```
+
+The document that the mouse and touch listeners are attached to. Set it when the slider is rendered in a different document than the one running your code, e.g. inside an iframe. It is read once on mount. Default is the global `document`.
+
 ## getTrackBackground
 
 There is an additional helper function being exported from `react-range`. Your track is most likely a `div` with some background. What if you want to achieve a nice "progress bar" effect where the part before the thumb has different color than the part after? What if you want to have the same thing even with multiple thumbs (aka differently colored segments)? **You don't need to glue together multiple divs in order to do that!** You can use a single `div` and set `background: linear-gradient(...)`. `getTrackBackground` function builds this verbose `linear-gradient(...)` for you!
