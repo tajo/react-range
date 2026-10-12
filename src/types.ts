@@ -20,6 +20,7 @@ export interface IProps {
   draggableTrack: boolean;
   disabled: boolean;
   rtl: boolean;
+  ownerDocument?: Document;
   onChange: (values: number[]) => void;
   onFinalChange?: (values: number[]) => void;
   renderMark?: (params: IRenderMarkParams) => React.ReactNode;

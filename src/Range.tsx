@@ -43,6 +43,7 @@ class Range extends React.Component<IProps> {
   schdOnMouseMove: (e: MouseEvent) => void;
   schdOnTouchMove: (e: TouchEvent) => void;
   schdOnEnd: (e: Event) => void;
+  ownerDocument!: Document;
   state = {
     draggedTrackPos: [-1, -1],
     draggedThumbIndex: -1,
@@ -66,6 +67,7 @@ class Range extends React.Component<IProps> {
 
   componentDidMount() {
     const { values, min, step } = this.props;
+    this.ownerDocument = this.props.ownerDocument ?? document;
     this.resizeObserver = (window as any).ResizeObserver
       ? new (window as any).ResizeObserver(this.onResize)
       : {
@@ -73,12 +75,20 @@ class Range extends React.Component<IProps> {
           unobserve: () => window.removeEventListener("resize", this.onResize),
         };
 
-    document.addEventListener("touchstart", this.onMouseOrTouchStart as any, {
-      passive: false,
-    });
-    document.addEventListener("mousedown", this.onMouseOrTouchStart as any, {
-      passive: false,
-    });
+    this.ownerDocument.addEventListener(
+      "touchstart",
+      this.onMouseOrTouchStart as any,
+      {
+        passive: false,
+      },
+    );
+    this.ownerDocument.addEventListener(
+      "mousedown",
+      this.onMouseOrTouchStart as any,
+      {
+        passive: false,
+      },
+    );
     !this.props.allowOverlap && checkInitialOverlap(this.props.values);
     this.props.values.forEach((value) =>
       checkBoundaries(value, this.props.min, this.props.max),
@@ -130,17 +140,26 @@ class Range extends React.Component<IProps> {
     const options: AddEventListenerOptions = {
       passive: false,
     };
-    document.removeEventListener(
+    this.ownerDocument.removeEventListener(
       "mousedown",
       this.onMouseOrTouchStart as any,
       options,
     );
     // These need to be removed!!
-    document.removeEventListener("mousemove", this.schdOnMouseMove as any);
-    document.removeEventListener("touchmove", this.schdOnTouchMove as any);
-    document.removeEventListener("touchstart", this.onMouseOrTouchStart as any);
-    document.removeEventListener("mouseup", this.schdOnEnd as any);
-    document.removeEventListener("touchend", this.schdOnEnd as any);
+    this.ownerDocument.removeEventListener(
+      "mousemove",
+      this.schdOnMouseMove as any,
+    );
+    this.ownerDocument.removeEventListener(
+      "touchmove",
+      this.schdOnTouchMove as any,
+    );
+    this.ownerDocument.removeEventListener(
+      "touchstart",
+      this.onMouseOrTouchStart as any,
+    );
+    this.ownerDocument.removeEventListener("mouseup", this.schdOnEnd as any);
+    this.ownerDocument.removeEventListener("touchend", this.schdOnEnd as any);
     this.resizeObserver.unobserve(this.trackRef.current!);
   }
 
@@ -222,20 +241,20 @@ class Range extends React.Component<IProps> {
     );
 
   addTouchEvents = (e: TouchEvent) => {
-    document.addEventListener("touchmove", this.schdOnTouchMove, {
+    this.ownerDocument.addEventListener("touchmove", this.schdOnTouchMove, {
       passive: false,
     });
-    document.addEventListener("touchend", this.schdOnEnd, {
+    this.ownerDocument.addEventListener("touchend", this.schdOnEnd, {
       passive: false,
     });
-    document.addEventListener("touchcancel", this.schdOnEnd, {
+    this.ownerDocument.addEventListener("touchcancel", this.schdOnEnd, {
       passive: false,
     });
   };
 
   addMouseEvents = (e: MouseEvent) => {
-    document.addEventListener("mousemove", this.schdOnMouseMove);
-    document.addEventListener("mouseup", this.schdOnEnd);
+    this.ownerDocument.addEventListener("mousemove", this.schdOnMouseMove);
+    this.ownerDocument.addEventListener("mouseup", this.schdOnEnd);
   };
 
   onMouseDownTrack = (e: React.MouseEvent) => {
@@ -533,11 +552,11 @@ class Range extends React.Component<IProps> {
 
   onEnd = (e: Event) => {
     e.preventDefault();
-    document.removeEventListener("mousemove", this.schdOnMouseMove);
-    document.removeEventListener("touchmove", this.schdOnTouchMove);
-    document.removeEventListener("mouseup", this.schdOnEnd);
-    document.removeEventListener("touchend", this.schdOnEnd);
-    document.removeEventListener("touchcancel", this.schdOnEnd);
+    this.ownerDocument.removeEventListener("mousemove", this.schdOnMouseMove);
+    this.ownerDocument.removeEventListener("touchmove", this.schdOnTouchMove);
+    this.ownerDocument.removeEventListener("mouseup", this.schdOnEnd);
+    this.ownerDocument.removeEventListener("touchend", this.schdOnEnd);
+    this.ownerDocument.removeEventListener("touchcancel", this.schdOnEnd);
     if (
       this.state.draggedThumbIndex === -1 &&
       this.state.draggedTrackPos[0] === -1 &&
